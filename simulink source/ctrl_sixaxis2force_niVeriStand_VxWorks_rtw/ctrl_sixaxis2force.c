@@ -1,11 +1,15 @@
 /*
  * ctrl_sixaxis2force.c
  *
+ * Academic License - for use in teaching, academic research, and meeting
+ * course requirements at degree granting institutions only.  Not for
+ * government, commercial, or other organizational use.
+ *
  * Code generation for model "ctrl_sixaxis2force".
  *
- * Model version              : 1.26
- * Simulink Coder version : 8.6 (R2014a) 27-Dec-2013
- * C source code generated on : Sun Mar 08 15:44:17 2015
+ * Model version              : 1.27
+ * Simulink Coder version : 8.8 (R2015a) 09-Feb-2015
+ * C source code generated on : Thu Feb 09 11:25:39 2017
  *
  * Target selection: NIVeriStand_VxWorks.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -13,6 +17,7 @@
  * Code generation objectives: Unspecified
  * Validation result: Not run
  */
+
 #include "ctrl_sixaxis2force.h"
 #include "ctrl_sixaxis2force_private.h"
 
@@ -140,12 +145,12 @@ static void ctrl_sixaxis2force_update(void)
 }
 
 /* Model initialize function */
-void ctrl_sixaxis2force_initialize(void)
+static void ctrl_sixaxis2force_initialize(void)
 {
 }
 
 /* Model terminate function */
-void ctrl_sixaxis2force_terminate(void)
+static void ctrl_sixaxis2force_terminate(void)
 {
   /* (no terminate code required) */
 }
@@ -407,7 +412,7 @@ long NIRT_SetValueByDataType(void* ptr,int subindex, double value, int type, int
     return NIRT_SetValueByDataType(ptr,subindex,value,6,Complex);
 
    case 13:
-    //Type is array. Call SetValueByDataType on its contained type
+    //Type is matrix. Call SetValueByDataType on its contained type
     return NIRT_SetValueByDataType(ptr,subindex,value,7,Complex);
 
    case 15:
@@ -689,8 +694,8 @@ NI_Task NI_TaskList[] DataSection(".NIVS.tasklist") =
 int NI_NumTasks DataSection(".NIVS.numtasks") = 1;
 static char* NI_CompiledModelName DataSection(".NIVS.compiledmodelname") =
   "ctrl_sixaxis2force";
-static char* NI_CompiledModelVersion = "1.26";
-static char* NI_CompiledModelDateTime = "Sun Mar 08 15:44:17 2015";
+static char* NI_CompiledModelVersion = "1.27";
+static char* NI_CompiledModelDateTime = "Thu Feb 09 11:25:39 2017";
 static char* NI_builder DataSection(".NIVS.builder") =
   "NI VeriStand 2014.0.0.82 (2014) RTW Build";
 static char* NI_BuilderVersion DataSection(".NIVS.builderversion") =

@@ -1,11 +1,15 @@
 /*
  * ctrl_sixaxis2thruster.h
  *
+ * Academic License - for use in teaching, academic research, and meeting
+ * course requirements at degree granting institutions only.  Not for
+ * government, commercial, or other organizational use.
+ *
  * Code generation for model "ctrl_sixaxis2thruster".
  *
- * Model version              : 1.22
- * Simulink Coder version : 8.6 (R2014a) 27-Dec-2013
- * C source code generated on : Wed Feb 25 14:00:14 2015
+ * Model version              : 1.23
+ * Simulink Coder version : 8.8 (R2015a) 09-Feb-2015
+ * C source code generated on : Thu Feb 09 11:25:11 2017
  *
  * Target selection: NIVeriStand_VxWorks.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -13,6 +17,7 @@
  * Code generation objectives: Unspecified
  * Validation result: Not run
  */
+
 #ifndef RTW_HEADER_ctrl_sixaxis2thruster_h_
 #define RTW_HEADER_ctrl_sixaxis2thruster_h_
 #include <math.h>
@@ -21,6 +26,7 @@
 #ifndef ctrl_sixaxis2thruster_COMMON_INCLUDES_
 # define ctrl_sixaxis2thruster_COMMON_INCLUDES_
 #include "rtwtypes.h"
+#include "zero_crossing_types.h"
 #include "simstruc.h"
 #include "fixedpoint.h"
 #include "rt_logging.h"
@@ -250,6 +256,14 @@
 # define rtmSetNumOutputPorts(rtm, val) ((rtm)->Sizes.numOports = (val))
 #endif
 
+#ifndef rtmGetNumPeriodicContStates
+# define rtmGetNumPeriodicContStates(rtm) ((rtm)->Sizes.numPeriodicContStates)
+#endif
+
+#ifndef rtmSetNumPeriodicContStates
+# define rtmSetNumPeriodicContStates(rtm, val) ((rtm)->Sizes.numPeriodicContStates = (val))
+#endif
+
 #ifndef rtmGetNumSFcnParams
 # define rtmGetNumSFcnParams(rtm)      ((rtm)->Sizes.numSFcnPrms)
 #endif
@@ -368,6 +382,22 @@
 
 #ifndef rtmSetPerTaskSampleHitsPtr
 # define rtmSetPerTaskSampleHitsPtr(rtm, val) ((rtm)->Timing.perTaskSampleHits = (val))
+#endif
+
+#ifndef rtmGetPeriodicContStateIndices
+# define rtmGetPeriodicContStateIndices(rtm) ((rtm)->ModelData.periodicContStateIndices)
+#endif
+
+#ifndef rtmSetPeriodicContStateIndices
+# define rtmSetPeriodicContStateIndices(rtm, val) ((rtm)->ModelData.periodicContStateIndices = (val))
+#endif
+
+#ifndef rtmGetPeriodicContStateRanges
+# define rtmGetPeriodicContStateRanges(rtm) ((rtm)->ModelData.periodicContStateRanges)
+#endif
+
+#ifndef rtmSetPeriodicContStateRanges
+# define rtmSetPeriodicContStateRanges(rtm, val) ((rtm)->ModelData.periodicContStateRanges = (val))
 #endif
 
 #ifndef rtmGetPrevZCSigState
@@ -1199,6 +1229,8 @@ struct tag_RTM_ctrl_sixaxis2thruster_T {
     void *defaultParam;
     ZCSigState *prevZCSigState;
     real_T *contStates;
+    int_T *periodicContStateIndices;
+    real_T *periodicContStateRanges;
     real_T *derivs;
     void *zcSignalValues;
     void *inputs;
@@ -1220,6 +1252,7 @@ struct tag_RTM_ctrl_sixaxis2thruster_T {
     uint32_T checksums[4];
     uint32_T options;
     int_T numContStates;
+    int_T numPeriodicContStates;
     int_T numU;
     int_T numY;
     int_T numSampTimes;
@@ -1286,6 +1319,18 @@ extern B_ctrl_sixaxis2thruster_T ctrl_sixaxis2thruster_B;
 
 /* Block states (auto storage) */
 extern DW_ctrl_sixaxis2thruster_T ctrl_sixaxis2thruster_DW;
+
+/*====================*
+ * External functions *
+ *====================*/
+extern ctrl_sixaxis2thruster_rtModel *ctrl_sixaxis2thruster(void);
+extern void MdlInitializeSizes(void);
+extern void MdlInitializeSampleTimes(void);
+extern void MdlInitialize(void);
+extern void MdlStart(void);
+extern void MdlOutputs(int_T tid);
+extern void MdlUpdate(int_T tid);
+extern void MdlTerminate(void);
 
 /* Real-time Model object */
 extern RT_MODEL_ctrl_sixaxis2thruste_T *const ctrl_sixaxis2thruster_M;

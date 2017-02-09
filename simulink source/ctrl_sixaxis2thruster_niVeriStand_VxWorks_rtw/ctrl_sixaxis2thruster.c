@@ -1,11 +1,15 @@
 /*
  * ctrl_sixaxis2thruster.c
  *
+ * Academic License - for use in teaching, academic research, and meeting
+ * course requirements at degree granting institutions only.  Not for
+ * government, commercial, or other organizational use.
+ *
  * Code generation for model "ctrl_sixaxis2thruster".
  *
- * Model version              : 1.22
- * Simulink Coder version : 8.6 (R2014a) 27-Dec-2013
- * C source code generated on : Wed Feb 25 14:00:14 2015
+ * Model version              : 1.23
+ * Simulink Coder version : 8.8 (R2015a) 09-Feb-2015
+ * C source code generated on : Thu Feb 09 11:25:11 2017
  *
  * Target selection: NIVeriStand_VxWorks.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -13,6 +17,7 @@
  * Code generation objectives: Unspecified
  * Validation result: Not run
  */
+
 #include "ctrl_sixaxis2thruster.h"
 #include "ctrl_sixaxis2thruster_private.h"
 
@@ -220,7 +225,7 @@ static void ctrl_sixaxis2thruster_update(void)
 }
 
 /* Model initialize function */
-void ctrl_sixaxis2thruster_initialize(void)
+static void ctrl_sixaxis2thruster_initialize(void)
 {
   /* InitializeConditions for UnitDelay: '<S4>/Delay Input1' */
   ctrl_sixaxis2thruster_DW.DelayInput1_DSTATE =
@@ -240,7 +245,7 @@ void ctrl_sixaxis2thruster_initialize(void)
 }
 
 /* Model terminate function */
-void ctrl_sixaxis2thruster_terminate(void)
+static void ctrl_sixaxis2thruster_terminate(void)
 {
   /* (no terminate code required) */
 }
@@ -504,7 +509,7 @@ long NIRT_SetValueByDataType(void* ptr,int subindex, double value, int type, int
     return NIRT_SetValueByDataType(ptr,subindex,value,6,Complex);
 
    case 13:
-    //Type is array. Call SetValueByDataType on its contained type
+    //Type is matrix. Call SetValueByDataType on its contained type
     return NIRT_SetValueByDataType(ptr,subindex,value,7,Complex);
 
    case 15:
@@ -911,8 +916,8 @@ NI_Task NI_TaskList[] DataSection(".NIVS.tasklist") =
 int NI_NumTasks DataSection(".NIVS.numtasks") = 1;
 static char* NI_CompiledModelName DataSection(".NIVS.compiledmodelname") =
   "ctrl_sixaxis2thruster";
-static char* NI_CompiledModelVersion = "1.22";
-static char* NI_CompiledModelDateTime = "Wed Feb 25 14:00:14 2015";
+static char* NI_CompiledModelVersion = "1.23";
+static char* NI_CompiledModelDateTime = "Thu Feb 09 11:25:11 2017";
 static char* NI_builder DataSection(".NIVS.builder") =
   "NI VeriStand 2014.0.0.82 (2014) RTW Build";
 static char* NI_BuilderVersion DataSection(".NIVS.builderversion") =
