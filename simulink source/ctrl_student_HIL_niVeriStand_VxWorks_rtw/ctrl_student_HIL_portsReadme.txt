@@ -1,9 +1,15 @@
 	<portlist>
+<inport> id="-1"  name = "Des_samp_freq" width = "1" datatype = "0"</inport>
+<inport> id="-1"  name = "Noise_power" width = "1" datatype = "0"</inport>
+<inport> id="-1"  name = "Noise_powhead" width = "1" datatype = "0"</inport>
 <inport> id="-1"  name = "y_in" width = "1" datatype = "0"</inport>
 <inport> id="-1"  name = "x_in" width = "1" datatype = "0"</inport>
 <inport> id="-1"  name = "psi_in" width = "1" datatype = "0"</inport>
+<inport> id="-1"  name = "Enable_noise" width = "1" datatype = "0"</inport>
+<inport> id="-1"  name = "Observer/k_psi" width = "1" datatype = "0"</inport>
 <inport> id="-1"  name = "u_in" width = "1" datatype = "0"</inport>
 <inport> id="-1"  name = "r_in" width = "1" datatype = "0"</inport>
+<inport> id="-1"  name = "v_in" width = "1" datatype = "0"</inport>
 <inport> id="-1"  name = "joystick/L2_continuous" width = "1" datatype = "0"</inport>
 <inport> id="-1"  name = "joystick/PosYLeft" width = "1" datatype = "0"</inport>
 <inport> id="-1"  name = "joystick/PosXLeft" width = "1" datatype = "0"</inport>
@@ -16,7 +22,6 @@
 <inport> id="-1"  name = "joystick/ArrowUp" width = "1" datatype = "0"</inport>
 <inport> id="-1"  name = "joystick/ArrowLeft" width = "1" datatype = "0"</inport>
 <inport> id="-1"  name = "joystick/ArrowRight" width = "1" datatype = "0"</inport>
-<inport> id="-1"  name = "v_in" width = "1" datatype = "0"</inport>
 <outport> id = "-1" name = "uhat" width = "1" datatype = "0"</outport>
 <outport> id = "-1" name = "uin" width = "1" datatype = "0"</outport>
 <outport> id = "-1" name = "utilde" width = "1" datatype = "0"</outport>
