@@ -15,9 +15,9 @@
  *
  * Code generation for model "ctrl_student_HIL".
  *
- * Model version              : 1.98
+ * Model version              : 1.99
  * Simulink Coder version : 8.8 (R2015a) 09-Feb-2015
- * C source code generated on : Thu Feb 09 14:33:39 2017
+ * C source code generated on : Thu Feb 09 15:16:53 2017
  *
  * Target selection: NIVeriStand_VxWorks.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -176,6 +176,42 @@ P_ctrl_student_HIL_T ctrl_student_HIL_P = {
                                         */
   0.0,                                 /* Expression: btype
                                         * Referenced by: '<Root>/uin'
+                                        */
+  -1.0,                                /* Expression: width
+                                        * Referenced by: '<Root>/utilde'
+                                        */
+  1.0,                                 /* Expression: dtype
+                                        * Referenced by: '<Root>/utilde'
+                                        */
+  3.0,                                 /* Expression: portnum
+                                        * Referenced by: '<Root>/utilde'
+                                        */
+  -1.0,                                /* Expression: stime
+                                        * Referenced by: '<Root>/utilde'
+                                        */
+  1.0,                                 /* Expression: stype
+                                        * Referenced by: '<Root>/utilde'
+                                        */
+  0.0,                                 /* Expression: btype
+                                        * Referenced by: '<Root>/utilde'
+                                        */
+  -1.0,                                /* Expression: width
+                                        * Referenced by: '<Root>/r_in'
+                                        */
+  1.0,                                 /* Expression: dtype
+                                        * Referenced by: '<Root>/r_in'
+                                        */
+  4.0,                                 /* Expression: portnum
+                                        * Referenced by: '<Root>/r_in'
+                                        */
+  -1.0,                                /* Expression: stime
+                                        * Referenced by: '<Root>/r_in'
+                                        */
+  1.0,                                 /* Expression: stype
+                                        * Referenced by: '<Root>/r_in'
+                                        */
+  1.0,                                 /* Expression: btype
+                                        * Referenced by: '<Root>/r_in'
                                         */
   -1.0,                                /* Expression: width
                                         * Referenced by: '<S3>/L2_continuous'
@@ -664,24 +700,6 @@ P_ctrl_student_HIL_T ctrl_student_HIL_P = {
                                         * Referenced by: '<S4>/integrator reset model'
                                         */
   -1.0,                                /* Expression: width
-                                        * Referenced by: '<Root>/r_in'
-                                        */
-  1.0,                                 /* Expression: dtype
-                                        * Referenced by: '<Root>/r_in'
-                                        */
-  4.0,                                 /* Expression: portnum
-                                        * Referenced by: '<Root>/r_in'
-                                        */
-  -1.0,                                /* Expression: stime
-                                        * Referenced by: '<Root>/r_in'
-                                        */
-  1.0,                                 /* Expression: stype
-                                        * Referenced by: '<Root>/r_in'
-                                        */
-  1.0,                                 /* Expression: btype
-                                        * Referenced by: '<Root>/r_in'
-                                        */
-  -1.0,                                /* Expression: width
                                         * Referenced by: '<Root>/v_in'
                                         */
   1.0,                                 /* Expression: dtype
@@ -715,6 +733,18 @@ typedef struct {
 NI_ParamSizeWidth P_ctrl_student_HIL_T_sizes[] DataSection(
   ".NIVS.defaultparamsizes") = {
   { sizeof(P_ctrl_student_HIL_T), 1 },
+
+  { sizeof(real_T), 1, 0 },
+
+  { sizeof(real_T), 1, 0 },
+
+  { sizeof(real_T), 1, 0 },
+
+  { sizeof(real_T), 1, 0 },
+
+  { sizeof(real_T), 1, 0 },
+
+  { sizeof(real_T), 1, 0 },
 
   { sizeof(real_T), 1, 0 },
 

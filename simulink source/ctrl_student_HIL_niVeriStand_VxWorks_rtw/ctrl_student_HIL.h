@@ -7,9 +7,9 @@
  *
  * Code generation for model "ctrl_student_HIL".
  *
- * Model version              : 1.98
+ * Model version              : 1.99
  * Simulink Coder version : 8.8 (R2015a) 09-Feb-2015
- * C source code generated on : Thu Feb 09 14:33:39 2017
+ * C source code generated on : Thu Feb 09 15:16:53 2017
  *
  * Target selection: NIVeriStand_VxWorks.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -821,8 +821,11 @@ typedef struct {
   real_T Hold[3];                      /* '<S6>/Hold' */
   real_T Sum1;                         /* '<S2>/Sum1' */
   real_T u_in;                         /* '<Root>/u_in' */
+  real_T Sum;                          /* '<Root>/Sum' */
+  real_T r_in;                         /* '<Root>/r_in' */
   real_T L2_continuous;                /* '<S3>/L2_continuous' */
   real_T PosYLeft;                     /* '<S3>/PosYLeft' */
+  real_T Gain1;                        /* '<S3>/Gain1' */
   real_T PosXLeft;                     /* '<S3>/PosXLeft' */
   real_T R2_continuous;                /* '<S3>/R2_continuous' */
   real_T PosXRight;                    /* '<S3>/PosXRight' */
@@ -833,7 +836,6 @@ typedef struct {
   real_T ArrowUp;                      /* '<S3>/ArrowUp' */
   real_T ArrowLeft;                    /* '<S3>/ArrowLeft' */
   real_T ArrowRight;                   /* '<S3>/ArrowRight' */
-  real_T r_in;                         /* '<Root>/r_in' */
   real_T v_in;                         /* '<Root>/v_in' */
   real_T u_BT;                         /* '<S3>/Thrust allocation' */
   real_T u_VSP;                        /* '<S3>/Thrust allocation' */
@@ -857,6 +859,8 @@ typedef struct {
   real_T uhat_DWORK1;                  /* '<Root>/uhat' */
   real_T u_in_DWORK1;                  /* '<Root>/u_in' */
   real_T uin_DWORK1;                   /* '<Root>/uin' */
+  real_T utilde_DWORK1;                /* '<Root>/utilde' */
+  real_T r_in_DWORK1;                  /* '<Root>/r_in' */
   real_T L2_continuous_DWORK1;         /* '<S3>/L2_continuous' */
   real_T PosYLeft_DWORK1;              /* '<S3>/PosYLeft' */
   real_T PosXLeft_DWORK1;              /* '<S3>/PosXLeft' */
@@ -883,7 +887,6 @@ typedef struct {
   real_T x_0_DWORK1;                   /* '<S4>/x_0' */
   real_T y_0_DWORK1;                   /* '<S4>/y_0' */
   real_T integratorresetmodel_DWORK1;  /* '<S4>/integrator reset model' */
-  real_T r_in_DWORK1;                  /* '<Root>/r_in' */
   real_T v_in_DWORK1;                  /* '<Root>/v_in' */
   int32_T NIVeriStandSignalProbe_DWORK2;/* '<Root>/NIVeriStandSignalProbe' */
   uint32_T RandSeed;                   /* '<S11>/White Noise' */
@@ -895,6 +898,8 @@ typedef struct {
   uint8_T uhat_DWORK2[17];             /* '<Root>/uhat' */
   uint8_T u_in_DWORK2[17];             /* '<Root>/u_in' */
   uint8_T uin_DWORK2[17];              /* '<Root>/uin' */
+  uint8_T utilde_DWORK2[17];           /* '<Root>/utilde' */
+  uint8_T r_in_DWORK2[17];             /* '<Root>/r_in' */
   uint8_T L2_continuous_DWORK2[17];    /* '<S3>/L2_continuous' */
   uint8_T PosYLeft_DWORK2[17];         /* '<S3>/PosYLeft' */
   uint8_T PosXLeft_DWORK2[17];         /* '<S3>/PosXLeft' */
@@ -921,7 +926,6 @@ typedef struct {
   uint8_T x_0_DWORK2[17];              /* '<S4>/x_0' */
   uint8_T y_0_DWORK2[17];              /* '<S4>/y_0' */
   uint8_T integratorresetmodel_DWORK2[17];/* '<S4>/integrator reset model' */
-  uint8_T r_in_DWORK2[17];             /* '<Root>/r_in' */
   uint8_T v_in_DWORK2[17];             /* '<Root>/v_in' */
   uint8_T NIVeriStandSignalProbe_DWORK1[17];/* '<Root>/NIVeriStandSignalProbe' */
   uint8_T NIVeriStandSignalProbe_DWORK3[60];/* '<Root>/NIVeriStandSignalProbe' */
@@ -1115,6 +1119,42 @@ struct P_ctrl_student_HIL_T_ {
                                         */
   real_T uin_P6;                       /* Expression: btype
                                         * Referenced by: '<Root>/uin'
+                                        */
+  real_T utilde_P1;                    /* Expression: width
+                                        * Referenced by: '<Root>/utilde'
+                                        */
+  real_T utilde_P2;                    /* Expression: dtype
+                                        * Referenced by: '<Root>/utilde'
+                                        */
+  real_T utilde_P3;                    /* Expression: portnum
+                                        * Referenced by: '<Root>/utilde'
+                                        */
+  real_T utilde_P4;                    /* Expression: stime
+                                        * Referenced by: '<Root>/utilde'
+                                        */
+  real_T utilde_P5;                    /* Expression: stype
+                                        * Referenced by: '<Root>/utilde'
+                                        */
+  real_T utilde_P6;                    /* Expression: btype
+                                        * Referenced by: '<Root>/utilde'
+                                        */
+  real_T r_in_P1;                      /* Expression: width
+                                        * Referenced by: '<Root>/r_in'
+                                        */
+  real_T r_in_P2;                      /* Expression: dtype
+                                        * Referenced by: '<Root>/r_in'
+                                        */
+  real_T r_in_P3;                      /* Expression: portnum
+                                        * Referenced by: '<Root>/r_in'
+                                        */
+  real_T r_in_P4;                      /* Expression: stime
+                                        * Referenced by: '<Root>/r_in'
+                                        */
+  real_T r_in_P5;                      /* Expression: stype
+                                        * Referenced by: '<Root>/r_in'
+                                        */
+  real_T r_in_P6;                      /* Expression: btype
+                                        * Referenced by: '<Root>/r_in'
                                         */
   real_T L2_continuous_P1;             /* Expression: width
                                         * Referenced by: '<S3>/L2_continuous'
@@ -1601,24 +1641,6 @@ struct P_ctrl_student_HIL_T_ {
                                         */
   real_T integratorresetmodel_P6;      /* Expression: btype
                                         * Referenced by: '<S4>/integrator reset model'
-                                        */
-  real_T r_in_P1;                      /* Expression: width
-                                        * Referenced by: '<Root>/r_in'
-                                        */
-  real_T r_in_P2;                      /* Expression: dtype
-                                        * Referenced by: '<Root>/r_in'
-                                        */
-  real_T r_in_P3;                      /* Expression: portnum
-                                        * Referenced by: '<Root>/r_in'
-                                        */
-  real_T r_in_P4;                      /* Expression: stime
-                                        * Referenced by: '<Root>/r_in'
-                                        */
-  real_T r_in_P5;                      /* Expression: stype
-                                        * Referenced by: '<Root>/r_in'
-                                        */
-  real_T r_in_P6;                      /* Expression: btype
-                                        * Referenced by: '<Root>/r_in'
                                         */
   real_T v_in_P1;                      /* Expression: width
                                         * Referenced by: '<Root>/v_in'
