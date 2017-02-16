@@ -15,9 +15,9 @@
  *
  * Code generation for model "ctrl_student_HIL".
  *
- * Model version              : 1.119
+ * Model version              : 1.126
  * Simulink Coder version : 8.8 (R2015a) 09-Feb-2015
- * C source code generated on : Thu Feb 09 17:20:01 2017
+ * C source code generated on : Thu Feb 16 10:46:40 2017
  *
  * Target selection: NIVeriStand_VxWorks.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -134,6 +134,30 @@ P_ctrl_student_HIL_T ctrl_student_HIL_P = {
                                         */
   1.0,                                 /* Expression: btype
                                         * Referenced by: '<Root>/y_in'
+                                        */
+  0.0,                                 /* Expression: 0
+                                        * Referenced by: '<Root>/Constant'
+                                        */
+  -1.0,                                /* Expression: width
+                                        * Referenced by: '<Root>/dead'
+                                        */
+  1.0,                                 /* Expression: dtype
+                                        * Referenced by: '<Root>/dead'
+                                        */
+  11.0,                                /* Expression: portnum
+                                        * Referenced by: '<Root>/dead'
+                                        */
+  -1.0,                                /* Expression: stime
+                                        * Referenced by: '<Root>/dead'
+                                        */
+  1.0,                                 /* Expression: stype
+                                        * Referenced by: '<Root>/dead'
+                                        */
+  1.0,                                 /* Expression: btype
+                                        * Referenced by: '<Root>/dead'
+                                        */
+  1.0,                                 /* Expression: 1
+                                        * Referenced by: '<Root>/Constant1'
                                         */
   -1.0,                                /* Expression: width
                                         * Referenced by: '<Root>/x_in'
@@ -823,6 +847,22 @@ typedef struct {
 NI_ParamSizeWidth P_ctrl_student_HIL_T_sizes[] DataSection(
   ".NIVS.defaultparamsizes") = {
   { sizeof(P_ctrl_student_HIL_T), 1 },
+
+  { sizeof(real_T), 1, 0 },
+
+  { sizeof(real_T), 1, 0 },
+
+  { sizeof(real_T), 1, 0 },
+
+  { sizeof(real_T), 1, 0 },
+
+  { sizeof(real_T), 1, 0 },
+
+  { sizeof(real_T), 1, 0 },
+
+  { sizeof(real_T), 1, 0 },
+
+  { sizeof(real_T), 1, 0 },
 
   { sizeof(real_T), 1, 0 },
 

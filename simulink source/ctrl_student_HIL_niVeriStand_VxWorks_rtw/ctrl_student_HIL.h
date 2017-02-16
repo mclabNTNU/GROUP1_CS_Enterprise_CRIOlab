@@ -7,9 +7,9 @@
  *
  * Code generation for model "ctrl_student_HIL".
  *
- * Model version              : 1.119
+ * Model version              : 1.126
  * Simulink Coder version : 8.8 (R2015a) 09-Feb-2015
- * C source code generated on : Thu Feb 09 17:20:01 2017
+ * C source code generated on : Thu Feb 16 10:46:40 2017
  *
  * Target selection: NIVeriStand_VxWorks.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -820,7 +820,9 @@ typedef struct {
   real_T Noise_powhead;                /* '<Root>/Noise_powhead' */
   real_T WhiteNoise_m;                 /* '<S10>/White Noise' */
   real_T y_in;                         /* '<Root>/y_in' */
+  real_T dead;                         /* '<Root>/dead' */
   real_T x_in;                         /* '<Root>/x_in' */
+  real_T Product;                      /* '<Root>/Product' */
   real_T psi_in;                       /* '<Root>/psi_in' */
   real_T Hold[3];                      /* '<S6>/Hold' */
   real_T Enable_noise;                 /* '<Root>/Enable_noise' */
@@ -862,6 +864,7 @@ typedef struct {
   real_T Noise_powhead_DWORK1;         /* '<Root>/Noise_powhead' */
   real_T NextOutput_p;                 /* '<S10>/White Noise' */
   real_T y_in_DWORK1;                  /* '<Root>/y_in' */
+  real_T dead_DWORK1;                  /* '<Root>/dead' */
   real_T x_in_DWORK1;                  /* '<Root>/x_in' */
   real_T psi_in_DWORK1;                /* '<Root>/psi_in' */
   real_T Hold_PreviousInput[3];        /* '<S6>/Hold' */
@@ -911,6 +914,7 @@ typedef struct {
   uint8_T Noise_power_DWORK2[17];      /* '<Root>/Noise_power' */
   uint8_T Noise_powhead_DWORK2[17];    /* '<Root>/Noise_powhead' */
   uint8_T y_in_DWORK2[17];             /* '<Root>/y_in' */
+  uint8_T dead_DWORK2[17];             /* '<Root>/dead' */
   uint8_T x_in_DWORK2[17];             /* '<Root>/x_in' */
   uint8_T psi_in_DWORK2[17];           /* '<Root>/psi_in' */
   uint8_T Enable_noise_DWORK2[17];     /* '<Root>/Enable_noise' */
@@ -1097,6 +1101,30 @@ struct P_ctrl_student_HIL_T_ {
                                         */
   real_T y_in_P6;                      /* Expression: btype
                                         * Referenced by: '<Root>/y_in'
+                                        */
+  real_T Constant_Value;               /* Expression: 0
+                                        * Referenced by: '<Root>/Constant'
+                                        */
+  real_T dead_P1;                      /* Expression: width
+                                        * Referenced by: '<Root>/dead'
+                                        */
+  real_T dead_P2;                      /* Expression: dtype
+                                        * Referenced by: '<Root>/dead'
+                                        */
+  real_T dead_P3;                      /* Expression: portnum
+                                        * Referenced by: '<Root>/dead'
+                                        */
+  real_T dead_P4;                      /* Expression: stime
+                                        * Referenced by: '<Root>/dead'
+                                        */
+  real_T dead_P5;                      /* Expression: stype
+                                        * Referenced by: '<Root>/dead'
+                                        */
+  real_T dead_P6;                      /* Expression: btype
+                                        * Referenced by: '<Root>/dead'
+                                        */
+  real_T Constant1_Value;              /* Expression: 1
+                                        * Referenced by: '<Root>/Constant1'
                                         */
   real_T x_in_P1;                      /* Expression: width
                                         * Referenced by: '<Root>/x_in'
@@ -1710,7 +1738,7 @@ struct P_ctrl_student_HIL_T_ {
   real_T psi_0_P6;                     /* Expression: btype
                                         * Referenced by: '<S4>/psi_0 '
                                         */
-  real_T Constant_Value;               /* Expression: 0
+  real_T Constant_Value_i;             /* Expression: 0
                                         * Referenced by: '<S4>/Constant'
                                         */
   real_T x_0_P1;                       /* Expression: width
@@ -1731,7 +1759,7 @@ struct P_ctrl_student_HIL_T_ {
   real_T x_0_P6;                       /* Expression: btype
                                         * Referenced by: '<S4>/x_0'
                                         */
-  real_T Constant1_Value;              /* Expression: 0
+  real_T Constant1_Value_h;            /* Expression: 0
                                         * Referenced by: '<S4>/Constant1'
                                         */
   real_T y_0_P1;                       /* Expression: width

@@ -3,6 +3,7 @@
 <inport> id="-1"  name = "Noise_power" width = "1" datatype = "0"</inport>
 <inport> id="-1"  name = "Noise_powhead" width = "1" datatype = "0"</inport>
 <inport> id="-1"  name = "y_in" width = "1" datatype = "0"</inport>
+<inport> id="-1"  name = "dead" width = "1" datatype = "0"</inport>
 <inport> id="-1"  name = "x_in" width = "1" datatype = "0"</inport>
 <inport> id="-1"  name = "psi_in" width = "1" datatype = "0"</inport>
 <inport> id="-1"  name = "Enable_noise" width = "1" datatype = "0"</inport>
