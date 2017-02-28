@@ -8,16 +8,6 @@
 <inport> id="-1"  name = "N_power" width = "1" datatype = "0"</inport>
 <inport> id="-1"  name = "N_power_H" width = "1" datatype = "0"</inport>
 <inport> id="-1"  name = "Samp_freq" width = "1" datatype = "0"</inport>
-<inport> id="-1"  name = "Enable_noise" width = "1" datatype = "0"</inport>
-<inport> id="-1"  name = "Observer/L1/L12" width = "1" datatype = "34"</inport>
-<inport> id="-1"  name = "Observer/L1/L11" width = "1" datatype = "34"</inport>
-<inport> id="-1"  name = "Observer/L1/L13" width = "1" datatype = "34"</inport>
-<inport> id="-1"  name = "Observer/L2/L21" width = "1" datatype = "34"</inport>
-<inport> id="-1"  name = "Observer/L2/L22" width = "1" datatype = "34"</inport>
-<inport> id="-1"  name = "Observer/L2/L23" width = "1" datatype = "34"</inport>
-<inport> id="-1"  name = "Observer/L3/L31" width = "1" datatype = "34"</inport>
-<inport> id="-1"  name = "Observer/L3/L32" width = "1" datatype = "34"</inport>
-<inport> id="-1"  name = "Observer/L3/L33" width = "1" datatype = "34"</inport>
 <inport> id="-1"  name = "joystick/L2_continuous" width = "1" datatype = "0"</inport>
 <inport> id="-1"  name = "joystick/PosYRight" width = "1" datatype = "0"</inport>
 <inport> id="-1"  name = "joystick/PosXRight" width = "1" datatype = "0"</inport>
@@ -30,12 +20,16 @@
 <inport> id="-1"  name = "joystick/ArrowUp" width = "1" datatype = "0"</inport>
 <inport> id="-1"  name = "joystick/ArrowLeft" width = "1" datatype = "0"</inport>
 <inport> id="-1"  name = "joystick/ArrowRight" width = "1" datatype = "0"</inport>
-<outport> id = "-1" name = "Observer/eta_bar_ut/x_bar" width = "1" datatype = "18"</outport>
-<outport> id = "-1" name = "Observer/eta_bar_ut/y_bar" width = "1" datatype = "18"</outport>
-<outport> id = "-1" name = "Observer/eta_bar_ut/psi_bar" width = "1" datatype = "18"</outport>
-<outport> id = "-1" name = "Observer/eta_hat_ut/psi_hat" width = "1" datatype = "18"</outport>
-<outport> id = "-1" name = "Observer/eta_hat_ut/x_hat" width = "1" datatype = "18"</outport>
-<outport> id = "-1" name = "Observer/eta_hat_ut/y_hat" width = "1" datatype = "18"</outport>
+<inport> id="-1"  name = "Enable_noise" width = "1" datatype = "0"</inport>
+<inport> id="-1"  name = "Observer/L1/L12" width = "1" datatype = "34"</inport>
+<inport> id="-1"  name = "Observer/L1/L11" width = "1" datatype = "34"</inport>
+<inport> id="-1"  name = "Observer/L1/L13" width = "1" datatype = "34"</inport>
+<inport> id="-1"  name = "Observer/L2/L21" width = "1" datatype = "34"</inport>
+<inport> id="-1"  name = "Observer/L2/L22" width = "1" datatype = "34"</inport>
+<inport> id="-1"  name = "Observer/L2/L23" width = "1" datatype = "34"</inport>
+<inport> id="-1"  name = "Observer/L3/L31" width = "1" datatype = "34"</inport>
+<inport> id="-1"  name = "Observer/L3/L32" width = "1" datatype = "34"</inport>
+<inport> id="-1"  name = "Observer/L3/L33" width = "1" datatype = "34"</inport>
 <outport> id = "-1" name = "joystick/u_BT" width = "1" datatype = "0"</outport>
 <outport> id = "-1" name = "joystick/u_VSP1" width = "1" datatype = "0"</outport>
 <outport> id = "-1" name = "joystick/u_VSP2" width = "1" datatype = "0"</outport>
@@ -43,6 +37,12 @@
 <outport> id = "-1" name = "joystick/alpha_VSP2" width = "1" datatype = "0"</outport>
 <outport> id = "-1" name = "joystick/omega_VSP1" width = "1" datatype = "0"</outport>
 <outport> id = "-1" name = "joystick/omega_VSP2" width = "1" datatype = "0"</outport>
+<outport> id = "-1" name = "Observer/eta_bar_ut/x_bar" width = "1" datatype = "18"</outport>
+<outport> id = "-1" name = "Observer/eta_bar_ut/y_bar" width = "1" datatype = "18"</outport>
+<outport> id = "-1" name = "Observer/eta_bar_ut/psi_bar" width = "1" datatype = "18"</outport>
+<outport> id = "-1" name = "Observer/eta_hat_ut/psi_hat" width = "1" datatype = "18"</outport>
+<outport> id = "-1" name = "Observer/eta_hat_ut/x_hat" width = "1" datatype = "18"</outport>
+<outport> id = "-1" name = "Observer/eta_hat_ut/y_hat" width = "1" datatype = "18"</outport>
 <outport> id = "-1" name = "eta_noise_ut/psi_noise" width = "1" datatype = "18"</outport>
 <outport> id = "-1" name = "eta_noise_ut/x_noise" width = "1" datatype = "18"</outport>
 <outport> id = "-1" name = "eta_noise_ut/y_noise" width = "1" datatype = "18"</outport>

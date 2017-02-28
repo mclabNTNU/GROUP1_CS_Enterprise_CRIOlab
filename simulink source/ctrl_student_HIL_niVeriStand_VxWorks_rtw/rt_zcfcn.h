@@ -1,5 +1,5 @@
 /*
- * ctrl_student_HIL_types.h
+ * rt_zcfcn.h
  *
  * Academic License - for use in teaching, academic research, and meeting
  * course requirements at degree granting institutions only.  Not for
@@ -18,17 +18,19 @@
  * Validation result: Not run
  */
 
-#ifndef RTW_HEADER_ctrl_student_HIL_types_h_
-#define RTW_HEADER_ctrl_student_HIL_types_h_
+#ifndef RTW_HEADER_rt_zcfcn_h_
+#define RTW_HEADER_rt_zcfcn_h_
 #include "rtwtypes.h"
-#include "builtin_typeid_types.h"
-#include "multiword_types.h"
-#include "zero_crossing_types.h"
+#include "solver_zc.h"
+#ifndef slZcHadEvent
+#define slZcHadEvent(ev, zcsDir)       (((ev) & (zcsDir)) != 0x00 )
+#endif
 
-/* Parameters (auto storage) */
-typedef struct P_ctrl_student_HIL_T_ P_ctrl_student_HIL_T;
+#ifndef slZcUnAliasEvents
+#define slZcUnAliasEvents(evL, evR)    ((((slZcHadEvent((evL), (SL_ZCS_EVENT_N2Z)) && slZcHadEvent((evR), (SL_ZCS_EVENT_Z2P))) || (slZcHadEvent((evL), (SL_ZCS_EVENT_P2Z)) && slZcHadEvent((evR), (SL_ZCS_EVENT_Z2N)))) ? (SL_ZCS_EVENT_NUL) : (evR)))
+#endif
 
-/* Forward declaration for rtModel */
-typedef struct tag_RTM_ctrl_student_HIL_T RT_MODEL_ctrl_student_HIL_T;
+extern ZCEventType rt_ZCFcn(ZCDirection zcDir, ZCSigState *prevZc, real_T
+  currValue);
 
-#endif                                 /* RTW_HEADER_ctrl_student_HIL_types_h_ */
+#endif                                 /* RTW_HEADER_rt_zcfcn_h_ */

@@ -10,7 +10,7 @@
 				<String>CSE1</String>
 			</Property>
 			<Property Name="Version">
-				<String>1.0.0.130</String>
+				<String>1.0.0.134</String>
 			</Property>
 			<Property Name="Creator">
 				<String />
@@ -5197,10 +5197,10 @@
 									<Double>10000</Double>
 								</Property>
 								<Property Name="DLL Size">
-									<I32>220164</I32>
+									<I32>222287</I32>
 								</Property>
 								<Property Name="DLL Timestamp">
-									<Double>3571135276.923686</Double>
+									<Double>3571142178.3296866</Double>
 								</Property>
 								<Property Name="Decimation">
 									<I32>1</I32>
@@ -5244,7 +5244,7 @@
 										<ForceDownload>false</ForceDownload>
 										<RTDestination>c:\ni-rt\system\ctrl_student_HIL.out</RTDestination>
 										<SupportedTarget>VxWorks</SupportedTarget>
-										<MD5>6488ecadc600e4482f9ef3184b3520b0</MD5>
+										<MD5>b32503c4baa08ffc8b912c503532fd26</MD5>
 									</DependentFile>
 								</Property>
 								<Property Name="GlobalParameterScopes">
@@ -5317,7 +5317,7 @@
 												<String>joystick/L2_continuous</String>
 											</Property>
 											<Property Name="Index">
-												<I32>19</I32>
+												<I32>9</I32>
 											</Property>
 											<Property Name="DataSource">
 												<DataSourceNode Channel="Targets/Controller/Custom Devices/WL_Joystick/L2_cont" />
@@ -5335,7 +5335,7 @@
 												<String>joystick/PosXRight</String>
 											</Property>
 											<Property Name="Index">
-												<I32>21</I32>
+												<I32>11</I32>
 											</Property>
 											<Property Name="DataSource">
 												<DataSourceNode Channel="Targets/Controller/Custom Devices/WL_Joystick/PosXRight" />
@@ -5353,7 +5353,7 @@
 												<String>joystick/PosYRight</String>
 											</Property>
 											<Property Name="Index">
-												<I32>20</I32>
+												<I32>10</I32>
 											</Property>
 											<Property Name="DataSource">
 												<DataSourceNode Channel="Targets/Controller/Custom Devices/WL_Joystick/PosYRight" />
@@ -5371,7 +5371,7 @@
 												<String>joystick/R2_continuous</String>
 											</Property>
 											<Property Name="Index">
-												<I32>22</I32>
+												<I32>12</I32>
 											</Property>
 											<Property Name="DataSource">
 												<DataSourceNode Channel="Targets/Controller/Custom Devices/WL_Joystick/R2_cont" />
@@ -5389,7 +5389,7 @@
 												<String>joystick/PosXLeft</String>
 											</Property>
 											<Property Name="Index">
-												<I32>23</I32>
+												<I32>13</I32>
 											</Property>
 											<Property Name="DataSource">
 												<DataSourceNode Channel="Targets/Controller/Custom Devices/WL_Joystick/PosXLeft" />
@@ -5407,7 +5407,7 @@
 												<String>joystick/PosYLeft</String>
 											</Property>
 											<Property Name="Index">
-												<I32>24</I32>
+												<I32>14</I32>
 											</Property>
 											<Property Name="DataSource">
 												<DataSourceNode Channel="Targets/Controller/Custom Devices/WL_Joystick/PosYLeft" />
@@ -5425,7 +5425,7 @@
 												<String>joystick/L1</String>
 											</Property>
 											<Property Name="Index">
-												<I32>25</I32>
+												<I32>15</I32>
 											</Property>
 											<Property Name="DataSource">
 												<DataSourceNode Channel="Targets/Controller/Custom Devices/WL_Joystick/L1" />
@@ -5443,7 +5443,7 @@
 												<String>joystick/R1</String>
 											</Property>
 											<Property Name="Index">
-												<I32>26</I32>
+												<I32>16</I32>
 											</Property>
 											<Property Name="DataSource">
 												<DataSourceNode Channel="Targets/Controller/Custom Devices/WL_Joystick/R1" />
@@ -5461,7 +5461,7 @@
 												<String>joystick/ArrowDown</String>
 											</Property>
 											<Property Name="Index">
-												<I32>27</I32>
+												<I32>17</I32>
 											</Property>
 											<Property Name="DataSource">
 												<DataSourceNode Channel="Targets/Controller/Custom Devices/WL_Joystick/ArrowDown" />
@@ -5479,7 +5479,7 @@
 												<String>joystick/ArrowUp</String>
 											</Property>
 											<Property Name="Index">
-												<I32>28</I32>
+												<I32>18</I32>
 											</Property>
 											<Property Name="DataSource">
 												<DataSourceNode Channel="Targets/Controller/Custom Devices/WL_Joystick/ArrowUP" />
@@ -5497,7 +5497,7 @@
 												<String>joystick/ArrowLeft</String>
 											</Property>
 											<Property Name="Index">
-												<I32>29</I32>
+												<I32>19</I32>
 											</Property>
 											<Property Name="DataSource">
 												<DataSourceNode Channel="Targets/Controller/Custom Devices/WL_Joystick/ArrowLeft" />
@@ -5515,7 +5515,7 @@
 												<String>joystick/ArrowRight</String>
 											</Property>
 											<Property Name="Index">
-												<I32>30</I32>
+												<I32>20</I32>
 											</Property>
 											<Property Name="DataSource">
 												<DataSourceNode Channel="Targets/Controller/Custom Devices/WL_Joystick/ArrowRight" />
@@ -5547,7 +5547,7 @@
 													<String>Observer/L3/L31</String>
 												</Property>
 												<Property Name="Index">
-													<I32>16</I32>
+													<I32>28</I32>
 												</Property>
 											</Properties>
 											<Errors />
@@ -5562,7 +5562,7 @@
 													<String>Observer/L3/L32</String>
 												</Property>
 												<Property Name="Index">
-													<I32>17</I32>
+													<I32>29</I32>
 												</Property>
 											</Properties>
 											<Errors />
@@ -5577,7 +5577,7 @@
 													<String>Observer/L3/L33</String>
 												</Property>
 												<Property Name="Index">
-													<I32>18</I32>
+													<I32>30</I32>
 												</Property>
 											</Properties>
 											<Errors />
@@ -5602,7 +5602,7 @@
 													<String>Observer/L1/L12</String>
 												</Property>
 												<Property Name="Index">
-													<I32>10</I32>
+													<I32>22</I32>
 												</Property>
 											</Properties>
 											<Errors />
@@ -5617,7 +5617,7 @@
 													<String>Observer/L1/L11</String>
 												</Property>
 												<Property Name="Index">
-													<I32>11</I32>
+													<I32>23</I32>
 												</Property>
 											</Properties>
 											<Errors />
@@ -5632,7 +5632,7 @@
 													<String>Observer/L1/L13</String>
 												</Property>
 												<Property Name="Index">
-													<I32>12</I32>
+													<I32>24</I32>
 												</Property>
 											</Properties>
 											<Errors />
@@ -5652,7 +5652,7 @@
 													<String>Observer/L2/L21</String>
 												</Property>
 												<Property Name="Index">
-													<I32>13</I32>
+													<I32>25</I32>
 												</Property>
 											</Properties>
 											<Errors />
@@ -5667,7 +5667,7 @@
 													<String>Observer/L2/L22</String>
 												</Property>
 												<Property Name="Index">
-													<I32>14</I32>
+													<I32>26</I32>
 												</Property>
 											</Properties>
 											<Errors />
@@ -5682,7 +5682,7 @@
 													<String>Observer/L2/L23</String>
 												</Property>
 												<Property Name="Index">
-													<I32>15</I32>
+													<I32>27</I32>
 												</Property>
 											</Properties>
 											<Errors />
@@ -5852,7 +5852,7 @@
 											<String>Enable_noise</String>
 										</Property>
 										<Property Name="Index">
-											<I32>9</I32>
+											<I32>21</I32>
 										</Property>
 									</Properties>
 									<Errors />
@@ -5986,7 +5986,7 @@
 												<String>joystick/u_BT</String>
 											</Property>
 											<Property Name="Index">
-												<I32>37</I32>
+												<I32>31</I32>
 											</Property>
 										</Properties>
 										<Errors />
@@ -6001,7 +6001,7 @@
 												<String>joystick/u_VSP1</String>
 											</Property>
 											<Property Name="Index">
-												<I32>38</I32>
+												<I32>32</I32>
 											</Property>
 										</Properties>
 										<Errors />
@@ -6016,7 +6016,7 @@
 												<String>joystick/u_VSP2</String>
 											</Property>
 											<Property Name="Index">
-												<I32>39</I32>
+												<I32>33</I32>
 											</Property>
 										</Properties>
 										<Errors />
@@ -6031,7 +6031,7 @@
 												<String>joystick/alpha_VSP1</String>
 											</Property>
 											<Property Name="Index">
-												<I32>40</I32>
+												<I32>34</I32>
 											</Property>
 										</Properties>
 										<Errors />
@@ -6046,7 +6046,7 @@
 												<String>joystick/alpha_VSP2</String>
 											</Property>
 											<Property Name="Index">
-												<I32>41</I32>
+												<I32>35</I32>
 											</Property>
 										</Properties>
 										<Errors />
@@ -6061,7 +6061,7 @@
 												<String>joystick/omega_VSP1</String>
 											</Property>
 											<Property Name="Index">
-												<I32>42</I32>
+												<I32>36</I32>
 											</Property>
 										</Properties>
 										<Errors />
@@ -6076,7 +6076,7 @@
 												<String>joystick/omega_VSP2</String>
 											</Property>
 											<Property Name="Index">
-												<I32>43</I32>
+												<I32>37</I32>
 											</Property>
 										</Properties>
 										<Errors />
@@ -6100,7 +6100,7 @@
 													<String>Observer/eta_bar_ut/x_bar</String>
 												</Property>
 												<Property Name="Index">
-													<I32>31</I32>
+													<I32>38</I32>
 												</Property>
 											</Properties>
 											<Errors />
@@ -6115,7 +6115,7 @@
 													<String>Observer/eta_bar_ut/y_bar</String>
 												</Property>
 												<Property Name="Index">
-													<I32>32</I32>
+													<I32>39</I32>
 												</Property>
 											</Properties>
 											<Errors />
@@ -6130,7 +6130,7 @@
 													<String>Observer/eta_bar_ut/psi_bar</String>
 												</Property>
 												<Property Name="Index">
-													<I32>33</I32>
+													<I32>40</I32>
 												</Property>
 											</Properties>
 											<Errors />
@@ -6150,7 +6150,7 @@
 													<String>Observer/eta_hat_ut/psi_hat</String>
 												</Property>
 												<Property Name="Index">
-													<I32>34</I32>
+													<I32>41</I32>
 												</Property>
 											</Properties>
 											<Errors />
@@ -6165,7 +6165,7 @@
 													<String>Observer/eta_hat_ut/x_hat</String>
 												</Property>
 												<Property Name="Index">
-													<I32>35</I32>
+													<I32>42</I32>
 												</Property>
 											</Properties>
 											<Errors />
@@ -6180,7 +6180,7 @@
 													<String>Observer/eta_hat_ut/y_hat</String>
 												</Property>
 												<Property Name="Index">
-													<I32>36</I32>
+													<I32>43</I32>
 												</Property>
 											</Properties>
 											<Errors />
