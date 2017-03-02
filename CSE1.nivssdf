@@ -10,7 +10,7 @@
 				<String>CSE1</String>
 			</Property>
 			<Property Name="Version">
-				<String>1.0.0.134</String>
+				<String>1.0.0.152</String>
 			</Property>
 			<Property Name="Creator">
 				<String />
@@ -31,7 +31,7 @@
 						<String>VxWorks</String>
 					</Property>
 					<Property Name="IP Address">
-						<String>192.168.0.73</String>
+						<String>192.168.0.71</String>
 					</Property>
 					<Property Name="Control Loop Processor">
 						<I32>-2</I32>
@@ -5200,7 +5200,7 @@
 									<I32>222287</I32>
 								</Property>
 								<Property Name="DLL Timestamp">
-									<Double>3571142178.3296866</Double>
+									<Double>3571305564.2827888</Double>
 								</Property>
 								<Property Name="Decimation">
 									<I32>1</I32>
@@ -5244,7 +5244,7 @@
 										<ForceDownload>false</ForceDownload>
 										<RTDestination>c:\ni-rt\system\ctrl_student_HIL.out</RTDestination>
 										<SupportedTarget>VxWorks</SupportedTarget>
-										<MD5>b32503c4baa08ffc8b912c503532fd26</MD5>
+										<MD5>28356f59bcfd85e922e0200e7e8d0ffb</MD5>
 									</DependentFile>
 								</Property>
 								<Property Name="GlobalParameterScopes">
