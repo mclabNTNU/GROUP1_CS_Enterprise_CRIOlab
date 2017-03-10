@@ -10,7 +10,7 @@
 				<String>CSE1</String>
 			</Property>
 			<Property Name="Version">
-				<String>1.0.0.202</String>
+				<String>1.0.0.204</String>
 			</Property>
 			<Property Name="Creator">
 				<String />
@@ -5197,10 +5197,10 @@
 									<Double>10000</Double>
 								</Property>
 								<Property Name="DLL Size">
-									<I32>248765</I32>
+									<I32>249197</I32>
 								</Property>
 								<Property Name="DLL Timestamp">
-									<Double>3571992660.7493591</Double>
+									<Double>3571994500.1163654</Double>
 								</Property>
 								<Property Name="Decimation">
 									<I32>1</I32>
@@ -5244,7 +5244,7 @@
 										<ForceDownload>false</ForceDownload>
 										<RTDestination>c:\ni-rt\system\ctrl_student_HIL.out</RTDestination>
 										<SupportedTarget>VxWorks</SupportedTarget>
-										<MD5>d8f877e18ee88e2d6fbe1973b4014763</MD5>
+										<MD5>97508cba4c13393414028cfe15b462d5</MD5>
 									</DependentFile>
 								</Property>
 								<Property Name="GlobalParameterScopes">
@@ -5703,7 +5703,7 @@
 												<String>dead rec switch/dead</String>
 											</Property>
 											<Property Name="Index">
-												<I32>21</I32>
+												<I32>14</I32>
 											</Property>
 										</Properties>
 										<Errors />
@@ -5737,7 +5737,7 @@
 											<String>psi_in</String>
 										</Property>
 										<Property Name="Index">
-											<I32>14</I32>
+											<I32>15</I32>
 										</Property>
 										<Property Name="DataSource">
 											<DataSourceNode Channel="Targets/Controller/Simulation Models/Models/CSE1_HIL_tau/Outports/eta/psi" />
@@ -5773,7 +5773,7 @@
 											<String>r_in</String>
 										</Property>
 										<Property Name="Index">
-											<I32>15</I32>
+											<I32>16</I32>
 										</Property>
 										<Property Name="DataSource">
 											<DataSourceNode Channel="Targets/Controller/Simulation Models/Models/CSE1_HIL_tau/Outports/nu/r" />
@@ -5791,7 +5791,7 @@
 											<String>u_in</String>
 										</Property>
 										<Property Name="Index">
-											<I32>16</I32>
+											<I32>17</I32>
 										</Property>
 										<Property Name="DataSource">
 											<DataSourceNode Channel="Targets/Controller/Simulation Models/Models/CSE1_HIL_tau/Outports/nu/u" />
@@ -5809,7 +5809,7 @@
 											<String>v_in</String>
 										</Property>
 										<Property Name="Index">
-											<I32>17</I32>
+											<I32>18</I32>
 										</Property>
 										<Property Name="DataSource">
 											<DataSourceNode Channel="Targets/Controller/Simulation Models/Models/CSE1_HIL_tau/Outports/nu/v" />
@@ -5827,7 +5827,7 @@
 											<String>N_power</String>
 										</Property>
 										<Property Name="Index">
-											<I32>18</I32>
+											<I32>19</I32>
 										</Property>
 									</Properties>
 									<Errors />
@@ -5842,7 +5842,7 @@
 											<String>N_power_H</String>
 										</Property>
 										<Property Name="Index">
-											<I32>19</I32>
+											<I32>20</I32>
 										</Property>
 									</Properties>
 									<Errors />
@@ -5857,7 +5857,7 @@
 											<String>Samp_freq</String>
 										</Property>
 										<Property Name="Index">
-											<I32>20</I32>
+											<I32>21</I32>
 										</Property>
 									</Properties>
 									<Errors />

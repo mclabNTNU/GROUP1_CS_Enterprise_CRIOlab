@@ -13,6 +13,7 @@
 <inport> id="-1"  name = "joystick/ArrowUp" width = "1" datatype = "0"</inport>
 <inport> id="-1"  name = "joystick/ArrowLeft" width = "1" datatype = "0"</inport>
 <inport> id="-1"  name = "joystick/ArrowRight" width = "1" datatype = "0"</inport>
+<inport> id="-1"  name = "dead rec switch/dead" width = "1" datatype = "0"</inport>
 <inport> id="-1"  name = "psi_in" width = "1" datatype = "0"</inport>
 <inport> id="-1"  name = "r_in" width = "1" datatype = "0"</inport>
 <inport> id="-1"  name = "u_in" width = "1" datatype = "0"</inport>
@@ -20,7 +21,6 @@
 <inport> id="-1"  name = "N_power" width = "1" datatype = "0"</inport>
 <inport> id="-1"  name = "N_power_H" width = "1" datatype = "0"</inport>
 <inport> id="-1"  name = "Samp_freq" width = "1" datatype = "0"</inport>
-<inport> id="-1"  name = "dead rec switch/dead" width = "1" datatype = "0"</inport>
 <inport> id="-1"  name = "Enable_noise" width = "1" datatype = "0"</inport>
 <inport> id="-1"  name = "Observer/L1/L12" width = "1" datatype = "36"</inport>
 <inport> id="-1"  name = "Observer/L1/L11" width = "1" datatype = "36"</inport>

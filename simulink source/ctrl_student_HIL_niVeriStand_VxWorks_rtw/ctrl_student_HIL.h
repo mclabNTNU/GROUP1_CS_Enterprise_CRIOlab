@@ -7,9 +7,9 @@
  *
  * Code generation for model "ctrl_student_HIL".
  *
- * Model version              : 1.208
+ * Model version              : 1.209
  * Simulink Coder version : 8.8 (R2015a) 09-Feb-2015
- * C source code generated on : Fri Mar 10 13:10:43 2017
+ * C source code generated on : Fri Mar 10 13:37:41 2017
  *
  * Target selection: NIVeriStand_VxWorks.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -139,11 +139,11 @@
 #endif
 
 #ifndef rtmGetFirstInitCondFlag
-# define rtmGetFirstInitCondFlag(rtm)  ()
+# define rtmGetFirstInitCondFlag(rtm)  ((rtm)->Timing.firstInitCondFlag)
 #endif
 
 #ifndef rtmSetFirstInitCondFlag
-# define rtmSetFirstInitCondFlag(rtm, val) ()
+# define rtmSetFirstInitCondFlag(rtm, val) ((rtm)->Timing.firstInitCondFlag = (val))
 #endif
 
 #ifndef rtmGetIntgData
@@ -734,6 +734,14 @@
 # define rtmSetErrorStatus(rtm, val)   ((rtm)->errorStatus = (val))
 #endif
 
+#ifndef rtmSetFirstInitCond
+# define rtmSetFirstInitCond(rtm, val) ((rtm)->Timing.firstInitCondFlag = (val))
+#endif
+
+#ifndef rtmIsFirstInitCond
+# define rtmIsFirstInitCond(rtm)       ((rtm)->Timing.firstInitCondFlag)
+#endif
+
 #ifndef rtmIsMajorTimeStep
 # define rtmIsMajorTimeStep(rtm)       (((rtm)->Timing.simTimeStep) == MAJOR_TIME_STEP)
 #endif
@@ -834,8 +842,10 @@ typedef struct {
   real_T ArrowUp;                      /* '<S5>/ArrowUp' */
   real_T ArrowLeft;                    /* '<S5>/ArrowLeft' */
   real_T ArrowRight;                   /* '<S5>/ArrowRight' */
-  real_T Integrator[3];                /* '<Root>/Integrator' */
+  real_T dead;                         /* '<S3>/dead' */
+  real_T Sum;                          /* '<Root>/Sum' */
   real_T psi_in;                       /* '<Root>/psi_in' */
+  real_T Integrator[3];                /* '<Root>/Integrator' */
   real_T r_in;                         /* '<Root>/r_in' */
   real_T u_in;                         /* '<Root>/u_in' */
   real_T v_in;                         /* '<Root>/v_in' */
@@ -843,7 +853,6 @@ typedef struct {
   real_T N_power_H;                    /* '<Root>/N_power_H' */
   real_T Samp_freq;                    /* '<Root>/Samp_freq' */
   real_T Integrator_e[3];              /* '<S2>/Integrator' */
-  real_T dead;                         /* '<S3>/dead' */
   real_T counter;                      /* '<S9>/counter' */
   real_T WhiteNoise;                   /* '<S15>/White Noise' */
   real_T WhiteNoise_e;                 /* '<S16>/White Noise' */
@@ -865,7 +874,7 @@ typedef struct {
   real_T L32;                          /* '<S20>/L32' */
   real_T L33;                          /* '<S20>/L33' */
   real_T Product3[3];                  /* '<S2>/Product3' */
-  real_T Sum[3];                       /* '<S2>/Sum' */
+  real_T Sum_j[3];                     /* '<S2>/Sum' */
   real_T invM[3];                      /* '<S2>/inv(M)' */
   real_T vecx[10];                     /* '<S7>/MATLAB Function' */
   real_T vecy[10];                     /* '<S7>/MATLAB Function' */
@@ -904,15 +913,15 @@ typedef struct {
   real_T ArrowUp_DWORK1;               /* '<S5>/ArrowUp' */
   real_T ArrowLeft_DWORK1;             /* '<S5>/ArrowLeft' */
   real_T ArrowRight_DWORK1;            /* '<S5>/ArrowRight' */
-  real_T imu_DWORK1[3];                /* '<Root>/imu' */
+  real_T dead_DWORK1;                  /* '<S3>/dead' */
   real_T psi_in_DWORK1;                /* '<Root>/psi_in' */
+  real_T imu_DWORK1[3];                /* '<Root>/imu' */
   real_T r_in_DWORK1;                  /* '<Root>/r_in' */
   real_T u_in_DWORK1;                  /* '<Root>/u_in' */
   real_T v_in_DWORK1;                  /* '<Root>/v_in' */
   real_T N_power_DWORK1;               /* '<Root>/N_power' */
   real_T N_power_H_DWORK1;             /* '<Root>/N_power_H' */
   real_T Samp_freq_DWORK1;             /* '<Root>/Samp_freq' */
-  real_T dead_DWORK1;                  /* '<S3>/dead' */
   real_T counter_PreviousInput;        /* '<S9>/counter' */
   real_T NextOutput;                   /* '<S15>/White Noise' */
   real_T NextOutput_c;                 /* '<S16>/White Noise' */
@@ -954,6 +963,10 @@ typedef struct {
   uint32_T RandSeed;                   /* '<S15>/White Noise' */
   uint32_T RandSeed_j;                 /* '<S16>/White Noise' */
   uint32_T RandSeed_c;                 /* '<S14>/White Noise' */
+  struct {
+    int_T IcNeedsLoading;
+  } Integrator_IWORK;                  /* '<Root>/Integrator' */
+
   uint8_T L2_continuous_DWORK2[17];    /* '<S5>/L2_continuous' */
   uint8_T PosYRight_DWORK2[17];        /* '<S5>/PosYRight' */
   uint8_T PosXRight_DWORK2[17];        /* '<S5>/PosXRight' */
@@ -975,15 +988,15 @@ typedef struct {
   uint8_T ArrowUp_DWORK2[17];          /* '<S5>/ArrowUp' */
   uint8_T ArrowLeft_DWORK2[17];        /* '<S5>/ArrowLeft' */
   uint8_T ArrowRight_DWORK2[17];       /* '<S5>/ArrowRight' */
-  uint8_T imu_DWORK2[17];              /* '<Root>/imu' */
+  uint8_T dead_DWORK2[17];             /* '<S3>/dead' */
   uint8_T psi_in_DWORK2[17];           /* '<Root>/psi_in' */
+  uint8_T imu_DWORK2[17];              /* '<Root>/imu' */
   uint8_T r_in_DWORK2[17];             /* '<Root>/r_in' */
   uint8_T u_in_DWORK2[17];             /* '<Root>/u_in' */
   uint8_T v_in_DWORK2[17];             /* '<Root>/v_in' */
   uint8_T N_power_DWORK2[17];          /* '<Root>/N_power' */
   uint8_T N_power_H_DWORK2[17];        /* '<Root>/N_power_H' */
   uint8_T Samp_freq_DWORK2[17];        /* '<Root>/Samp_freq' */
-  uint8_T dead_DWORK2[17];             /* '<S3>/dead' */
   uint8_T Enable_noise_DWORK2[17];     /* '<Root>/Enable_noise' */
   uint8_T x_bar_DWORK2[17];            /* '<S22>/x_bar' */
   uint8_T y_bar_DWORK2[17];            /* '<S22>/y_bar' */
@@ -1466,26 +1479,29 @@ struct P_ctrl_student_HIL_T_ {
   real_T ArrowRight_P6;                /* Expression: btype
                                         * Referenced by: '<S5>/ArrowRight'
                                         */
-  real_T Integrator_IC;                /* Expression: 0
-                                        * Referenced by: '<Root>/Integrator'
+  real_T Constant_Value;               /* Expression: 0
+                                        * Referenced by: '<S3>/Constant'
                                         */
-  real_T imu_P1;                       /* Expression: width
-                                        * Referenced by: '<Root>/imu'
+  real_T dead_P1;                      /* Expression: width
+                                        * Referenced by: '<S3>/dead'
                                         */
-  real_T imu_P2;                       /* Expression: dtype
-                                        * Referenced by: '<Root>/imu'
+  real_T dead_P2;                      /* Expression: dtype
+                                        * Referenced by: '<S3>/dead'
                                         */
-  real_T imu_P3;                       /* Expression: portnum
-                                        * Referenced by: '<Root>/imu'
+  real_T dead_P3;                      /* Expression: portnum
+                                        * Referenced by: '<S3>/dead'
                                         */
-  real_T imu_P4;                       /* Expression: stime
-                                        * Referenced by: '<Root>/imu'
+  real_T dead_P4;                      /* Expression: stime
+                                        * Referenced by: '<S3>/dead'
                                         */
-  real_T imu_P5;                       /* Expression: stype
-                                        * Referenced by: '<Root>/imu'
+  real_T dead_P5;                      /* Expression: stype
+                                        * Referenced by: '<S3>/dead'
                                         */
-  real_T imu_P6;                       /* Expression: btype
-                                        * Referenced by: '<Root>/imu'
+  real_T dead_P6;                      /* Expression: btype
+                                        * Referenced by: '<S3>/dead'
+                                        */
+  real_T Constant1_Value;              /* Expression: 1
+                                        * Referenced by: '<S3>/Constant1'
                                         */
   real_T psi_in_P1;                    /* Expression: width
                                         * Referenced by: '<Root>/psi_in'
@@ -1504,6 +1520,24 @@ struct P_ctrl_student_HIL_T_ {
                                         */
   real_T psi_in_P6;                    /* Expression: btype
                                         * Referenced by: '<Root>/psi_in'
+                                        */
+  real_T imu_P1;                       /* Expression: width
+                                        * Referenced by: '<Root>/imu'
+                                        */
+  real_T imu_P2;                       /* Expression: dtype
+                                        * Referenced by: '<Root>/imu'
+                                        */
+  real_T imu_P3;                       /* Expression: portnum
+                                        * Referenced by: '<Root>/imu'
+                                        */
+  real_T imu_P4;                       /* Expression: stime
+                                        * Referenced by: '<Root>/imu'
+                                        */
+  real_T imu_P5;                       /* Expression: stype
+                                        * Referenced by: '<Root>/imu'
+                                        */
+  real_T imu_P6;                       /* Expression: btype
+                                        * Referenced by: '<Root>/imu'
                                         */
   real_T r_in_P1;                      /* Expression: width
                                         * Referenced by: '<Root>/r_in'
@@ -1613,32 +1647,8 @@ struct P_ctrl_student_HIL_T_ {
   real_T Samp_freq_P6;                 /* Expression: btype
                                         * Referenced by: '<Root>/Samp_freq'
                                         */
-  real_T Integrator_IC_d;              /* Expression: 0
+  real_T Integrator_IC;                /* Expression: 0
                                         * Referenced by: '<S2>/Integrator'
-                                        */
-  real_T Constant_Value;               /* Expression: 0
-                                        * Referenced by: '<S3>/Constant'
-                                        */
-  real_T dead_P1;                      /* Expression: width
-                                        * Referenced by: '<S3>/dead'
-                                        */
-  real_T dead_P2;                      /* Expression: dtype
-                                        * Referenced by: '<S3>/dead'
-                                        */
-  real_T dead_P3;                      /* Expression: portnum
-                                        * Referenced by: '<S3>/dead'
-                                        */
-  real_T dead_P4;                      /* Expression: stime
-                                        * Referenced by: '<S3>/dead'
-                                        */
-  real_T dead_P5;                      /* Expression: stype
-                                        * Referenced by: '<S3>/dead'
-                                        */
-  real_T dead_P6;                      /* Expression: btype
-                                        * Referenced by: '<S3>/dead'
-                                        */
-  real_T Constant1_Value;              /* Expression: 1
-                                        * Referenced by: '<S3>/Constant1'
                                         */
   real_T Stepsize_Value;               /* Expression: 0.01
                                         * Referenced by: '<S1>/Step size'
@@ -2337,6 +2347,7 @@ struct tag_RTM_ctrl_student_HIL_T {
     uint32_T clockTick1;
     uint32_T clockTickH1;
     time_T stepSize1;
+    boolean_T firstInitCondFlag;
     time_T tStart;
     time_T tFinal;
     time_T timeOfLastOutput;
