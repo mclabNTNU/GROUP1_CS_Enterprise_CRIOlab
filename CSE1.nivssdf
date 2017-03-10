@@ -10,7 +10,7 @@
 				<String>CSE1</String>
 			</Property>
 			<Property Name="Version">
-				<String>1.0.0.166</String>
+				<String>1.0.0.202</String>
 			</Property>
 			<Property Name="Creator">
 				<String />
@@ -5197,10 +5197,10 @@
 									<Double>10000</Double>
 								</Property>
 								<Property Name="DLL Size">
-									<I32>234363</I32>
+									<I32>248765</I32>
 								</Property>
 								<Property Name="DLL Timestamp">
-									<Double>3571912487.1559367</Double>
+									<Double>3571992660.7493591</Double>
 								</Property>
 								<Property Name="Decimation">
 									<I32>1</I32>
@@ -5244,7 +5244,7 @@
 										<ForceDownload>false</ForceDownload>
 										<RTDestination>c:\ni-rt\system\ctrl_student_HIL.out</RTDestination>
 										<SupportedTarget>VxWorks</SupportedTarget>
-										<MD5>2d84f9cfe5448de88dc00db6f3b64eb1</MD5>
+										<MD5>d8f877e18ee88e2d6fbe1973b4014763</MD5>
 									</DependentFile>
 								</Property>
 								<Property Name="GlobalParameterScopes">
@@ -6362,6 +6362,26 @@
 											</Property>
 											<Property Name="Index">
 												<I32>39</I32>
+											</Property>
+										</Properties>
+										<Errors />
+										<DefaultValue>
+											<Elem>0</Elem>
+										</DefaultValue>
+									</Channel>
+								</Section>
+								<Section Name="signal dropout check " TypeGUID="cbfdde93-6581-4b7c-83b8-e88484f25b2e">
+									<Description />
+									<Properties />
+									<Errors />
+									<Channel Name="lost" TypeGUID="03D3B995-1485-13A6-56ABA0860ADF91DF" RowDim="1" ColDim="1" Units="" BitFields="5">
+										<Description />
+										<Properties>
+											<Property Name="Model Path">
+												<String>signal dropout check /lost</String>
+											</Property>
+											<Property Name="Index">
+												<I32>59</I32>
 											</Property>
 										</Properties>
 										<Errors />

@@ -22,15 +22,15 @@
 <inport> id="-1"  name = "Samp_freq" width = "1" datatype = "0"</inport>
 <inport> id="-1"  name = "dead rec switch/dead" width = "1" datatype = "0"</inport>
 <inport> id="-1"  name = "Enable_noise" width = "1" datatype = "0"</inport>
-<inport> id="-1"  name = "Observer/L1/L12" width = "1" datatype = "34"</inport>
-<inport> id="-1"  name = "Observer/L1/L11" width = "1" datatype = "34"</inport>
-<inport> id="-1"  name = "Observer/L1/L13" width = "1" datatype = "34"</inport>
-<inport> id="-1"  name = "Observer/L2/L21" width = "1" datatype = "34"</inport>
-<inport> id="-1"  name = "Observer/L2/L22" width = "1" datatype = "34"</inport>
-<inport> id="-1"  name = "Observer/L2/L23" width = "1" datatype = "34"</inport>
-<inport> id="-1"  name = "Observer/L3/L31" width = "1" datatype = "34"</inport>
-<inport> id="-1"  name = "Observer/L3/L32" width = "1" datatype = "34"</inport>
-<inport> id="-1"  name = "Observer/L3/L33" width = "1" datatype = "34"</inport>
+<inport> id="-1"  name = "Observer/L1/L12" width = "1" datatype = "36"</inport>
+<inport> id="-1"  name = "Observer/L1/L11" width = "1" datatype = "36"</inport>
+<inport> id="-1"  name = "Observer/L1/L13" width = "1" datatype = "36"</inport>
+<inport> id="-1"  name = "Observer/L2/L21" width = "1" datatype = "36"</inport>
+<inport> id="-1"  name = "Observer/L2/L22" width = "1" datatype = "36"</inport>
+<inport> id="-1"  name = "Observer/L2/L23" width = "1" datatype = "36"</inport>
+<inport> id="-1"  name = "Observer/L3/L31" width = "1" datatype = "36"</inport>
+<inport> id="-1"  name = "Observer/L3/L32" width = "1" datatype = "36"</inport>
+<inport> id="-1"  name = "Observer/L3/L33" width = "1" datatype = "36"</inport>
 <outport> id = "-1" name = "joystick/u_BT" width = "1" datatype = "0"</outport>
 <outport> id = "-1" name = "joystick/u_VSP1" width = "1" datatype = "0"</outport>
 <outport> id = "-1" name = "joystick/u_VSP2" width = "1" datatype = "0"</outport>
@@ -58,4 +58,5 @@
 <outport> id = "-1" name = "tau to CSE mocell (only use for HIL testing)/x_0" width = "1" datatype = "0"</outport>
 <outport> id = "-1" name = "tau to CSE mocell (only use for HIL testing)/y_0" width = "1" datatype = "0"</outport>
 <outport> id = "-1" name = "tau to CSE mocell (only use for HIL testing)/integrator reset model" width = "1" datatype = "0"</outport>
+<outport> id = "-1" name = "signal dropout check /lost" width = "1" datatype = "0"</outport>
 </portlist>
