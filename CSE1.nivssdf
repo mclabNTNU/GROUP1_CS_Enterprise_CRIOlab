@@ -10,7 +10,7 @@
 				<String>CSE1</String>
 			</Property>
 			<Property Name="Version">
-				<String>1.0.0.205</String>
+				<String>1.0.0.206</String>
 			</Property>
 			<Property Name="Creator">
 				<String />
@@ -4950,9 +4950,6 @@
 											<Property Name="Index">
 												<I32>1</I32>
 											</Property>
-											<Property Name="DataSource">
-												<DataSourceNode Channel="Targets/Controller/Simulation Models/Models/ctrl_student_HIL/Outports/tau to CSE mocell (only use for HIL testing)/psi_0 " />
-											</Property>
 										</Properties>
 										<Errors />
 										<DefaultValue>
@@ -4968,9 +4965,6 @@
 											<Property Name="Index">
 												<I32>2</I32>
 											</Property>
-											<Property Name="DataSource">
-												<DataSourceNode Channel="Targets/Controller/Simulation Models/Models/ctrl_student_HIL/Outports/tau to CSE mocell (only use for HIL testing)/x_0" />
-											</Property>
 										</Properties>
 										<Errors />
 										<DefaultValue>
@@ -4985,9 +4979,6 @@
 											</Property>
 											<Property Name="Index">
 												<I32>3</I32>
-											</Property>
-											<Property Name="DataSource">
-												<DataSourceNode Channel="Targets/Controller/Simulation Models/Models/ctrl_student_HIL/Outports/tau to CSE mocell (only use for HIL testing)/y_0" />
 											</Property>
 										</Properties>
 										<Errors />
@@ -5009,9 +5000,6 @@
 											<Property Name="Index">
 												<I32>4</I32>
 											</Property>
-											<Property Name="DataSource">
-												<DataSourceNode Channel="Targets/Controller/Simulation Models/Models/ctrl_student_HIL/Outports/tau to CSE mocell (only use for HIL testing)/X_d" />
-											</Property>
 										</Properties>
 										<Errors />
 										<DefaultValue>
@@ -5026,9 +5014,6 @@
 											</Property>
 											<Property Name="Index">
 												<I32>5</I32>
-											</Property>
-											<Property Name="DataSource">
-												<DataSourceNode Channel="Targets/Controller/Simulation Models/Models/ctrl_student_HIL/Outports/tau to CSE mocell (only use for HIL testing)/Y_d" />
 											</Property>
 										</Properties>
 										<Errors />
@@ -5045,9 +5030,6 @@
 											<Property Name="Index">
 												<I32>6</I32>
 											</Property>
-											<Property Name="DataSource">
-												<DataSourceNode Channel="Targets/Controller/Simulation Models/Models/ctrl_student_HIL/Outports/tau to CSE mocell (only use for HIL testing)/N_d" />
-											</Property>
 										</Properties>
 										<Errors />
 										<DefaultValue>
@@ -5063,9 +5045,6 @@
 										</Property>
 										<Property Name="Index">
 											<I32>0</I32>
-										</Property>
-										<Property Name="DataSource">
-											<DataSourceNode Channel="Targets/Controller/Simulation Models/Models/ctrl_student_HIL/Outports/tau to CSE mocell (only use for HIL testing)/integrator reset model" />
 										</Property>
 									</Properties>
 									<Errors />
@@ -5722,7 +5701,7 @@
 											<I32>5</I32>
 										</Property>
 										<Property Name="DataSource">
-											<DataSourceNode Channel="Targets/Controller/Simulation Models/Models/CSE1_HIL_tau/Outports/eta/y" />
+											<DataSourceNode Channel="Targets/Controller/Simulation Models/Models/CSEI_tau/Outports/eta/y" />
 										</Property>
 									</Properties>
 									<Errors />
@@ -5740,7 +5719,7 @@
 											<I32>15</I32>
 										</Property>
 										<Property Name="DataSource">
-											<DataSourceNode Channel="Targets/Controller/Simulation Models/Models/CSE1_HIL_tau/Outports/eta/psi" />
+											<DataSourceNode Channel="Targets/Controller/Simulation Models/Models/CSEI_tau/Outports/eta/psi" />
 										</Property>
 									</Properties>
 									<Errors />
@@ -5758,7 +5737,7 @@
 											<I32>4</I32>
 										</Property>
 										<Property Name="DataSource">
-											<DataSourceNode Channel="Targets/Controller/Simulation Models/Models/CSE1_HIL_tau/Outports/eta/x" />
+											<DataSourceNode Channel="Targets/Controller/Simulation Models/Models/CSEI_tau/Outports/eta/x" />
 										</Property>
 									</Properties>
 									<Errors />
@@ -5776,7 +5755,7 @@
 											<I32>16</I32>
 										</Property>
 										<Property Name="DataSource">
-											<DataSourceNode Channel="Targets/Controller/Simulation Models/Models/CSE1_HIL_tau/Outports/nu/r" />
+											<DataSourceNode Channel="Targets/Controller/Simulation Models/Models/CSEI_tau/Outports/nu/r" />
 										</Property>
 									</Properties>
 									<Errors />
@@ -5794,7 +5773,7 @@
 											<I32>17</I32>
 										</Property>
 										<Property Name="DataSource">
-											<DataSourceNode Channel="Targets/Controller/Simulation Models/Models/CSE1_HIL_tau/Outports/nu/u" />
+											<DataSourceNode Channel="Targets/Controller/Simulation Models/Models/CSEI_tau/Outports/nu/u" />
 										</Property>
 									</Properties>
 									<Errors />
@@ -5812,7 +5791,7 @@
 											<I32>18</I32>
 										</Property>
 										<Property Name="DataSource">
-											<DataSourceNode Channel="Targets/Controller/Simulation Models/Models/CSE1_HIL_tau/Outports/nu/v" />
+											<DataSourceNode Channel="Targets/Controller/Simulation Models/Models/CSEI_tau/Outports/nu/v" />
 										</Property>
 									</Properties>
 									<Errors />
@@ -6528,6 +6507,9 @@
 											<Property Name="Index">
 												<I32>1</I32>
 											</Property>
+											<Property Name="DataSource">
+												<DataSourceNode Channel="Targets/Controller/Simulation Models/Models/ctrl_student_HIL/Outports/tau to CSE mocell (only use for HIL testing)/psi_0 " />
+											</Property>
 										</Properties>
 										<Errors />
 										<DefaultValue>
@@ -6543,6 +6525,9 @@
 											<Property Name="Index">
 												<I32>2</I32>
 											</Property>
+											<Property Name="DataSource">
+												<DataSourceNode Channel="Targets/Controller/Simulation Models/Models/ctrl_student_HIL/Outports/tau to CSE mocell (only use for HIL testing)/x_0" />
+											</Property>
 										</Properties>
 										<Errors />
 										<DefaultValue>
@@ -6557,6 +6542,9 @@
 											</Property>
 											<Property Name="Index">
 												<I32>3</I32>
+											</Property>
+											<Property Name="DataSource">
+												<DataSourceNode Channel="Targets/Controller/Simulation Models/Models/ctrl_student_HIL/Outports/tau to CSE mocell (only use for HIL testing)/y_0" />
 											</Property>
 										</Properties>
 										<Errors />
@@ -6578,6 +6566,9 @@
 											<Property Name="Index">
 												<I32>4</I32>
 											</Property>
+											<Property Name="DataSource">
+												<DataSourceNode Channel="Targets/Controller/Simulation Models/Models/ctrl_student_HIL/Outports/tau to CSE mocell (only use for HIL testing)/X_d" />
+											</Property>
 										</Properties>
 										<Errors />
 										<DefaultValue>
@@ -6592,6 +6583,9 @@
 											</Property>
 											<Property Name="Index">
 												<I32>5</I32>
+											</Property>
+											<Property Name="DataSource">
+												<DataSourceNode Channel="Targets/Controller/Simulation Models/Models/ctrl_student_HIL/Outports/tau to CSE mocell (only use for HIL testing)/Y_d" />
 											</Property>
 										</Properties>
 										<Errors />
@@ -6608,6 +6602,9 @@
 											<Property Name="Index">
 												<I32>6</I32>
 											</Property>
+											<Property Name="DataSource">
+												<DataSourceNode Channel="Targets/Controller/Simulation Models/Models/ctrl_student_HIL/Outports/tau to CSE mocell (only use for HIL testing)/N_d" />
+											</Property>
 										</Properties>
 										<Errors />
 										<DefaultValue>
@@ -6623,6 +6620,9 @@
 										</Property>
 										<Property Name="Index">
 											<I32>0</I32>
+										</Property>
+										<Property Name="DataSource">
+											<DataSourceNode Channel="Targets/Controller/Simulation Models/Models/ctrl_student_HIL/Outports/tau to CSE mocell (only use for HIL testing)/integrator reset model" />
 										</Property>
 									</Properties>
 									<Errors />
