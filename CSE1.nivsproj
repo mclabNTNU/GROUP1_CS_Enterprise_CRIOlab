@@ -304,6 +304,15 @@
 				</Properties>
 				<Errors />
 			</Section>
+			<Section Name="CSEI_tau.out" TypeGUID="369b9797-43bd-4cdf-8352-81032feed666">
+				<Description />
+				<Properties>
+					<Property Name="Path">
+						<String>C:\Users\MCLab\Documents\GitHub\GROUP6_CS_Enterprise_CRIOlab\simulink source\CSEI_tau_niVeriStand_VxWorks_rtw\CSEI_tau.out</String>
+					</Property>
+				</Properties>
+				<Errors />
+			</Section>
 		</Section>
 	</Root>
 </Document>
