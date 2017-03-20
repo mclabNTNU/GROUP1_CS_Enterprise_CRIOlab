@@ -15,9 +15,9 @@
  *
  * Code generation for model "ctrl_student_HIL".
  *
- * Model version              : 1.321
+ * Model version              : 1.353
  * Simulink Coder version : 8.8 (R2015a) 09-Feb-2015
- * C source code generated on : Thu Mar 16 14:56:45 2017
+ * C source code generated on : Mon Mar 20 14:46:31 2017
  *
  * Target selection: NIVeriStand_VxWorks.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -1007,6 +1007,19 @@ P_ctrl_student_HIL_T ctrl_student_HIL_P = {
                                         * Referenced by: '<S23>/L33'
                                         */
 
+  /*  Expression: [0;0;0]
+   * Referenced by: '<S4>/Memory4'
+   */
+  { 0.0, 0.0, 0.0 },
+
+  /*  Expression: [0;0;0]
+   * Referenced by: '<S4>/Memory5'
+   */
+  { 0.0, 0.0, 0.0 },
+  0.0,                                 /* Expression: 0
+                                        * Referenced by: '<S4>/Memory2'
+                                        */
+
   /*  Expression: [0;0]
    * Referenced by: '<S4>/Constant6'
    */
@@ -1020,7 +1033,10 @@ P_ctrl_student_HIL_T ctrl_student_HIL_P = {
                                         * Referenced by: '<S4>/Constant2'
                                         */
   0.0,                                 /* Expression: 0
-                                        * Referenced by: '<S4>/Integrator1'
+                                        * Referenced by: '<S4>/Memory'
+                                        */
+  0.0,                                 /* Expression: 0
+                                        * Referenced by: '<S4>/Memory1'
                                         */
 
   /*  Expression: [0;0]
@@ -1231,6 +1247,30 @@ P_ctrl_student_HIL_T ctrl_student_HIL_P = {
                                         */
   0.0,                                 /* Expression: btype
                                         * Referenced by: '<S11>/integrator reset model'
+                                        */
+  0.0,                                 /* Expression: 0
+                                        * Referenced by: '<S4>/Integrator1'
+                                        */
+  -1.0,                                /* Expression: width
+                                        * Referenced by: '<S4>/s'
+                                        */
+  1.0,                                 /* Expression: dtype
+                                        * Referenced by: '<S4>/s'
+                                        */
+  1.0,                                 /* Expression: portnum
+                                        * Referenced by: '<S4>/s'
+                                        */
+  -1.0,                                /* Expression: stime
+                                        * Referenced by: '<S4>/s'
+                                        */
+  1.0,                                 /* Expression: stype
+                                        * Referenced by: '<S4>/s'
+                                        */
+  0.0,                                 /* Expression: btype
+                                        * Referenced by: '<S4>/s'
+                                        */
+  0.0,                                 /* Expression: 0
+                                        * Referenced by: '<S4>/Memory3'
                                         */
   0.0,                                 /* Expression: 0
                                         * Referenced by: '<S4>/my'
@@ -1918,9 +1958,17 @@ NI_ParamSizeWidth P_ctrl_student_HIL_T_sizes[] DataSection(
 
   { sizeof(real_T), 1, 0 },
 
+  { sizeof(real_T), 3, 0 },
+
+  { sizeof(real_T), 3, 0 },
+
+  { sizeof(real_T), 1, 0 },
+
   { sizeof(real_T), 2, 0 },
 
   { sizeof(real_T), 2, 0 },
+
+  { sizeof(real_T), 1, 0 },
 
   { sizeof(real_T), 1, 0 },
 
@@ -1933,6 +1981,22 @@ NI_ParamSizeWidth P_ctrl_student_HIL_T_sizes[] DataSection(
   { sizeof(real_T), 1, 0 },
 
   { sizeof(real_T), 9, 0 },
+
+  { sizeof(real_T), 1, 0 },
+
+  { sizeof(real_T), 1, 0 },
+
+  { sizeof(real_T), 1, 0 },
+
+  { sizeof(real_T), 1, 0 },
+
+  { sizeof(real_T), 1, 0 },
+
+  { sizeof(real_T), 1, 0 },
+
+  { sizeof(real_T), 1, 0 },
+
+  { sizeof(real_T), 1, 0 },
 
   { sizeof(real_T), 1, 0 },
 

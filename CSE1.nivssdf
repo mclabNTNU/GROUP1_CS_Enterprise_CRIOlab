@@ -10,7 +10,7 @@
 				<String>CSE1</String>
 			</Property>
 			<Property Name="Version">
-				<String>1.0.0.230</String>
+				<String>1.0.0.238</String>
 			</Property>
 			<Property Name="Creator">
 				<String />
@@ -5197,10 +5197,10 @@
 									<Double>10000</Double>
 								</Property>
 								<Property Name="DLL Size">
-									<I32>261058</I32>
+									<I32>287770</I32>
 								</Property>
 								<Property Name="DLL Timestamp">
-									<Double>3572517420.5509567</Double>
+									<Double>3572862410.1889687</Double>
 								</Property>
 								<Property Name="Decimation">
 									<I32>1</I32>
@@ -5244,7 +5244,7 @@
 										<ForceDownload>false</ForceDownload>
 										<RTDestination>c:\ni-rt\system\ctrl_student_HIL.out</RTDestination>
 										<SupportedTarget>VxWorks</SupportedTarget>
-										<MD5>d4603744d6286bdc180ee229ec68a98b</MD5>
+										<MD5>a7b3164aa1353a62b08390c83e71c5e3</MD5>
 									</DependentFile>
 								</Property>
 								<Property Name="GlobalParameterScopes">
@@ -6384,6 +6384,26 @@
 										<Properties>
 											<Property Name="Model Path">
 												<String>signal dropout check /lost</String>
+											</Property>
+											<Property Name="Index">
+												<I32>61</I32>
+											</Property>
+										</Properties>
+										<Errors />
+										<DefaultValue>
+											<Elem>0</Elem>
+										</DefaultValue>
+									</Channel>
+								</Section>
+								<Section Name="case D" TypeGUID="cbfdde93-6581-4b7c-83b8-e88484f25b2e">
+									<Description />
+									<Properties />
+									<Errors />
+									<Channel Name="s" TypeGUID="03D3B995-1485-13A6-56ABA0860ADF91DF" RowDim="1" ColDim="1" Units="" BitFields="5">
+										<Description />
+										<Properties>
+											<Property Name="Model Path">
+												<String>case D/s</String>
 											</Property>
 											<Property Name="Index">
 												<I32>60</I32>

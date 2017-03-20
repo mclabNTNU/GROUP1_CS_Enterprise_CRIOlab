@@ -7,9 +7,9 @@
  *
  * Code generation for model "ctrl_student_HIL".
  *
- * Model version              : 1.321
+ * Model version              : 1.353
  * Simulink Coder version : 8.8 (R2015a) 09-Feb-2015
- * C source code generated on : Thu Mar 16 14:56:45 2017
+ * C source code generated on : Mon Mar 20 14:46:31 2017
  *
  * Target selection: NIVeriStand_VxWorks.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -865,7 +865,12 @@ typedef struct {
   real_T L33;                          /* '<S23>/L33' */
   real_T Product3[3];                  /* '<S2>/Product3' */
   real_T Sum[3];                       /* '<S2>/Sum' */
+  real_T Memory4[3];                   /* '<S4>/Memory4' */
+  real_T Memory5[3];                   /* '<S4>/Memory5' */
+  real_T Memory2;                      /* '<S4>/Memory2' */
   real_T invM[3];                      /* '<S2>/inv(M)' */
+  real_T Integrator1_e;                /* '<S4>/Integrator1' */
+  real_T Memory3[3];                   /* '<S4>/Memory3' */
   real_T switch_signal;                /* '<S10>/Switch_function' */
   real_T signal[3];                    /* '<Root>/signal switch ' */
   real_T vecx[10];                     /* '<S8>/MATLAB Function' */
@@ -875,7 +880,11 @@ typedef struct {
   real_T u_VSP;                        /* '<S7>/Thrust allocation' */
   real_T alpha_VSP;                    /* '<S7>/Thrust allocation' */
   real_T omega_VSP;                    /* '<S7>/Thrust allocation' */
+  real_T z1[3];                        /* '<S4>/z1//z2' */
+  real_T z2[3];                        /* '<S4>/z1//z2' */
   real_T s_dot1;                       /* '<S4>/update law' */
+  real_T eta_v[11];                    /* '<S4>/Straight -line ' */
+  real_T eta_v_a[11];                  /* '<S4>/Ellipsoidal path' */
   real_T output[3];                    /* '<S13>/MATLAB Function1' */
   real_T count;                        /* '<S12>/MATLAB Function' */
   B_MATLABFunction_ctrl_student_T sf_MATLABFunction_an;/* '<S23>/MATLAB Function' */
@@ -943,6 +952,11 @@ typedef struct {
   real_T L31_DWORK1;                   /* '<S23>/L31' */
   real_T L32_DWORK1;                   /* '<S23>/L32' */
   real_T L33_DWORK1;                   /* '<S23>/L33' */
+  real_T Memory4_PreviousInput[3];     /* '<S4>/Memory4' */
+  real_T Memory5_PreviousInput[3];     /* '<S4>/Memory5' */
+  real_T Memory2_PreviousInput;        /* '<S4>/Memory2' */
+  real_T Memory_PreviousInput_m;       /* '<S4>/Memory' */
+  real_T Memory1_PreviousInput_g;      /* '<S4>/Memory1' */
   real_T psi_noise_DWORK1;             /* '<S6>/psi_noise' */
   real_T x_noise_DWORK1;               /* '<S6>/x_noise' */
   real_T y_noise_DWORK1;               /* '<S6>/y_noise' */
@@ -953,6 +967,8 @@ typedef struct {
   real_T x_0_DWORK1;                   /* '<S11>/x_0' */
   real_T y_0_DWORK1;                   /* '<S11>/y_0' */
   real_T integratorresetmodel_DWORK1;  /* '<S11>/integrator reset model' */
+  real_T s_DWORK1;                     /* '<S4>/s' */
+  real_T Memory3_PreviousInput[3];     /* '<S4>/Memory3' */
   real_T lost_DWORK1;                  /* '<S8>/lost' */
   int32_T NIVeriStandSignalProbe_DWORK2;/* '<Root>/NIVeriStandSignalProbe' */
   uint32_T RandSeed;                   /* '<S18>/White Noise' */
@@ -1018,6 +1034,7 @@ typedef struct {
   uint8_T x_0_DWORK2[17];              /* '<S11>/x_0' */
   uint8_T y_0_DWORK2[17];              /* '<S11>/y_0' */
   uint8_T integratorresetmodel_DWORK2[17];/* '<S11>/integrator reset model' */
+  uint8_T s_DWORK2[17];                /* '<S4>/s' */
   uint8_T lost_DWORK2[17];             /* '<S8>/lost' */
   uint8_T NIVeriStandSignalProbe_DWORK1[17];/* '<Root>/NIVeriStandSignalProbe' */
   uint8_T NIVeriStandSignalProbe_DWORK3[60];/* '<Root>/NIVeriStandSignalProbe' */
@@ -2060,6 +2077,15 @@ struct P_ctrl_student_HIL_T_ {
   real_T L33_P6;                       /* Expression: btype
                                         * Referenced by: '<S23>/L33'
                                         */
+  real_T Memory4_X0[3];                /* Expression: [0;0;0]
+                                        * Referenced by: '<S4>/Memory4'
+                                        */
+  real_T Memory5_X0[3];                /* Expression: [0;0;0]
+                                        * Referenced by: '<S4>/Memory5'
+                                        */
+  real_T Memory2_X0;                   /* Expression: 0
+                                        * Referenced by: '<S4>/Memory2'
+                                        */
   real_T Constant6_Value[2];           /* Expression: [0;0]
                                         * Referenced by: '<S4>/Constant6'
                                         */
@@ -2069,8 +2095,11 @@ struct P_ctrl_student_HIL_T_ {
   real_T Constant2_Value;              /* Expression: 0.5
                                         * Referenced by: '<S4>/Constant2'
                                         */
-  real_T Integrator1_IC_g;             /* Expression: 0
-                                        * Referenced by: '<S4>/Integrator1'
+  real_T Memory_X0_a;                  /* Expression: 0
+                                        * Referenced by: '<S4>/Memory'
+                                        */
+  real_T Memory1_X0_m;                 /* Expression: 0
+                                        * Referenced by: '<S4>/Memory1'
                                         */
   real_T Constant3_Value[2];           /* Expression: [0;0]
                                         * Referenced by: '<S4>/Constant3'
@@ -2274,6 +2303,30 @@ struct P_ctrl_student_HIL_T_ {
                                         */
   real_T integratorresetmodel_P6;      /* Expression: btype
                                         * Referenced by: '<S11>/integrator reset model'
+                                        */
+  real_T Integrator1_IC_g;             /* Expression: 0
+                                        * Referenced by: '<S4>/Integrator1'
+                                        */
+  real_T s_P1;                         /* Expression: width
+                                        * Referenced by: '<S4>/s'
+                                        */
+  real_T s_P2;                         /* Expression: dtype
+                                        * Referenced by: '<S4>/s'
+                                        */
+  real_T s_P3;                         /* Expression: portnum
+                                        * Referenced by: '<S4>/s'
+                                        */
+  real_T s_P4;                         /* Expression: stime
+                                        * Referenced by: '<S4>/s'
+                                        */
+  real_T s_P5;                         /* Expression: stype
+                                        * Referenced by: '<S4>/s'
+                                        */
+  real_T s_P6;                         /* Expression: btype
+                                        * Referenced by: '<S4>/s'
+                                        */
+  real_T Memory3_X0;                   /* Expression: 0
+                                        * Referenced by: '<S4>/Memory3'
                                         */
   real_T my_Value;                     /* Expression: 0
                                         * Referenced by: '<S4>/my'
@@ -2497,7 +2550,7 @@ extern RT_MODEL_ctrl_student_HIL_T *const ctrl_student_HIL_M;
  * '<S34>'  : 'ctrl_student_HIL/case D/controller'
  * '<S35>'  : 'ctrl_student_HIL/case D/signal switch '
  * '<S36>'  : 'ctrl_student_HIL/case D/update law'
- * '<S37>'  : 'ctrl_student_HIL/case D/z1'
+ * '<S37>'  : 'ctrl_student_HIL/case D/z1//z2'
  * '<S38>'  : 'ctrl_student_HIL/joystick/MATLAB Function'
  * '<S39>'  : 'ctrl_student_HIL/joystick/Thrust allocation'
  * '<S40>'  : 'ctrl_student_HIL/signal dropout check /MATLAB Function'
