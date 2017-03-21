@@ -7,9 +7,9 @@
  *
  * Code generation for model "ctrl_student_HIL".
  *
- * Model version              : 1.376
+ * Model version              : 1.390
  * Simulink Coder version : 8.8 (R2015a) 09-Feb-2015
- * C source code generated on : Tue Mar 21 14:00:38 2017
+ * C source code generated on : Tue Mar 21 15:20:02 2017
  *
  * Target selection: NIVeriStand_VxWorks.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -884,6 +884,10 @@ typedef struct {
   real_T z1[3];                        /* '<S3>/z1//z2' */
   real_T z2[3];                        /* '<S3>/z1//z2' */
   real_T s_dot1;                       /* '<S3>/update law' */
+  real_T D1[3];                        /* '<S3>/controller' */
+  real_T z11[3];                       /* '<S3>/controller' */
+  real_T ma[3];                        /* '<S3>/controller' */
+  real_T Kdz[3];                       /* '<S3>/controller' */
   real_T output[3];                    /* '<S12>/MATLAB Function1' */
   real_T count;                        /* '<S11>/MATLAB Function' */
   B_MATLABFunction_ctrl_student_T sf_MATLABFunction_an;/* '<S22>/MATLAB Function' */
@@ -965,6 +969,10 @@ typedef struct {
   real_T y_0_DWORK1;                   /* '<S10>/y_0' */
   real_T integratorresetmodel_DWORK1;  /* '<S10>/integrator reset model' */
   real_T s_DWORK1;                     /* '<S3>/s' */
+  real_T D_DWORK1[3];                  /* '<S3>/D' */
+  real_T z1_DWORK1[3];                 /* '<S3>/z1' */
+  real_T ma_DWORK1[3];                 /* '<S3>/ma' */
+  real_T kdz_DWORK1[3];                /* '<S3>/kdz' */
   real_T Memory3_PreviousInput[3];     /* '<S3>/Memory3' */
   real_T lost_DWORK1;                  /* '<S7>/lost' */
   int32_T NIVeriStandSignalProbe_DWORK2;/* '<Root>/NIVeriStandSignalProbe' */
@@ -1032,6 +1040,10 @@ typedef struct {
   uint8_T y_0_DWORK2[17];              /* '<S10>/y_0' */
   uint8_T integratorresetmodel_DWORK2[17];/* '<S10>/integrator reset model' */
   uint8_T s_DWORK2[17];                /* '<S3>/s' */
+  uint8_T D_DWORK2[17];                /* '<S3>/D' */
+  uint8_T z1_DWORK2[17];               /* '<S3>/z1' */
+  uint8_T ma_DWORK2[17];               /* '<S3>/ma' */
+  uint8_T kdz_DWORK2[17];              /* '<S3>/kdz' */
   uint8_T lost_DWORK2[17];             /* '<S7>/lost' */
   uint8_T NIVeriStandSignalProbe_DWORK1[17];/* '<Root>/NIVeriStandSignalProbe' */
   uint8_T NIVeriStandSignalProbe_DWORK3[60];/* '<Root>/NIVeriStandSignalProbe' */
@@ -2089,6 +2101,12 @@ struct P_ctrl_student_HIL_T_ {
   real_T Integrator1_IC_g;             /* Expression: 0
                                         * Referenced by: '<S3>/Integrator1'
                                         */
+  real_T Saturation_UpperSat[3];       /* Expression: [1 1 1]
+                                        * Referenced by: '<S3>/Saturation'
+                                        */
+  real_T Saturation_LowerSat[3];       /* Expression: -[1 1 1]
+                                        * Referenced by: '<S3>/Saturation'
+                                        */
   real_T invM_Gain[9];                 /* Expression: inv([14.79 0 0;
                                           0 14.79 14.79*0.0375;
                                           0 14.79*0.0375 1.76])
@@ -2300,6 +2318,78 @@ struct P_ctrl_student_HIL_T_ {
                                         */
   real_T s_P6;                         /* Expression: btype
                                         * Referenced by: '<S3>/s'
+                                        */
+  real_T D_P1;                         /* Expression: width
+                                        * Referenced by: '<S3>/D'
+                                        */
+  real_T D_P2;                         /* Expression: dtype
+                                        * Referenced by: '<S3>/D'
+                                        */
+  real_T D_P3;                         /* Expression: portnum
+                                        * Referenced by: '<S3>/D'
+                                        */
+  real_T D_P4;                         /* Expression: stime
+                                        * Referenced by: '<S3>/D'
+                                        */
+  real_T D_P5;                         /* Expression: stype
+                                        * Referenced by: '<S3>/D'
+                                        */
+  real_T D_P6;                         /* Expression: btype
+                                        * Referenced by: '<S3>/D'
+                                        */
+  real_T z1_P1;                        /* Expression: width
+                                        * Referenced by: '<S3>/z1'
+                                        */
+  real_T z1_P2;                        /* Expression: dtype
+                                        * Referenced by: '<S3>/z1'
+                                        */
+  real_T z1_P3;                        /* Expression: portnum
+                                        * Referenced by: '<S3>/z1'
+                                        */
+  real_T z1_P4;                        /* Expression: stime
+                                        * Referenced by: '<S3>/z1'
+                                        */
+  real_T z1_P5;                        /* Expression: stype
+                                        * Referenced by: '<S3>/z1'
+                                        */
+  real_T z1_P6;                        /* Expression: btype
+                                        * Referenced by: '<S3>/z1'
+                                        */
+  real_T ma_P1;                        /* Expression: width
+                                        * Referenced by: '<S3>/ma'
+                                        */
+  real_T ma_P2;                        /* Expression: dtype
+                                        * Referenced by: '<S3>/ma'
+                                        */
+  real_T ma_P3;                        /* Expression: portnum
+                                        * Referenced by: '<S3>/ma'
+                                        */
+  real_T ma_P4;                        /* Expression: stime
+                                        * Referenced by: '<S3>/ma'
+                                        */
+  real_T ma_P5;                        /* Expression: stype
+                                        * Referenced by: '<S3>/ma'
+                                        */
+  real_T ma_P6;                        /* Expression: btype
+                                        * Referenced by: '<S3>/ma'
+                                        */
+  real_T kdz_P1;                       /* Expression: width
+                                        * Referenced by: '<S3>/kdz'
+                                        */
+  real_T kdz_P2;                       /* Expression: dtype
+                                        * Referenced by: '<S3>/kdz'
+                                        */
+  real_T kdz_P3;                       /* Expression: portnum
+                                        * Referenced by: '<S3>/kdz'
+                                        */
+  real_T kdz_P4;                       /* Expression: stime
+                                        * Referenced by: '<S3>/kdz'
+                                        */
+  real_T kdz_P5;                       /* Expression: stype
+                                        * Referenced by: '<S3>/kdz'
+                                        */
+  real_T kdz_P6;                       /* Expression: btype
+                                        * Referenced by: '<S3>/kdz'
                                         */
   real_T Memory3_X0;                   /* Expression: 0
                                         * Referenced by: '<S3>/Memory3'

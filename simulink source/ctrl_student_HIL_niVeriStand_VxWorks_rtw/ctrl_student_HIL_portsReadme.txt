@@ -60,5 +60,9 @@
 <outport> id = "-1" name = "tau to CSE mocell (only use for HIL testing)/y_0" width = "1" datatype = "0"</outport>
 <outport> id = "-1" name = "tau to CSE mocell (only use for HIL testing)/integrator reset model" width = "1" datatype = "0"</outport>
 <outport> id = "-1" name = "case D/s" width = "1" datatype = "0"</outport>
+<outport> id = "-1" name = "case D/D" width = "3" datatype = "18"</outport>
+<outport> id = "-1" name = "case D/z1" width = "3" datatype = "18"</outport>
+<outport> id = "-1" name = "case D/ma" width = "3" datatype = "18"</outport>
+<outport> id = "-1" name = "case D/kdz" width = "3" datatype = "18"</outport>
 <outport> id = "-1" name = "signal dropout check /lost" width = "1" datatype = "0"</outport>
 </portlist>

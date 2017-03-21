@@ -15,9 +15,9 @@
  *
  * Code generation for model "ctrl_student_HIL".
  *
- * Model version              : 1.376
+ * Model version              : 1.390
  * Simulink Coder version : 8.8 (R2015a) 09-Feb-2015
- * C source code generated on : Tue Mar 21 14:00:38 2017
+ * C source code generated on : Tue Mar 21 15:20:02 2017
  *
  * Target selection: NIVeriStand_VxWorks.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -1028,6 +1028,16 @@ P_ctrl_student_HIL_T ctrl_student_HIL_P = {
                                         * Referenced by: '<S3>/Integrator1'
                                         */
 
+  /*  Expression: [1 1 1]
+   * Referenced by: '<S3>/Saturation'
+   */
+  { 1.0, 1.0, 1.0 },
+
+  /*  Expression: -[1 1 1]
+   * Referenced by: '<S3>/Saturation'
+   */
+  { -1.0, -1.0, -1.0 },
+
   /*  Expression: inv([14.79 0 0;
      0 14.79 14.79*0.0375;
      0 14.79*0.0375 1.76])
@@ -1241,6 +1251,78 @@ P_ctrl_student_HIL_T ctrl_student_HIL_P = {
                                         */
   0.0,                                 /* Expression: btype
                                         * Referenced by: '<S3>/s'
+                                        */
+  -1.0,                                /* Expression: width
+                                        * Referenced by: '<S3>/D'
+                                        */
+  1.0,                                 /* Expression: dtype
+                                        * Referenced by: '<S3>/D'
+                                        */
+  2.0,                                 /* Expression: portnum
+                                        * Referenced by: '<S3>/D'
+                                        */
+  -1.0,                                /* Expression: stime
+                                        * Referenced by: '<S3>/D'
+                                        */
+  1.0,                                 /* Expression: stype
+                                        * Referenced by: '<S3>/D'
+                                        */
+  0.0,                                 /* Expression: btype
+                                        * Referenced by: '<S3>/D'
+                                        */
+  -1.0,                                /* Expression: width
+                                        * Referenced by: '<S3>/z1'
+                                        */
+  1.0,                                 /* Expression: dtype
+                                        * Referenced by: '<S3>/z1'
+                                        */
+  3.0,                                 /* Expression: portnum
+                                        * Referenced by: '<S3>/z1'
+                                        */
+  -1.0,                                /* Expression: stime
+                                        * Referenced by: '<S3>/z1'
+                                        */
+  1.0,                                 /* Expression: stype
+                                        * Referenced by: '<S3>/z1'
+                                        */
+  0.0,                                 /* Expression: btype
+                                        * Referenced by: '<S3>/z1'
+                                        */
+  -1.0,                                /* Expression: width
+                                        * Referenced by: '<S3>/ma'
+                                        */
+  1.0,                                 /* Expression: dtype
+                                        * Referenced by: '<S3>/ma'
+                                        */
+  4.0,                                 /* Expression: portnum
+                                        * Referenced by: '<S3>/ma'
+                                        */
+  -1.0,                                /* Expression: stime
+                                        * Referenced by: '<S3>/ma'
+                                        */
+  1.0,                                 /* Expression: stype
+                                        * Referenced by: '<S3>/ma'
+                                        */
+  0.0,                                 /* Expression: btype
+                                        * Referenced by: '<S3>/ma'
+                                        */
+  -1.0,                                /* Expression: width
+                                        * Referenced by: '<S3>/kdz'
+                                        */
+  1.0,                                 /* Expression: dtype
+                                        * Referenced by: '<S3>/kdz'
+                                        */
+  5.0,                                 /* Expression: portnum
+                                        * Referenced by: '<S3>/kdz'
+                                        */
+  -1.0,                                /* Expression: stime
+                                        * Referenced by: '<S3>/kdz'
+                                        */
+  1.0,                                 /* Expression: stype
+                                        * Referenced by: '<S3>/kdz'
+                                        */
+  0.0,                                 /* Expression: btype
+                                        * Referenced by: '<S3>/kdz'
                                         */
   0.0,                                 /* Expression: 0
                                         * Referenced by: '<S3>/Memory3'
@@ -1938,7 +2020,59 @@ NI_ParamSizeWidth P_ctrl_student_HIL_T_sizes[] DataSection(
 
   { sizeof(real_T), 1, 0 },
 
+  { sizeof(real_T), 3, 0 },
+
+  { sizeof(real_T), 3, 0 },
+
   { sizeof(real_T), 9, 0 },
+
+  { sizeof(real_T), 1, 0 },
+
+  { sizeof(real_T), 1, 0 },
+
+  { sizeof(real_T), 1, 0 },
+
+  { sizeof(real_T), 1, 0 },
+
+  { sizeof(real_T), 1, 0 },
+
+  { sizeof(real_T), 1, 0 },
+
+  { sizeof(real_T), 1, 0 },
+
+  { sizeof(real_T), 1, 0 },
+
+  { sizeof(real_T), 1, 0 },
+
+  { sizeof(real_T), 1, 0 },
+
+  { sizeof(real_T), 1, 0 },
+
+  { sizeof(real_T), 1, 0 },
+
+  { sizeof(real_T), 1, 0 },
+
+  { sizeof(real_T), 1, 0 },
+
+  { sizeof(real_T), 1, 0 },
+
+  { sizeof(real_T), 1, 0 },
+
+  { sizeof(real_T), 1, 0 },
+
+  { sizeof(real_T), 1, 0 },
+
+  { sizeof(real_T), 1, 0 },
+
+  { sizeof(real_T), 1, 0 },
+
+  { sizeof(real_T), 1, 0 },
+
+  { sizeof(real_T), 1, 0 },
+
+  { sizeof(real_T), 1, 0 },
+
+  { sizeof(real_T), 1, 0 },
 
   { sizeof(real_T), 1, 0 },
 

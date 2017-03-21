@@ -10,7 +10,7 @@
 				<String>CSE1</String>
 			</Property>
 			<Property Name="Version">
-				<String>1.0.0.247</String>
+				<String>1.0.0.260</String>
 			</Property>
 			<Property Name="Creator">
 				<String />
@@ -5197,10 +5197,10 @@
 									<Double>10000</Double>
 								</Property>
 								<Property Name="DLL Size">
-									<I32>279293</I32>
+									<I32>295101</I32>
 								</Property>
 								<Property Name="DLL Timestamp">
-									<Double>3572946050.7953806</Double>
+									<Double>3572950839.13993</Double>
 								</Property>
 								<Property Name="Decimation">
 									<I32>1</I32>
@@ -5244,7 +5244,7 @@
 										<ForceDownload>false</ForceDownload>
 										<RTDestination>c:\ni-rt\system\ctrl_student_HIL.out</RTDestination>
 										<SupportedTarget>VxWorks</SupportedTarget>
-										<MD5>baf73ae90b492c0e69086384c4b15f5a</MD5>
+										<MD5>2bcc5bc2fdf6180b823a009565e9c76c</MD5>
 									</DependentFile>
 								</Property>
 								<Property Name="GlobalParameterScopes">
@@ -6386,7 +6386,7 @@
 												<String>signal dropout check /lost</String>
 											</Property>
 											<Property Name="Index">
-												<I32>61</I32>
+												<I32>65</I32>
 											</Property>
 										</Properties>
 										<Errors />
@@ -6399,6 +6399,206 @@
 									<Description />
 									<Properties />
 									<Errors />
+									<Section Name="D" TypeGUID="cbfdde93-6581-4b7c-83b8-e88484f25b2e">
+										<Description />
+										<Properties />
+										<Errors />
+										<Channel Name="D(1,1)" TypeGUID="03D3B995-1485-13A6-56ABA0860ADF91DF" RowDim="1" ColDim="1" Units="" BitFields="5">
+											<Description />
+											<Properties>
+												<Property Name="Model Path">
+													<String>case D/D</String>
+												</Property>
+												<Property Name="Index">
+													<I32>61</I32>
+												</Property>
+											</Properties>
+											<Errors />
+											<DefaultValue>
+												<Elem>0</Elem>
+											</DefaultValue>
+										</Channel>
+										<Channel Name="D(2,1)" TypeGUID="03D3B995-1485-13A6-56ABA0860ADF91DF" RowDim="1" ColDim="1" Units="" BitFields="5">
+											<Description />
+											<Properties>
+												<Property Name="Model Path">
+													<String>case D/D</String>
+												</Property>
+												<Property Name="Index">
+													<I32>61</I32>
+												</Property>
+											</Properties>
+											<Errors />
+											<DefaultValue>
+												<Elem>0</Elem>
+											</DefaultValue>
+										</Channel>
+										<Channel Name="D(3,1)" TypeGUID="03D3B995-1485-13A6-56ABA0860ADF91DF" RowDim="1" ColDim="1" Units="" BitFields="5">
+											<Description />
+											<Properties>
+												<Property Name="Model Path">
+													<String>case D/D</String>
+												</Property>
+												<Property Name="Index">
+													<I32>61</I32>
+												</Property>
+											</Properties>
+											<Errors />
+											<DefaultValue>
+												<Elem>0</Elem>
+											</DefaultValue>
+										</Channel>
+									</Section>
+									<Section Name="z1" TypeGUID="cbfdde93-6581-4b7c-83b8-e88484f25b2e">
+										<Description />
+										<Properties />
+										<Errors />
+										<Channel Name="z1(1,1)" TypeGUID="03D3B995-1485-13A6-56ABA0860ADF91DF" RowDim="1" ColDim="1" Units="" BitFields="5">
+											<Description />
+											<Properties>
+												<Property Name="Model Path">
+													<String>case D/z1</String>
+												</Property>
+												<Property Name="Index">
+													<I32>62</I32>
+												</Property>
+											</Properties>
+											<Errors />
+											<DefaultValue>
+												<Elem>0</Elem>
+											</DefaultValue>
+										</Channel>
+										<Channel Name="z1(2,1)" TypeGUID="03D3B995-1485-13A6-56ABA0860ADF91DF" RowDim="1" ColDim="1" Units="" BitFields="5">
+											<Description />
+											<Properties>
+												<Property Name="Model Path">
+													<String>case D/z1</String>
+												</Property>
+												<Property Name="Index">
+													<I32>62</I32>
+												</Property>
+											</Properties>
+											<Errors />
+											<DefaultValue>
+												<Elem>0</Elem>
+											</DefaultValue>
+										</Channel>
+										<Channel Name="z1(3,1)" TypeGUID="03D3B995-1485-13A6-56ABA0860ADF91DF" RowDim="1" ColDim="1" Units="" BitFields="5">
+											<Description />
+											<Properties>
+												<Property Name="Model Path">
+													<String>case D/z1</String>
+												</Property>
+												<Property Name="Index">
+													<I32>62</I32>
+												</Property>
+											</Properties>
+											<Errors />
+											<DefaultValue>
+												<Elem>0</Elem>
+											</DefaultValue>
+										</Channel>
+									</Section>
+									<Section Name="ma" TypeGUID="cbfdde93-6581-4b7c-83b8-e88484f25b2e">
+										<Description />
+										<Properties />
+										<Errors />
+										<Channel Name="ma(1,1)" TypeGUID="03D3B995-1485-13A6-56ABA0860ADF91DF" RowDim="1" ColDim="1" Units="" BitFields="5">
+											<Description />
+											<Properties>
+												<Property Name="Model Path">
+													<String>case D/ma</String>
+												</Property>
+												<Property Name="Index">
+													<I32>63</I32>
+												</Property>
+											</Properties>
+											<Errors />
+											<DefaultValue>
+												<Elem>0</Elem>
+											</DefaultValue>
+										</Channel>
+										<Channel Name="ma(2,1)" TypeGUID="03D3B995-1485-13A6-56ABA0860ADF91DF" RowDim="1" ColDim="1" Units="" BitFields="5">
+											<Description />
+											<Properties>
+												<Property Name="Model Path">
+													<String>case D/ma</String>
+												</Property>
+												<Property Name="Index">
+													<I32>63</I32>
+												</Property>
+											</Properties>
+											<Errors />
+											<DefaultValue>
+												<Elem>0</Elem>
+											</DefaultValue>
+										</Channel>
+										<Channel Name="ma(3,1)" TypeGUID="03D3B995-1485-13A6-56ABA0860ADF91DF" RowDim="1" ColDim="1" Units="" BitFields="5">
+											<Description />
+											<Properties>
+												<Property Name="Model Path">
+													<String>case D/ma</String>
+												</Property>
+												<Property Name="Index">
+													<I32>63</I32>
+												</Property>
+											</Properties>
+											<Errors />
+											<DefaultValue>
+												<Elem>0</Elem>
+											</DefaultValue>
+										</Channel>
+									</Section>
+									<Section Name="kdz" TypeGUID="cbfdde93-6581-4b7c-83b8-e88484f25b2e">
+										<Description />
+										<Properties />
+										<Errors />
+										<Channel Name="kdz(1,1)" TypeGUID="03D3B995-1485-13A6-56ABA0860ADF91DF" RowDim="1" ColDim="1" Units="" BitFields="5">
+											<Description />
+											<Properties>
+												<Property Name="Model Path">
+													<String>case D/kdz</String>
+												</Property>
+												<Property Name="Index">
+													<I32>64</I32>
+												</Property>
+											</Properties>
+											<Errors />
+											<DefaultValue>
+												<Elem>0</Elem>
+											</DefaultValue>
+										</Channel>
+										<Channel Name="kdz(2,1)" TypeGUID="03D3B995-1485-13A6-56ABA0860ADF91DF" RowDim="1" ColDim="1" Units="" BitFields="5">
+											<Description />
+											<Properties>
+												<Property Name="Model Path">
+													<String>case D/kdz</String>
+												</Property>
+												<Property Name="Index">
+													<I32>64</I32>
+												</Property>
+											</Properties>
+											<Errors />
+											<DefaultValue>
+												<Elem>0</Elem>
+											</DefaultValue>
+										</Channel>
+										<Channel Name="kdz(3,1)" TypeGUID="03D3B995-1485-13A6-56ABA0860ADF91DF" RowDim="1" ColDim="1" Units="" BitFields="5">
+											<Description />
+											<Properties>
+												<Property Name="Model Path">
+													<String>case D/kdz</String>
+												</Property>
+												<Property Name="Index">
+													<I32>64</I32>
+												</Property>
+											</Properties>
+											<Errors />
+											<DefaultValue>
+												<Elem>0</Elem>
+											</DefaultValue>
+										</Channel>
+									</Section>
 									<Channel Name="s" TypeGUID="03D3B995-1485-13A6-56ABA0860ADF91DF" RowDim="1" ColDim="1" Units="" BitFields="5">
 										<Description />
 										<Properties>
