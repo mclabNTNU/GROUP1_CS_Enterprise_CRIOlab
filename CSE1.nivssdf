@@ -10,7 +10,7 @@
 				<String>CSE1</String>
 			</Property>
 			<Property Name="Version">
-				<String>1.0.0.274</String>
+				<String>1.0.0.298</String>
 			</Property>
 			<Property Name="Creator">
 				<String />
@@ -5197,10 +5197,10 @@
 									<Double>10000</Double>
 								</Property>
 								<Property Name="DLL Size">
-									<I32>311187</I32>
+									<I32>315591</I32>
 								</Property>
 								<Property Name="DLL Timestamp">
-									<Double>3573107818.2256751</Double>
+									<Double>3573123443.6450114</Double>
 								</Property>
 								<Property Name="Decimation">
 									<I32>1</I32>
@@ -5244,7 +5244,7 @@
 										<ForceDownload>false</ForceDownload>
 										<RTDestination>c:\ni-rt\system\ctrl_student_HIL.out</RTDestination>
 										<SupportedTarget>VxWorks</SupportedTarget>
-										<MD5>4c5eb9d0d9f4728740249c768b2fc671</MD5>
+										<MD5>fe69cc5729b80bcf33cf45278dbe8b80</MD5>
 									</DependentFile>
 								</Property>
 								<Property Name="GlobalParameterScopes">
@@ -5547,7 +5547,7 @@
 													<String>Observer/L3/L31</String>
 												</Property>
 												<Property Name="Index">
-													<I32>29</I32>
+													<I32>32</I32>
 												</Property>
 											</Properties>
 											<Errors />
@@ -5562,7 +5562,7 @@
 													<String>Observer/L3/L32</String>
 												</Property>
 												<Property Name="Index">
-													<I32>30</I32>
+													<I32>33</I32>
 												</Property>
 											</Properties>
 											<Errors />
@@ -5577,7 +5577,7 @@
 													<String>Observer/L3/L33</String>
 												</Property>
 												<Property Name="Index">
-													<I32>31</I32>
+													<I32>34</I32>
 												</Property>
 											</Properties>
 											<Errors />
@@ -5602,7 +5602,7 @@
 													<String>Observer/L1/L12</String>
 												</Property>
 												<Property Name="Index">
-													<I32>23</I32>
+													<I32>26</I32>
 												</Property>
 											</Properties>
 											<Errors />
@@ -5617,7 +5617,7 @@
 													<String>Observer/L1/L11</String>
 												</Property>
 												<Property Name="Index">
-													<I32>24</I32>
+													<I32>27</I32>
 												</Property>
 											</Properties>
 											<Errors />
@@ -5632,7 +5632,7 @@
 													<String>Observer/L1/L13</String>
 												</Property>
 												<Property Name="Index">
-													<I32>25</I32>
+													<I32>28</I32>
 												</Property>
 											</Properties>
 											<Errors />
@@ -5652,7 +5652,7 @@
 													<String>Observer/L2/L21</String>
 												</Property>
 												<Property Name="Index">
-													<I32>26</I32>
+													<I32>29</I32>
 												</Property>
 											</Properties>
 											<Errors />
@@ -5667,7 +5667,7 @@
 													<String>Observer/L2/L22</String>
 												</Property>
 												<Property Name="Index">
-													<I32>27</I32>
+													<I32>30</I32>
 												</Property>
 											</Properties>
 											<Errors />
@@ -5682,7 +5682,7 @@
 													<String>Observer/L2/L23</String>
 												</Property>
 												<Property Name="Index">
-													<I32>28</I32>
+													<I32>31</I32>
 												</Property>
 											</Properties>
 											<Errors />
@@ -5742,7 +5742,7 @@
 													<String>DP-system/Kd/Kd1</String>
 												</Property>
 												<Property Name="Index">
-													<I32>32</I32>
+													<I32>23</I32>
 												</Property>
 											</Properties>
 											<Errors />
@@ -5757,7 +5757,7 @@
 													<String>DP-system/Kd/Kd2</String>
 												</Property>
 												<Property Name="Index">
-													<I32>33</I32>
+													<I32>24</I32>
 												</Property>
 											</Properties>
 											<Errors />
@@ -5772,7 +5772,7 @@
 													<String>DP-system/Kd/Kd3</String>
 												</Property>
 												<Property Name="Index">
-													<I32>34</I32>
+													<I32>25</I32>
 												</Property>
 											</Properties>
 											<Errors />
@@ -5966,7 +5966,7 @@
 												<String>tau to CSE mocell (only use for HIL testing)/X_d</String>
 											</Property>
 											<Property Name="Index">
-												<I32>56</I32>
+												<I32>47</I32>
 											</Property>
 										</Properties>
 										<Errors />
@@ -5981,7 +5981,7 @@
 												<String>tau to CSE mocell (only use for HIL testing)/N_d</String>
 											</Property>
 											<Property Name="Index">
-												<I32>57</I32>
+												<I32>48</I32>
 											</Property>
 										</Properties>
 										<Errors />
@@ -5996,7 +5996,7 @@
 												<String>tau to CSE mocell (only use for HIL testing)/Y_d</String>
 											</Property>
 											<Property Name="Index">
-												<I32>58</I32>
+												<I32>49</I32>
 											</Property>
 										</Properties>
 										<Errors />
@@ -6011,7 +6011,7 @@
 												<String>tau to CSE mocell (only use for HIL testing)/psi_0 </String>
 											</Property>
 											<Property Name="Index">
-												<I32>59</I32>
+												<I32>50</I32>
 											</Property>
 										</Properties>
 										<Errors />
@@ -6026,7 +6026,7 @@
 												<String>tau to CSE mocell (only use for HIL testing)/x_0</String>
 											</Property>
 											<Property Name="Index">
-												<I32>60</I32>
+												<I32>51</I32>
 											</Property>
 										</Properties>
 										<Errors />
@@ -6041,7 +6041,7 @@
 												<String>tau to CSE mocell (only use for HIL testing)/y_0</String>
 											</Property>
 											<Property Name="Index">
-												<I32>61</I32>
+												<I32>52</I32>
 											</Property>
 										</Properties>
 										<Errors />
@@ -6056,7 +6056,7 @@
 												<String>tau to CSE mocell (only use for HIL testing)/integrator reset model</String>
 											</Property>
 											<Property Name="Index">
-												<I32>62</I32>
+												<I32>53</I32>
 											</Property>
 										</Properties>
 										<Errors />
@@ -6190,7 +6190,7 @@
 													<String>Observer/eta_bar_ut/x_bar</String>
 												</Property>
 												<Property Name="Index">
-													<I32>44</I32>
+													<I32>64</I32>
 												</Property>
 											</Properties>
 											<Errors />
@@ -6205,7 +6205,7 @@
 													<String>Observer/eta_bar_ut/y_bar</String>
 												</Property>
 												<Property Name="Index">
-													<I32>45</I32>
+													<I32>65</I32>
 												</Property>
 											</Properties>
 											<Errors />
@@ -6220,7 +6220,7 @@
 													<String>Observer/eta_bar_ut/psi_bar</String>
 												</Property>
 												<Property Name="Index">
-													<I32>46</I32>
+													<I32>66</I32>
 												</Property>
 											</Properties>
 											<Errors />
@@ -6240,7 +6240,7 @@
 													<String>Observer/eta_hat_ut/psi_hat</String>
 												</Property>
 												<Property Name="Index">
-													<I32>47</I32>
+													<I32>67</I32>
 												</Property>
 											</Properties>
 											<Errors />
@@ -6255,7 +6255,7 @@
 													<String>Observer/eta_hat_ut/x_hat</String>
 												</Property>
 												<Property Name="Index">
-													<I32>48</I32>
+													<I32>68</I32>
 												</Property>
 											</Properties>
 											<Errors />
@@ -6270,7 +6270,7 @@
 													<String>Observer/eta_hat_ut/y_hat</String>
 												</Property>
 												<Property Name="Index">
-													<I32>49</I32>
+													<I32>69</I32>
 												</Property>
 											</Properties>
 											<Errors />
@@ -6290,7 +6290,7 @@
 													<String>Observer/nu_hat_ut/r_hat</String>
 												</Property>
 												<Property Name="Index">
-													<I32>50</I32>
+													<I32>70</I32>
 												</Property>
 											</Properties>
 											<Errors />
@@ -6305,7 +6305,7 @@
 													<String>Observer/nu_hat_ut/u_hat</String>
 												</Property>
 												<Property Name="Index">
-													<I32>51</I32>
+													<I32>71</I32>
 												</Property>
 											</Properties>
 											<Errors />
@@ -6320,7 +6320,7 @@
 													<String>Observer/nu_hat_ut/v_hat</String>
 												</Property>
 												<Property Name="Index">
-													<I32>52</I32>
+													<I32>72</I32>
 												</Property>
 											</Properties>
 											<Errors />
@@ -6341,7 +6341,7 @@
 												<String>eta_noise_ut/psi_noise</String>
 											</Property>
 											<Property Name="Index">
-												<I32>53</I32>
+												<I32>44</I32>
 											</Property>
 										</Properties>
 										<Errors />
@@ -6356,7 +6356,7 @@
 												<String>eta_noise_ut/x_noise</String>
 											</Property>
 											<Property Name="Index">
-												<I32>54</I32>
+												<I32>45</I32>
 											</Property>
 										</Properties>
 										<Errors />
@@ -6371,7 +6371,7 @@
 												<String>eta_noise_ut/y_noise</String>
 											</Property>
 											<Property Name="Index">
-												<I32>55</I32>
+												<I32>46</I32>
 											</Property>
 										</Properties>
 										<Errors />
@@ -6451,7 +6451,7 @@
 												<String>signal dropout check /lost</String>
 											</Property>
 											<Property Name="Index">
-												<I32>70</I32>
+												<I32>73</I32>
 											</Property>
 										</Properties>
 										<Errors />
@@ -6510,7 +6510,7 @@
 													<String>DP-system/D</String>
 												</Property>
 												<Property Name="Index">
-													<I32>64</I32>
+													<I32>55</I32>
 												</Property>
 											</Properties>
 											<Errors />
@@ -6525,7 +6525,7 @@
 													<String>DP-system/D</String>
 												</Property>
 												<Property Name="Index">
-													<I32>64</I32>
+													<I32>55</I32>
 												</Property>
 											</Properties>
 											<Errors />
@@ -6540,7 +6540,7 @@
 													<String>DP-system/D</String>
 												</Property>
 												<Property Name="Index">
-													<I32>64</I32>
+													<I32>55</I32>
 												</Property>
 											</Properties>
 											<Errors />
@@ -6560,7 +6560,7 @@
 													<String>DP-system/z1</String>
 												</Property>
 												<Property Name="Index">
-													<I32>65</I32>
+													<I32>56</I32>
 												</Property>
 											</Properties>
 											<Errors />
@@ -6575,7 +6575,7 @@
 													<String>DP-system/z1</String>
 												</Property>
 												<Property Name="Index">
-													<I32>65</I32>
+													<I32>56</I32>
 												</Property>
 											</Properties>
 											<Errors />
@@ -6590,7 +6590,7 @@
 													<String>DP-system/z1</String>
 												</Property>
 												<Property Name="Index">
-													<I32>65</I32>
+													<I32>56</I32>
 												</Property>
 											</Properties>
 											<Errors />
@@ -6610,7 +6610,7 @@
 													<String>DP-system/ma</String>
 												</Property>
 												<Property Name="Index">
-													<I32>66</I32>
+													<I32>57</I32>
 												</Property>
 											</Properties>
 											<Errors />
@@ -6625,7 +6625,7 @@
 													<String>DP-system/ma</String>
 												</Property>
 												<Property Name="Index">
-													<I32>66</I32>
+													<I32>57</I32>
 												</Property>
 											</Properties>
 											<Errors />
@@ -6640,7 +6640,7 @@
 													<String>DP-system/ma</String>
 												</Property>
 												<Property Name="Index">
-													<I32>66</I32>
+													<I32>57</I32>
 												</Property>
 											</Properties>
 											<Errors />
@@ -6660,7 +6660,7 @@
 													<String>DP-system/kdz</String>
 												</Property>
 												<Property Name="Index">
-													<I32>67</I32>
+													<I32>58</I32>
 												</Property>
 											</Properties>
 											<Errors />
@@ -6675,7 +6675,7 @@
 													<String>DP-system/kdz</String>
 												</Property>
 												<Property Name="Index">
-													<I32>67</I32>
+													<I32>58</I32>
 												</Property>
 											</Properties>
 											<Errors />
@@ -6690,7 +6690,7 @@
 													<String>DP-system/kdz</String>
 												</Property>
 												<Property Name="Index">
-													<I32>67</I32>
+													<I32>58</I32>
 												</Property>
 											</Properties>
 											<Errors />
@@ -6710,7 +6710,7 @@
 													<String>DP-system/etaaa</String>
 												</Property>
 												<Property Name="Index">
-													<I32>68</I32>
+													<I32>59</I32>
 												</Property>
 											</Properties>
 											<Errors />
@@ -6725,7 +6725,7 @@
 													<String>DP-system/etaaa</String>
 												</Property>
 												<Property Name="Index">
-													<I32>68</I32>
+													<I32>59</I32>
 												</Property>
 											</Properties>
 											<Errors />
@@ -6740,7 +6740,7 @@
 													<String>DP-system/etaaa</String>
 												</Property>
 												<Property Name="Index">
-													<I32>68</I32>
+													<I32>59</I32>
 												</Property>
 											</Properties>
 											<Errors />
@@ -6760,7 +6760,7 @@
 													<String>DP-system/etav</String>
 												</Property>
 												<Property Name="Index">
-													<I32>69</I32>
+													<I32>60</I32>
 												</Property>
 											</Properties>
 											<Errors />
@@ -6775,7 +6775,7 @@
 													<String>DP-system/etav</String>
 												</Property>
 												<Property Name="Index">
-													<I32>69</I32>
+													<I32>60</I32>
 												</Property>
 											</Properties>
 											<Errors />
@@ -6790,7 +6790,7 @@
 													<String>DP-system/etav</String>
 												</Property>
 												<Property Name="Index">
-													<I32>69</I32>
+													<I32>60</I32>
 												</Property>
 											</Properties>
 											<Errors />
@@ -6805,7 +6805,7 @@
 													<String>DP-system/etav</String>
 												</Property>
 												<Property Name="Index">
-													<I32>69</I32>
+													<I32>60</I32>
 												</Property>
 											</Properties>
 											<Errors />
@@ -6820,7 +6820,7 @@
 													<String>DP-system/etav</String>
 												</Property>
 												<Property Name="Index">
-													<I32>69</I32>
+													<I32>60</I32>
 												</Property>
 											</Properties>
 											<Errors />
@@ -6835,7 +6835,7 @@
 													<String>DP-system/etav</String>
 												</Property>
 												<Property Name="Index">
-													<I32>69</I32>
+													<I32>60</I32>
 												</Property>
 											</Properties>
 											<Errors />
@@ -6850,7 +6850,7 @@
 													<String>DP-system/etav</String>
 												</Property>
 												<Property Name="Index">
-													<I32>69</I32>
+													<I32>60</I32>
 												</Property>
 											</Properties>
 											<Errors />
@@ -6865,7 +6865,7 @@
 													<String>DP-system/etav</String>
 												</Property>
 												<Property Name="Index">
-													<I32>69</I32>
+													<I32>60</I32>
 												</Property>
 											</Properties>
 											<Errors />
@@ -6880,7 +6880,7 @@
 													<String>DP-system/etav</String>
 												</Property>
 												<Property Name="Index">
-													<I32>69</I32>
+													<I32>60</I32>
 												</Property>
 											</Properties>
 											<Errors />
@@ -6895,7 +6895,7 @@
 													<String>DP-system/etav</String>
 												</Property>
 												<Property Name="Index">
-													<I32>69</I32>
+													<I32>60</I32>
 												</Property>
 											</Properties>
 											<Errors />
@@ -6910,7 +6910,42 @@
 													<String>DP-system/etav</String>
 												</Property>
 												<Property Name="Index">
-													<I32>69</I32>
+													<I32>60</I32>
+												</Property>
+											</Properties>
+											<Errors />
+											<DefaultValue>
+												<Elem>0</Elem>
+											</DefaultValue>
+										</Channel>
+									</Section>
+									<Section Name="i" TypeGUID="cbfdde93-6581-4b7c-83b8-e88484f25b2e">
+										<Description />
+										<Properties />
+										<Errors />
+										<Channel Name="i(1,1)" TypeGUID="03D3B995-1485-13A6-56ABA0860ADF91DF" RowDim="1" ColDim="1" Units="" BitFields="5">
+											<Description />
+											<Properties>
+												<Property Name="Model Path">
+													<String>DP-system/i</String>
+												</Property>
+												<Property Name="Index">
+													<I32>63</I32>
+												</Property>
+											</Properties>
+											<Errors />
+											<DefaultValue>
+												<Elem>0</Elem>
+											</DefaultValue>
+										</Channel>
+										<Channel Name="i(1,2)" TypeGUID="03D3B995-1485-13A6-56ABA0860ADF91DF" RowDim="1" ColDim="1" Units="" BitFields="5">
+											<Description />
+											<Properties>
+												<Property Name="Model Path">
+													<String>DP-system/i</String>
+												</Property>
+												<Property Name="Index">
+													<I32>63</I32>
 												</Property>
 											</Properties>
 											<Errors />
@@ -6926,7 +6961,37 @@
 												<String>DP-system/s</String>
 											</Property>
 											<Property Name="Index">
-												<I32>63</I32>
+												<I32>54</I32>
+											</Property>
+										</Properties>
+										<Errors />
+										<DefaultValue>
+											<Elem>0</Elem>
+										</DefaultValue>
+									</Channel>
+									<Channel Name="uref " TypeGUID="03D3B995-1485-13A6-56ABA0860ADF91DF" RowDim="1" ColDim="1" Units="" BitFields="5">
+										<Description />
+										<Properties>
+											<Property Name="Model Path">
+												<String>DP-system/uref </String>
+											</Property>
+											<Property Name="Index">
+												<I32>61</I32>
+											</Property>
+										</Properties>
+										<Errors />
+										<DefaultValue>
+											<Elem>0</Elem>
+										</DefaultValue>
+									</Channel>
+									<Channel Name="sdot" TypeGUID="03D3B995-1485-13A6-56ABA0860ADF91DF" RowDim="1" ColDim="1" Units="" BitFields="5">
+										<Description />
+										<Properties>
+											<Property Name="Model Path">
+												<String>DP-system/sdot</String>
+											</Property>
+											<Property Name="Index">
+												<I32>62</I32>
 											</Property>
 										</Properties>
 										<Errors />
