@@ -10,7 +10,7 @@
 				<String>CSE1</String>
 			</Property>
 			<Property Name="Version">
-				<String>1.0.0.260</String>
+				<String>1.0.0.274</String>
 			</Property>
 			<Property Name="Creator">
 				<String />
@@ -5197,10 +5197,10 @@
 									<Double>10000</Double>
 								</Property>
 								<Property Name="DLL Size">
-									<I32>295101</I32>
+									<I32>311187</I32>
 								</Property>
 								<Property Name="DLL Timestamp">
-									<Double>3572950839.13993</Double>
+									<Double>3573107818.2256751</Double>
 								</Property>
 								<Property Name="Decimation">
 									<I32>1</I32>
@@ -5244,7 +5244,7 @@
 										<ForceDownload>false</ForceDownload>
 										<RTDestination>c:\ni-rt\system\ctrl_student_HIL.out</RTDestination>
 										<SupportedTarget>VxWorks</SupportedTarget>
-										<MD5>2bcc5bc2fdf6180b823a009565e9c76c</MD5>
+										<MD5>4c5eb9d0d9f4728740249c768b2fc671</MD5>
 									</DependentFile>
 								</Property>
 								<Property Name="GlobalParameterScopes">
@@ -5717,6 +5717,71 @@
 										</DefaultValue>
 									</Channel>
 								</Section>
+								<Section Name="case D" TypeGUID="cbfdde93-6581-4b7c-83b8-e88484f25b2e">
+									<Description />
+									<Properties />
+									<Errors />
+									<Section Name="Kd" TypeGUID="cbfdde93-6581-4b7c-83b8-e88484f25b2e">
+										<Description />
+										<Properties />
+										<Errors />
+									</Section>
+								</Section>
+								<Section Name="DP-system" TypeGUID="cbfdde93-6581-4b7c-83b8-e88484f25b2e">
+									<Description />
+									<Properties />
+									<Errors />
+									<Section Name="Kd" TypeGUID="cbfdde93-6581-4b7c-83b8-e88484f25b2e">
+										<Description />
+										<Properties />
+										<Errors />
+										<Channel Name="Kd1" TypeGUID="03D3B985-1485-13A6-56FC3200A1C00087" RowDim="1" ColDim="1" Units="" BitFields="7">
+											<Description />
+											<Properties>
+												<Property Name="Model Path">
+													<String>DP-system/Kd/Kd1</String>
+												</Property>
+												<Property Name="Index">
+													<I32>32</I32>
+												</Property>
+											</Properties>
+											<Errors />
+											<DefaultValue>
+												<Elem>0</Elem>
+											</DefaultValue>
+										</Channel>
+										<Channel Name="Kd2" TypeGUID="03D3B985-1485-13A6-56FC3200A1C00087" RowDim="1" ColDim="1" Units="" BitFields="7">
+											<Description />
+											<Properties>
+												<Property Name="Model Path">
+													<String>DP-system/Kd/Kd2</String>
+												</Property>
+												<Property Name="Index">
+													<I32>33</I32>
+												</Property>
+											</Properties>
+											<Errors />
+											<DefaultValue>
+												<Elem>0</Elem>
+											</DefaultValue>
+										</Channel>
+										<Channel Name="Kd3" TypeGUID="03D3B985-1485-13A6-56FC3200A1C00087" RowDim="1" ColDim="1" Units="" BitFields="7">
+											<Description />
+											<Properties>
+												<Property Name="Model Path">
+													<String>DP-system/Kd/Kd3</String>
+												</Property>
+												<Property Name="Index">
+													<I32>34</I32>
+												</Property>
+											</Properties>
+											<Errors />
+											<DefaultValue>
+												<Elem>0</Elem>
+											</DefaultValue>
+										</Channel>
+									</Section>
+								</Section>
 								<Channel Name="y_in" TypeGUID="03D3B985-1485-13A6-56FC3200A1C00087" RowDim="1" ColDim="1" Units="" BitFields="7">
 									<Description />
 									<Properties>
@@ -5901,7 +5966,7 @@
 												<String>tau to CSE mocell (only use for HIL testing)/X_d</String>
 											</Property>
 											<Property Name="Index">
-												<I32>53</I32>
+												<I32>56</I32>
 											</Property>
 										</Properties>
 										<Errors />
@@ -5916,7 +5981,7 @@
 												<String>tau to CSE mocell (only use for HIL testing)/N_d</String>
 											</Property>
 											<Property Name="Index">
-												<I32>54</I32>
+												<I32>57</I32>
 											</Property>
 										</Properties>
 										<Errors />
@@ -5931,7 +5996,7 @@
 												<String>tau to CSE mocell (only use for HIL testing)/Y_d</String>
 											</Property>
 											<Property Name="Index">
-												<I32>55</I32>
+												<I32>58</I32>
 											</Property>
 										</Properties>
 										<Errors />
@@ -5946,7 +6011,7 @@
 												<String>tau to CSE mocell (only use for HIL testing)/psi_0 </String>
 											</Property>
 											<Property Name="Index">
-												<I32>56</I32>
+												<I32>59</I32>
 											</Property>
 										</Properties>
 										<Errors />
@@ -5961,7 +6026,7 @@
 												<String>tau to CSE mocell (only use for HIL testing)/x_0</String>
 											</Property>
 											<Property Name="Index">
-												<I32>57</I32>
+												<I32>60</I32>
 											</Property>
 										</Properties>
 										<Errors />
@@ -5976,7 +6041,7 @@
 												<String>tau to CSE mocell (only use for HIL testing)/y_0</String>
 											</Property>
 											<Property Name="Index">
-												<I32>58</I32>
+												<I32>61</I32>
 											</Property>
 										</Properties>
 										<Errors />
@@ -5991,7 +6056,7 @@
 												<String>tau to CSE mocell (only use for HIL testing)/integrator reset model</String>
 											</Property>
 											<Property Name="Index">
-												<I32>59</I32>
+												<I32>62</I32>
 											</Property>
 										</Properties>
 										<Errors />
@@ -6011,7 +6076,7 @@
 												<String>joystick/u_BT</String>
 											</Property>
 											<Property Name="Index">
-												<I32>32</I32>
+												<I32>35</I32>
 											</Property>
 										</Properties>
 										<Errors />
@@ -6026,7 +6091,7 @@
 												<String>joystick/u_VSP1</String>
 											</Property>
 											<Property Name="Index">
-												<I32>33</I32>
+												<I32>36</I32>
 											</Property>
 										</Properties>
 										<Errors />
@@ -6041,7 +6106,7 @@
 												<String>joystick/u_VSP2</String>
 											</Property>
 											<Property Name="Index">
-												<I32>34</I32>
+												<I32>37</I32>
 											</Property>
 										</Properties>
 										<Errors />
@@ -6056,7 +6121,7 @@
 												<String>joystick/alpha_VSP1</String>
 											</Property>
 											<Property Name="Index">
-												<I32>35</I32>
+												<I32>38</I32>
 											</Property>
 										</Properties>
 										<Errors />
@@ -6071,7 +6136,7 @@
 												<String>joystick/alpha_VSP2</String>
 											</Property>
 											<Property Name="Index">
-												<I32>36</I32>
+												<I32>39</I32>
 											</Property>
 										</Properties>
 										<Errors />
@@ -6086,7 +6151,7 @@
 												<String>joystick/omega_VSP1</String>
 											</Property>
 											<Property Name="Index">
-												<I32>37</I32>
+												<I32>40</I32>
 											</Property>
 										</Properties>
 										<Errors />
@@ -6101,7 +6166,7 @@
 												<String>joystick/omega_VSP2</String>
 											</Property>
 											<Property Name="Index">
-												<I32>38</I32>
+												<I32>41</I32>
 											</Property>
 										</Properties>
 										<Errors />
@@ -6125,7 +6190,7 @@
 													<String>Observer/eta_bar_ut/x_bar</String>
 												</Property>
 												<Property Name="Index">
-													<I32>41</I32>
+													<I32>44</I32>
 												</Property>
 											</Properties>
 											<Errors />
@@ -6140,7 +6205,7 @@
 													<String>Observer/eta_bar_ut/y_bar</String>
 												</Property>
 												<Property Name="Index">
-													<I32>42</I32>
+													<I32>45</I32>
 												</Property>
 											</Properties>
 											<Errors />
@@ -6155,7 +6220,7 @@
 													<String>Observer/eta_bar_ut/psi_bar</String>
 												</Property>
 												<Property Name="Index">
-													<I32>43</I32>
+													<I32>46</I32>
 												</Property>
 											</Properties>
 											<Errors />
@@ -6175,7 +6240,7 @@
 													<String>Observer/eta_hat_ut/psi_hat</String>
 												</Property>
 												<Property Name="Index">
-													<I32>44</I32>
+													<I32>47</I32>
 												</Property>
 											</Properties>
 											<Errors />
@@ -6190,7 +6255,7 @@
 													<String>Observer/eta_hat_ut/x_hat</String>
 												</Property>
 												<Property Name="Index">
-													<I32>45</I32>
+													<I32>48</I32>
 												</Property>
 											</Properties>
 											<Errors />
@@ -6205,7 +6270,7 @@
 													<String>Observer/eta_hat_ut/y_hat</String>
 												</Property>
 												<Property Name="Index">
-													<I32>46</I32>
+													<I32>49</I32>
 												</Property>
 											</Properties>
 											<Errors />
@@ -6225,7 +6290,7 @@
 													<String>Observer/nu_hat_ut/r_hat</String>
 												</Property>
 												<Property Name="Index">
-													<I32>47</I32>
+													<I32>50</I32>
 												</Property>
 											</Properties>
 											<Errors />
@@ -6240,7 +6305,7 @@
 													<String>Observer/nu_hat_ut/u_hat</String>
 												</Property>
 												<Property Name="Index">
-													<I32>48</I32>
+													<I32>51</I32>
 												</Property>
 											</Properties>
 											<Errors />
@@ -6255,7 +6320,7 @@
 													<String>Observer/nu_hat_ut/v_hat</String>
 												</Property>
 												<Property Name="Index">
-													<I32>49</I32>
+													<I32>52</I32>
 												</Property>
 											</Properties>
 											<Errors />
@@ -6276,7 +6341,7 @@
 												<String>eta_noise_ut/psi_noise</String>
 											</Property>
 											<Property Name="Index">
-												<I32>50</I32>
+												<I32>53</I32>
 											</Property>
 										</Properties>
 										<Errors />
@@ -6291,7 +6356,7 @@
 												<String>eta_noise_ut/x_noise</String>
 											</Property>
 											<Property Name="Index">
-												<I32>51</I32>
+												<I32>54</I32>
 											</Property>
 										</Properties>
 										<Errors />
@@ -6306,7 +6371,7 @@
 												<String>eta_noise_ut/y_noise</String>
 											</Property>
 											<Property Name="Index">
-												<I32>52</I32>
+												<I32>55</I32>
 											</Property>
 										</Properties>
 										<Errors />
@@ -6336,7 +6401,7 @@
 												<String>imu</String>
 											</Property>
 											<Property Name="Index">
-												<I32>39</I32>
+												<I32>42</I32>
 											</Property>
 										</Properties>
 										<Errors />
@@ -6351,7 +6416,7 @@
 												<String>imu</String>
 											</Property>
 											<Property Name="Index">
-												<I32>39</I32>
+												<I32>42</I32>
 											</Property>
 										</Properties>
 										<Errors />
@@ -6366,7 +6431,7 @@
 												<String>imu</String>
 											</Property>
 											<Property Name="Index">
-												<I32>39</I32>
+												<I32>42</I32>
 											</Property>
 										</Properties>
 										<Errors />
@@ -6386,7 +6451,7 @@
 												<String>signal dropout check /lost</String>
 											</Property>
 											<Property Name="Index">
-												<I32>65</I32>
+												<I32>70</I32>
 											</Property>
 										</Properties>
 										<Errors />
@@ -6403,14 +6468,49 @@
 										<Description />
 										<Properties />
 										<Errors />
+									</Section>
+									<Section Name="z1" TypeGUID="cbfdde93-6581-4b7c-83b8-e88484f25b2e">
+										<Description />
+										<Properties />
+										<Errors />
+									</Section>
+									<Section Name="ma" TypeGUID="cbfdde93-6581-4b7c-83b8-e88484f25b2e">
+										<Description />
+										<Properties />
+										<Errors />
+									</Section>
+									<Section Name="kdz" TypeGUID="cbfdde93-6581-4b7c-83b8-e88484f25b2e">
+										<Description />
+										<Properties />
+										<Errors />
+									</Section>
+									<Section Name="etaaa" TypeGUID="cbfdde93-6581-4b7c-83b8-e88484f25b2e">
+										<Description />
+										<Properties />
+										<Errors />
+									</Section>
+									<Section Name="etav" TypeGUID="cbfdde93-6581-4b7c-83b8-e88484f25b2e">
+										<Description />
+										<Properties />
+										<Errors />
+									</Section>
+								</Section>
+								<Section Name="DP-system" TypeGUID="cbfdde93-6581-4b7c-83b8-e88484f25b2e">
+									<Description />
+									<Properties />
+									<Errors />
+									<Section Name="D" TypeGUID="cbfdde93-6581-4b7c-83b8-e88484f25b2e">
+										<Description />
+										<Properties />
+										<Errors />
 										<Channel Name="D(1,1)" TypeGUID="03D3B995-1485-13A6-56ABA0860ADF91DF" RowDim="1" ColDim="1" Units="" BitFields="5">
 											<Description />
 											<Properties>
 												<Property Name="Model Path">
-													<String>case D/D</String>
+													<String>DP-system/D</String>
 												</Property>
 												<Property Name="Index">
-													<I32>61</I32>
+													<I32>64</I32>
 												</Property>
 											</Properties>
 											<Errors />
@@ -6422,10 +6522,10 @@
 											<Description />
 											<Properties>
 												<Property Name="Model Path">
-													<String>case D/D</String>
+													<String>DP-system/D</String>
 												</Property>
 												<Property Name="Index">
-													<I32>61</I32>
+													<I32>64</I32>
 												</Property>
 											</Properties>
 											<Errors />
@@ -6437,10 +6537,10 @@
 											<Description />
 											<Properties>
 												<Property Name="Model Path">
-													<String>case D/D</String>
+													<String>DP-system/D</String>
 												</Property>
 												<Property Name="Index">
-													<I32>61</I32>
+													<I32>64</I32>
 												</Property>
 											</Properties>
 											<Errors />
@@ -6457,10 +6557,10 @@
 											<Description />
 											<Properties>
 												<Property Name="Model Path">
-													<String>case D/z1</String>
+													<String>DP-system/z1</String>
 												</Property>
 												<Property Name="Index">
-													<I32>62</I32>
+													<I32>65</I32>
 												</Property>
 											</Properties>
 											<Errors />
@@ -6472,10 +6572,10 @@
 											<Description />
 											<Properties>
 												<Property Name="Model Path">
-													<String>case D/z1</String>
+													<String>DP-system/z1</String>
 												</Property>
 												<Property Name="Index">
-													<I32>62</I32>
+													<I32>65</I32>
 												</Property>
 											</Properties>
 											<Errors />
@@ -6487,10 +6587,10 @@
 											<Description />
 											<Properties>
 												<Property Name="Model Path">
-													<String>case D/z1</String>
+													<String>DP-system/z1</String>
 												</Property>
 												<Property Name="Index">
-													<I32>62</I32>
+													<I32>65</I32>
 												</Property>
 											</Properties>
 											<Errors />
@@ -6507,10 +6607,10 @@
 											<Description />
 											<Properties>
 												<Property Name="Model Path">
-													<String>case D/ma</String>
+													<String>DP-system/ma</String>
 												</Property>
 												<Property Name="Index">
-													<I32>63</I32>
+													<I32>66</I32>
 												</Property>
 											</Properties>
 											<Errors />
@@ -6522,10 +6622,10 @@
 											<Description />
 											<Properties>
 												<Property Name="Model Path">
-													<String>case D/ma</String>
+													<String>DP-system/ma</String>
 												</Property>
 												<Property Name="Index">
-													<I32>63</I32>
+													<I32>66</I32>
 												</Property>
 											</Properties>
 											<Errors />
@@ -6537,10 +6637,10 @@
 											<Description />
 											<Properties>
 												<Property Name="Model Path">
-													<String>case D/ma</String>
+													<String>DP-system/ma</String>
 												</Property>
 												<Property Name="Index">
-													<I32>63</I32>
+													<I32>66</I32>
 												</Property>
 											</Properties>
 											<Errors />
@@ -6557,10 +6657,10 @@
 											<Description />
 											<Properties>
 												<Property Name="Model Path">
-													<String>case D/kdz</String>
+													<String>DP-system/kdz</String>
 												</Property>
 												<Property Name="Index">
-													<I32>64</I32>
+													<I32>67</I32>
 												</Property>
 											</Properties>
 											<Errors />
@@ -6572,10 +6672,10 @@
 											<Description />
 											<Properties>
 												<Property Name="Model Path">
-													<String>case D/kdz</String>
+													<String>DP-system/kdz</String>
 												</Property>
 												<Property Name="Index">
-													<I32>64</I32>
+													<I32>67</I32>
 												</Property>
 											</Properties>
 											<Errors />
@@ -6587,10 +6687,230 @@
 											<Description />
 											<Properties>
 												<Property Name="Model Path">
-													<String>case D/kdz</String>
+													<String>DP-system/kdz</String>
 												</Property>
 												<Property Name="Index">
-													<I32>64</I32>
+													<I32>67</I32>
+												</Property>
+											</Properties>
+											<Errors />
+											<DefaultValue>
+												<Elem>0</Elem>
+											</DefaultValue>
+										</Channel>
+									</Section>
+									<Section Name="etaaa" TypeGUID="cbfdde93-6581-4b7c-83b8-e88484f25b2e">
+										<Description />
+										<Properties />
+										<Errors />
+										<Channel Name="etaaa(1,1)" TypeGUID="03D3B995-1485-13A6-56ABA0860ADF91DF" RowDim="1" ColDim="1" Units="" BitFields="5">
+											<Description />
+											<Properties>
+												<Property Name="Model Path">
+													<String>DP-system/etaaa</String>
+												</Property>
+												<Property Name="Index">
+													<I32>68</I32>
+												</Property>
+											</Properties>
+											<Errors />
+											<DefaultValue>
+												<Elem>0</Elem>
+											</DefaultValue>
+										</Channel>
+										<Channel Name="etaaa(2,1)" TypeGUID="03D3B995-1485-13A6-56ABA0860ADF91DF" RowDim="1" ColDim="1" Units="" BitFields="5">
+											<Description />
+											<Properties>
+												<Property Name="Model Path">
+													<String>DP-system/etaaa</String>
+												</Property>
+												<Property Name="Index">
+													<I32>68</I32>
+												</Property>
+											</Properties>
+											<Errors />
+											<DefaultValue>
+												<Elem>0</Elem>
+											</DefaultValue>
+										</Channel>
+										<Channel Name="etaaa(3,1)" TypeGUID="03D3B995-1485-13A6-56ABA0860ADF91DF" RowDim="1" ColDim="1" Units="" BitFields="5">
+											<Description />
+											<Properties>
+												<Property Name="Model Path">
+													<String>DP-system/etaaa</String>
+												</Property>
+												<Property Name="Index">
+													<I32>68</I32>
+												</Property>
+											</Properties>
+											<Errors />
+											<DefaultValue>
+												<Elem>0</Elem>
+											</DefaultValue>
+										</Channel>
+									</Section>
+									<Section Name="etav" TypeGUID="cbfdde93-6581-4b7c-83b8-e88484f25b2e">
+										<Description />
+										<Properties />
+										<Errors />
+										<Channel Name="etav(1,1)" TypeGUID="03D3B995-1485-13A6-56ABA0860ADF91DF" RowDim="1" ColDim="1" Units="" BitFields="5">
+											<Description />
+											<Properties>
+												<Property Name="Model Path">
+													<String>DP-system/etav</String>
+												</Property>
+												<Property Name="Index">
+													<I32>69</I32>
+												</Property>
+											</Properties>
+											<Errors />
+											<DefaultValue>
+												<Elem>0</Elem>
+											</DefaultValue>
+										</Channel>
+										<Channel Name="etav(2,1)" TypeGUID="03D3B995-1485-13A6-56ABA0860ADF91DF" RowDim="1" ColDim="1" Units="" BitFields="5">
+											<Description />
+											<Properties>
+												<Property Name="Model Path">
+													<String>DP-system/etav</String>
+												</Property>
+												<Property Name="Index">
+													<I32>69</I32>
+												</Property>
+											</Properties>
+											<Errors />
+											<DefaultValue>
+												<Elem>0</Elem>
+											</DefaultValue>
+										</Channel>
+										<Channel Name="etav(3,1)" TypeGUID="03D3B995-1485-13A6-56ABA0860ADF91DF" RowDim="1" ColDim="1" Units="" BitFields="5">
+											<Description />
+											<Properties>
+												<Property Name="Model Path">
+													<String>DP-system/etav</String>
+												</Property>
+												<Property Name="Index">
+													<I32>69</I32>
+												</Property>
+											</Properties>
+											<Errors />
+											<DefaultValue>
+												<Elem>0</Elem>
+											</DefaultValue>
+										</Channel>
+										<Channel Name="etav(4,1)" TypeGUID="03D3B995-1485-13A6-56ABA0860ADF91DF" RowDim="1" ColDim="1" Units="" BitFields="5">
+											<Description />
+											<Properties>
+												<Property Name="Model Path">
+													<String>DP-system/etav</String>
+												</Property>
+												<Property Name="Index">
+													<I32>69</I32>
+												</Property>
+											</Properties>
+											<Errors />
+											<DefaultValue>
+												<Elem>0</Elem>
+											</DefaultValue>
+										</Channel>
+										<Channel Name="etav(5,1)" TypeGUID="03D3B995-1485-13A6-56ABA0860ADF91DF" RowDim="1" ColDim="1" Units="" BitFields="5">
+											<Description />
+											<Properties>
+												<Property Name="Model Path">
+													<String>DP-system/etav</String>
+												</Property>
+												<Property Name="Index">
+													<I32>69</I32>
+												</Property>
+											</Properties>
+											<Errors />
+											<DefaultValue>
+												<Elem>0</Elem>
+											</DefaultValue>
+										</Channel>
+										<Channel Name="etav(6,1)" TypeGUID="03D3B995-1485-13A6-56ABA0860ADF91DF" RowDim="1" ColDim="1" Units="" BitFields="5">
+											<Description />
+											<Properties>
+												<Property Name="Model Path">
+													<String>DP-system/etav</String>
+												</Property>
+												<Property Name="Index">
+													<I32>69</I32>
+												</Property>
+											</Properties>
+											<Errors />
+											<DefaultValue>
+												<Elem>0</Elem>
+											</DefaultValue>
+										</Channel>
+										<Channel Name="etav(7,1)" TypeGUID="03D3B995-1485-13A6-56ABA0860ADF91DF" RowDim="1" ColDim="1" Units="" BitFields="5">
+											<Description />
+											<Properties>
+												<Property Name="Model Path">
+													<String>DP-system/etav</String>
+												</Property>
+												<Property Name="Index">
+													<I32>69</I32>
+												</Property>
+											</Properties>
+											<Errors />
+											<DefaultValue>
+												<Elem>0</Elem>
+											</DefaultValue>
+										</Channel>
+										<Channel Name="etav(8,1)" TypeGUID="03D3B995-1485-13A6-56ABA0860ADF91DF" RowDim="1" ColDim="1" Units="" BitFields="5">
+											<Description />
+											<Properties>
+												<Property Name="Model Path">
+													<String>DP-system/etav</String>
+												</Property>
+												<Property Name="Index">
+													<I32>69</I32>
+												</Property>
+											</Properties>
+											<Errors />
+											<DefaultValue>
+												<Elem>0</Elem>
+											</DefaultValue>
+										</Channel>
+										<Channel Name="etav(9,1)" TypeGUID="03D3B995-1485-13A6-56ABA0860ADF91DF" RowDim="1" ColDim="1" Units="" BitFields="5">
+											<Description />
+											<Properties>
+												<Property Name="Model Path">
+													<String>DP-system/etav</String>
+												</Property>
+												<Property Name="Index">
+													<I32>69</I32>
+												</Property>
+											</Properties>
+											<Errors />
+											<DefaultValue>
+												<Elem>0</Elem>
+											</DefaultValue>
+										</Channel>
+										<Channel Name="etav(10,1)" TypeGUID="03D3B995-1485-13A6-56ABA0860ADF91DF" RowDim="1" ColDim="1" Units="" BitFields="5">
+											<Description />
+											<Properties>
+												<Property Name="Model Path">
+													<String>DP-system/etav</String>
+												</Property>
+												<Property Name="Index">
+													<I32>69</I32>
+												</Property>
+											</Properties>
+											<Errors />
+											<DefaultValue>
+												<Elem>0</Elem>
+											</DefaultValue>
+										</Channel>
+										<Channel Name="etav(11,1)" TypeGUID="03D3B995-1485-13A6-56ABA0860ADF91DF" RowDim="1" ColDim="1" Units="" BitFields="5">
+											<Description />
+											<Properties>
+												<Property Name="Model Path">
+													<String>DP-system/etav</String>
+												</Property>
+												<Property Name="Index">
+													<I32>69</I32>
 												</Property>
 											</Properties>
 											<Errors />
@@ -6603,10 +6923,10 @@
 										<Description />
 										<Properties>
 											<Property Name="Model Path">
-												<String>case D/s</String>
+												<String>DP-system/s</String>
 											</Property>
 											<Property Name="Index">
-												<I32>60</I32>
+												<I32>63</I32>
 											</Property>
 										</Properties>
 										<Errors />
@@ -6622,7 +6942,7 @@
 											<String>guidance_switch</String>
 										</Property>
 										<Property Name="Index">
-											<I32>40</I32>
+											<I32>43</I32>
 										</Property>
 									</Properties>
 									<Errors />
