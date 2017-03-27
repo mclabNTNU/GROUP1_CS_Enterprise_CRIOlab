@@ -15,9 +15,9 @@
  *
  * Code generation for model "ctrl_student_HIL".
  *
- * Model version              : 1.456
+ * Model version              : 1.465
  * Simulink Coder version : 8.8 (R2015a) 09-Feb-2015
- * C source code generated on : Mon Mar 27 12:20:09 2017
+ * C source code generated on : Mon Mar 27 12:49:36 2017
  *
  * Target selection: NIVeriStand_VxWorks.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -738,11 +738,6 @@ P_ctrl_student_HIL_T ctrl_student_HIL_P = {
   0.0,                                 /* Expression: 0
                                         * Referenced by: '<S1>/Integrator1'
                                         */
-
-  /*  Expression: [0 0]
-   * Referenced by: '<S1>/Memory1'
-   */
-  { 0.0, 0.0 },
   0.0,                                 /* Expression: 0
                                         * Referenced by: '<S1>/Memory'
                                         */
@@ -1085,6 +1080,11 @@ P_ctrl_student_HIL_T ctrl_student_HIL_P = {
   0.0,                                 /* Expression: 0
                                         * Referenced by: '<S1>/Memory3'
                                         */
+
+  /*  Expression: [0 0 0]
+   * Referenced by: '<S1>/Memory1'
+   */
+  { 0.0, 0.0, 0.0 },
   -1.0,                                /* Expression: width
                                         * Referenced by: '<S1>/sdot'
                                         */
@@ -1972,8 +1972,6 @@ NI_ParamSizeWidth P_ctrl_student_HIL_T_sizes[] DataSection(
 
   { sizeof(real_T), 1, 0 },
 
-  { sizeof(real_T), 2, 0 },
-
   { sizeof(real_T), 1, 0 },
 
   { sizeof(real_T), 1, 0 },
@@ -2201,6 +2199,8 @@ NI_ParamSizeWidth P_ctrl_student_HIL_T_sizes[] DataSection(
   { sizeof(real_T), 1, 0 },
 
   { sizeof(real_T), 1, 0 },
+
+  { sizeof(real_T), 3, 0 },
 
   { sizeof(real_T), 1, 0 },
 

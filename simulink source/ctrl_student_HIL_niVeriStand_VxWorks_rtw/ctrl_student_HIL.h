@@ -7,9 +7,9 @@
  *
  * Code generation for model "ctrl_student_HIL".
  *
- * Model version              : 1.456
+ * Model version              : 1.465
  * Simulink Coder version : 8.8 (R2015a) 09-Feb-2015
- * C source code generated on : Mon Mar 27 12:20:09 2017
+ * C source code generated on : Mon Mar 27 12:49:36 2017
  *
  * Target selection: NIVeriStand_VxWorks.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -855,13 +855,13 @@ typedef struct {
   real_T Memory2;                      /* '<S1>/Memory2' */
   real_T Sum;                          /* '<S1>/Sum' */
   real_T Integrator1;                  /* '<S1>/Integrator1' */
-  real_T Memory1[2];                   /* '<S1>/Memory1' */
   real_T Memory_p[11];                 /* '<S1>/Memory' */
   real_T Kd1;                          /* '<S12>/Kd1' */
   real_T Kd2;                          /* '<S12>/Kd2' */
   real_T Kd3;                          /* '<S12>/Kd3' */
   real_T Sum_k[3];                     /* '<Root>/Sum' */
   real_T Memory3[3];                   /* '<S1>/Memory3' */
+  real_T Memory1[3];                   /* '<S1>/Memory1' */
   real_T Integrator_e[3];              /* '<S3>/Integrator' */
   real_T Memory_d[10];                 /* '<S8>/Memory' */
   real_T Memory1_l[10];                /* '<S8>/Memory1' */
@@ -892,9 +892,9 @@ typedef struct {
   real_T z1[3];                        /* '<S1>/z1//z2' */
   real_T z2[3];                        /* '<S1>/z1//z2' */
   real_T s_dot1;                       /* '<S1>/update law' */
+  real_T i;                            /* '<S1>/update law' */
   real_T signal[11];                   /* '<S1>/signal switch ' */
-  real_T U_ref;                        /* '<S1>/inputs' */
-  real_T temp[2];                      /* '<S1>/inputs' */
+  real_T U_ref_l;                      /* '<S1>/inputs' */
   real_T D1[3];                        /* '<S1>/controller' */
   real_T z11[3];                       /* '<S1>/controller' */
   real_T ma[3];                        /* '<S1>/controller' */
@@ -952,7 +952,6 @@ typedef struct {
   real_T Memory4_PreviousInput[3];     /* '<S1>/Memory4' */
   real_T Memory5_PreviousInput[3];     /* '<S1>/Memory5' */
   real_T Memory2_PreviousInput;        /* '<S1>/Memory2' */
-  real_T Memory1_PreviousInput[2];     /* '<S1>/Memory1' */
   real_T Memory_PreviousInput_l[11];   /* '<S1>/Memory' */
   real_T Kd1_DWORK1;                   /* '<S12>/Kd1' */
   real_T Kd2_DWORK1;                   /* '<S12>/Kd2' */
@@ -973,8 +972,9 @@ typedef struct {
   real_T etav_DWORK1[11];              /* '<S1>/etav' */
   real_T uref_DWORK1;                  /* '<S1>/uref ' */
   real_T Memory3_PreviousInput[3];     /* '<S1>/Memory3' */
+  real_T Memory1_PreviousInput[3];     /* '<S1>/Memory1' */
   real_T sdot_DWORK1;                  /* '<S1>/sdot' */
-  real_T i_DWORK1[2];                  /* '<S1>/i' */
+  real_T i_DWORK1;                     /* '<S1>/i' */
   real_T Memory_PreviousInput_p[10];   /* '<S8>/Memory' */
   real_T Memory1_PreviousInput_m[10];  /* '<S8>/Memory1' */
   real_T x_bar_DWORK1;                 /* '<S33>/x_bar' */
@@ -1845,9 +1845,6 @@ struct P_ctrl_student_HIL_T_ {
   real_T Integrator1_IC;               /* Expression: 0
                                         * Referenced by: '<S1>/Integrator1'
                                         */
-  real_T Memory1_X0[2];                /* Expression: [0 0]
-                                        * Referenced by: '<S1>/Memory1'
-                                        */
   real_T Memory_X0_j;                  /* Expression: 0
                                         * Referenced by: '<S1>/Memory'
                                         */
@@ -2189,6 +2186,9 @@ struct P_ctrl_student_HIL_T_ {
                                         */
   real_T Memory3_X0;                   /* Expression: 0
                                         * Referenced by: '<S1>/Memory3'
+                                        */
+  real_T Memory1_X0[3];                /* Expression: [0 0 0]
+                                        * Referenced by: '<S1>/Memory1'
                                         */
   real_T sdot_P1;                      /* Expression: width
                                         * Referenced by: '<S1>/sdot'
