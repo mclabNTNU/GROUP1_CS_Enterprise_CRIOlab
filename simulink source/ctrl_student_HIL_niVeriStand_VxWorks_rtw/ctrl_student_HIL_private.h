@@ -7,9 +7,9 @@
  *
  * Code generation for model "ctrl_student_HIL".
  *
- * Model version              : 1.465
+ * Model version              : 1.153
  * Simulink Coder version : 8.8 (R2015a) 09-Feb-2015
- * C source code generated on : Mon Mar 27 12:49:36 2017
+ * C source code generated on : Thu Mar 30 13:15:43 2017
  *
  * Target selection: NIVeriStand_VxWorks.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -29,8 +29,8 @@ extern real_T rt_urand_Upu32_Yd_f_pw_snf(uint32_T *u);
 extern real_T rt_nrand_Upu32_Yd_f_pw_snf(uint32_T *u);
 extern real_T rt_atan2d_snf(real_T u0, real_T u1);
 extern real_T rt_powd_snf(real_T u0, real_T u1);
-extern void ctrl_student_HIL_MATLABFunction(real_T rtu_u, real_T rtu_u_j, real_T
-  rtu_u_c, B_MATLABFunction_ctrl_student_T *localB);
+extern void ctrl_student_HIL_MATLABFunction(real_T rtu_u, real_T rtu_u_e, real_T
+  rtu_u_n, B_MATLABFunction_ctrl_student_T *localB);
 
 /* private model entry point functions */
 extern void ctrl_student_HIL_derivatives(void);
