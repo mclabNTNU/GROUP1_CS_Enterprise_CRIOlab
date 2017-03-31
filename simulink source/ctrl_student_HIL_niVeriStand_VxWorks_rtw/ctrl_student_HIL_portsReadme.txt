@@ -13,15 +13,15 @@
 <inport> id="-1"  name = "joystick1/ArrowUp" width = "1" datatype = "0"</inport>
 <inport> id="-1"  name = "joystick1/ArrowLeft" width = "1" datatype = "0"</inport>
 <inport> id="-1"  name = "joystick1/ArrowRight" width = "1" datatype = "0"</inport>
+<inport> id="-1"  name = "dead rec  switch/dead" width = "1" datatype = "0"</inport>
+<inport> id="-1"  name = "Samp_freq" width = "1" datatype = "0"</inport>
+<inport> id="-1"  name = "N_power" width = "1" datatype = "0"</inport>
+<inport> id="-1"  name = "N_power_H" width = "1" datatype = "0"</inport>
+<inport> id="-1"  name = "psi" width = "1" datatype = "0"</inport>
+<inport> id="-1"  name = "Enable_noise" width = "1" datatype = "0"</inport>
 <inport> id="-1"  name = "DP-system/Kd/Kd1" width = "1" datatype = "42"</inport>
 <inport> id="-1"  name = "DP-system/Kd/Kd2" width = "1" datatype = "42"</inport>
 <inport> id="-1"  name = "DP-system/Kd/Kd3" width = "1" datatype = "42"</inport>
-<inport> id="-1"  name = "psi" width = "1" datatype = "0"</inport>
-<inport> id="-1"  name = "Enable_noise" width = "1" datatype = "0"</inport>
-<inport> id="-1"  name = "N_power" width = "1" datatype = "0"</inport>
-<inport> id="-1"  name = "N_power_H" width = "1" datatype = "0"</inport>
-<inport> id="-1"  name = "dead rec  switch/dead" width = "1" datatype = "0"</inport>
-<inport> id="-1"  name = "Samp_freq" width = "1" datatype = "0"</inport>
 <inport> id="-1"  name = "Observer/L1/L12" width = "1" datatype = "42"</inport>
 <inport> id="-1"  name = "Observer/L1/L11" width = "1" datatype = "42"</inport>
 <inport> id="-1"  name = "Observer/L1/L13" width = "1" datatype = "42"</inport>
@@ -79,4 +79,6 @@
 <outport> id = "-1" name = "Observer/nu_hat_ut/u_hat" width = "1" datatype = "17"</outport>
 <outport> id = "-1" name = "Observer/nu_hat_ut/v_hat" width = "1" datatype = "17"</outport>
 <outport> id = "-1" name = "signal dropout check /lost" width = "1" datatype = "0"</outport>
+<outport> id = "-1" name = "signal dropout check /s1" width = "1" datatype = "0"</outport>
+<outport> id = "-1" name = "signal dropout check /s2" width = "1" datatype = "0"</outport>
 </portlist>

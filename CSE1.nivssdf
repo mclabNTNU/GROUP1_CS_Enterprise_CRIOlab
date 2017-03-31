@@ -10,7 +10,7 @@
 				<String>CSE1</String>
 			</Property>
 			<Property Name="Version">
-				<String>1.0.0.327</String>
+				<String>1.0.0.333</String>
 			</Property>
 			<Property Name="Creator">
 				<String />
@@ -5680,10 +5680,10 @@
 									<Double>10000</Double>
 								</Property>
 								<Property Name="DLL Size">
-									<I32>333480</I32>
+									<I32>337592</I32>
 								</Property>
 								<Property Name="DLL Timestamp">
-									<Double>3573717354.8989663</Double>
+									<Double>3573788424.2738624</Double>
 								</Property>
 								<Property Name="Decimation">
 									<I32>1</I32>
@@ -5727,7 +5727,7 @@
 										<ForceDownload>false</ForceDownload>
 										<RTDestination>c:\ni-rt\system\ctrl_student_HIL.out</RTDestination>
 										<SupportedTarget>VxWorks</SupportedTarget>
-										<MD5>ab0029642fb3e9b30bde5a134e19cbef</MD5>
+										<MD5>a577bb9121e76dbad08ec8105fce7be4</MD5>
 									</DependentFile>
 								</Property>
 								<Property Name="GlobalParameterScopes">
@@ -6021,7 +6021,7 @@
 												<String>dead rec  switch/dead</String>
 											</Property>
 											<Property Name="Index">
-												<I32>21</I32>
+												<I32>14</I32>
 											</Property>
 										</Properties>
 										<Errors />
@@ -6045,7 +6045,7 @@
 													<String>DP-system/Kd/Kd1</String>
 												</Property>
 												<Property Name="Index">
-													<I32>14</I32>
+													<I32>20</I32>
 												</Property>
 											</Properties>
 											<Errors />
@@ -6060,7 +6060,7 @@
 													<String>DP-system/Kd/Kd2</String>
 												</Property>
 												<Property Name="Index">
-													<I32>15</I32>
+													<I32>21</I32>
 												</Property>
 											</Properties>
 											<Errors />
@@ -6075,7 +6075,7 @@
 													<String>DP-system/Kd/Kd3</String>
 												</Property>
 												<Property Name="Index">
-													<I32>16</I32>
+													<I32>22</I32>
 												</Property>
 											</Properties>
 											<Errors />
@@ -6283,7 +6283,7 @@
 											<String>psi</String>
 										</Property>
 										<Property Name="Index">
-											<I32>17</I32>
+											<I32>18</I32>
 										</Property>
 										<Property Name="DataSource">
 											<DataSourceNode Channel="Targets/Controller/Custom Devices/Oqus/Yaw" />
@@ -6301,7 +6301,7 @@
 											<String>Enable_noise</String>
 										</Property>
 										<Property Name="Index">
-											<I32>18</I32>
+											<I32>19</I32>
 										</Property>
 									</Properties>
 									<Errors />
@@ -6316,7 +6316,7 @@
 											<String>N_power</String>
 										</Property>
 										<Property Name="Index">
-											<I32>19</I32>
+											<I32>16</I32>
 										</Property>
 									</Properties>
 									<Errors />
@@ -6331,7 +6331,7 @@
 											<String>N_power_H</String>
 										</Property>
 										<Property Name="Index">
-											<I32>20</I32>
+											<I32>17</I32>
 										</Property>
 									</Properties>
 									<Errors />
@@ -6346,7 +6346,7 @@
 											<String>Samp_freq</String>
 										</Property>
 										<Property Name="Index">
-											<I32>22</I32>
+											<I32>15</I32>
 										</Property>
 									</Properties>
 									<Errors />
@@ -7456,6 +7456,36 @@
 											</Property>
 											<Property Name="Index">
 												<I32>79</I32>
+											</Property>
+										</Properties>
+										<Errors />
+										<DefaultValue>
+											<Elem>0</Elem>
+										</DefaultValue>
+									</Channel>
+									<Channel Name="s1" TypeGUID="03D3B995-1485-13A6-56ABA0860ADF91DF" RowDim="1" ColDim="1" Units="" BitFields="5">
+										<Description />
+										<Properties>
+											<Property Name="Model Path">
+												<String>signal dropout check /s1</String>
+											</Property>
+											<Property Name="Index">
+												<I32>80</I32>
+											</Property>
+										</Properties>
+										<Errors />
+										<DefaultValue>
+											<Elem>0</Elem>
+										</DefaultValue>
+									</Channel>
+									<Channel Name="s2" TypeGUID="03D3B995-1485-13A6-56ABA0860ADF91DF" RowDim="1" ColDim="1" Units="" BitFields="5">
+										<Description />
+										<Properties>
+											<Property Name="Model Path">
+												<String>signal dropout check /s2</String>
+											</Property>
+											<Property Name="Index">
+												<I32>81</I32>
 											</Property>
 										</Properties>
 										<Errors />

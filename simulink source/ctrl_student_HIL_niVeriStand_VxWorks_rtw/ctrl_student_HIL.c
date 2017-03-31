@@ -7,9 +7,9 @@
  *
  * Code generation for model "ctrl_student_HIL".
  *
- * Model version              : 1.153
+ * Model version              : 1.173
  * Simulink Coder version : 8.8 (R2015a) 09-Feb-2015
- * C source code generated on : Thu Mar 30 13:15:43 2017
+ * C source code generated on : Fri Mar 31 08:59:54 2017
  *
  * Target selection: NIVeriStand_VxWorks.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -39,6 +39,8 @@ RT_MODEL_ctrl_student_HIL_T *const ctrl_student_HIL_M = &ctrl_student_HIL_M_;
 
 /* Forward declaration for local functions */
 static void ctrl_student_HIL_mldivide(const real_T A[9], const real_T B[3],
+  real_T Y[3]);
+static void ctrl_student_HIL_mldivide_c(const real_T A[9], const real_T B[3],
   real_T Y[3]);
 static real_T ctrl_student_HIL_norm(const real_T x[3]);
 
@@ -176,6 +178,59 @@ real_T rt_nrand_Upu32_Yd_f_pw_snf(uint32_T *u)
   return y;
 }
 
+/* Function for MATLAB Function: '<S7>/Thrust allocation' */
+static void ctrl_student_HIL_mldivide(const real_T A[9], const real_T B[3],
+  real_T Y[3])
+{
+  real_T b_A[9];
+  int32_T r1;
+  int32_T r2;
+  int32_T r3;
+  real_T maxval;
+  real_T a21;
+  int32_T rtemp;
+  memcpy(&b_A[0], &A[0], 9U * sizeof(real_T));
+  r1 = 0;
+  r2 = 1;
+  r3 = 2;
+  maxval = fabs(A[0]);
+  a21 = fabs(A[1]);
+  if (a21 > maxval) {
+    maxval = a21;
+    r1 = 1;
+    r2 = 0;
+  }
+
+  if (fabs(A[2]) > maxval) {
+    r1 = 2;
+    r2 = 1;
+    r3 = 0;
+  }
+
+  b_A[r2] = A[r2] / A[r1];
+  b_A[r3] /= b_A[r1];
+  b_A[3 + r2] -= b_A[3 + r1] * b_A[r2];
+  b_A[3 + r3] -= b_A[3 + r1] * b_A[r3];
+  b_A[6 + r2] -= b_A[6 + r1] * b_A[r2];
+  b_A[6 + r3] -= b_A[6 + r1] * b_A[r3];
+  if (fabs(b_A[3 + r3]) > fabs(b_A[3 + r2])) {
+    rtemp = r2;
+    r2 = r3;
+    r3 = rtemp;
+  }
+
+  b_A[3 + r3] /= b_A[3 + r2];
+  b_A[6 + r3] -= b_A[3 + r3] * b_A[6 + r2];
+  Y[1] = B[r2] - B[r1] * b_A[r2];
+  Y[2] = (B[r3] - B[r1] * b_A[r3]) - b_A[3 + r3] * Y[1];
+  Y[2] /= b_A[6 + r3];
+  Y[0] = B[r1] - b_A[6 + r1] * Y[2];
+  Y[1] -= b_A[6 + r2] * Y[2];
+  Y[1] /= b_A[3 + r2];
+  Y[0] -= b_A[3 + r1] * Y[1];
+  Y[0] /= b_A[r1];
+}
+
 real_T rt_atan2d_snf(real_T u0, real_T u1)
 {
   real_T y;
@@ -259,7 +314,7 @@ real_T rt_powd_snf(real_T u0, real_T u1)
 }
 
 /* Function for MATLAB Function: '<S10>/Full thrust allocation' */
-static void ctrl_student_HIL_mldivide(const real_T A[9], const real_T B[3],
+static void ctrl_student_HIL_mldivide_c(const real_T A[9], const real_T B[3],
   real_T Y[3])
 {
   real_T b_A[9];
@@ -354,63 +409,52 @@ static real_T ctrl_student_HIL_norm(const real_T x[3])
 /* Model output function */
 void ctrl_student_HIL_output(void)
 {
-  real_T tau[3];
   real_T u[3];
-  real_T u_VSP_x;
-  real_T x;
-  real_T b_x;
-  real_T a;
-  real_T d_x;
-  real_T b_a;
-  real_T c_a;
-  int32_T k;
-  real_T D[9];
-  real_T R[9];
-  real_T S[9];
-  static const real_T a_0[9] = { -0.2, -0.0, -0.0, -0.0, -0.2, -0.0, -0.0, -0.0,
-    -0.1 };
-
-  static const real_T b_a_0[9] = { 16.79, 0.0, 0.0, 0.0, 15.79,
-    0.55462499999999992, 0.0, 0.55462499999999992, 2.76 };
-
   static const real_T b[9] = { 1.165, 0.0, 0.0, 0.0, 1.165, 0.0, 0.0, 0.0, 2.629
   };
 
   static const real_T c[9] = { 1.0, 0.0, 0.0, 0.0, 1.0, -0.4575, 0.0, 1.0,
     0.3875 };
 
-  int32_T d;
-  int32_T idx[10];
-  int32_T nb;
-  int32_T khi;
-  int32_T iwork[10];
-  int32_T b_i;
-  int32_T kEnd;
-  int32_T f_k;
-  int32_T exponent;
-  int32_T d_j;
-  int32_T b_pEnd;
-  int32_T b_qEnd;
-  int32_T b_kEnd;
-  int32_T b_exponent;
-  boolean_T guard1 = false;
+  real_T c_x;
+  real_T d_x;
+  real_T b_a;
+  real_T c_a;
+  real_T D[9];
+  real_T R[9];
+  real_T S[9];
+  static const real_T a[9] = { -0.2, -0.0, -0.0, -0.0, -0.2, -0.0, -0.0, -0.0,
+    -0.1 };
+
+  static const real_T b_a_0[9] = { 16.79, 0.0, 0.0, 0.0, 15.79,
+    0.55462499999999992, 0.0, 0.55462499999999992, 2.76 };
+
+  static const real_T b_0[9] = { 1.165, 0.0, 0.0, 0.0, 1.165, 0.0, 0.0, 0.0,
+    2.629 };
+
+  static const real_T c_0[9] = { 1.0, 0.0, 0.0, 0.0, 1.0, -0.4575, 0.0, 1.0,
+    0.3875 };
+
+  real_T V1_s;
   real_T rtb_Gain;
   real_T rtb_Gain1;
-  real_T rtb_u;
+  real_T rtb_u_h;
   real_T rtb_Gain1_k;
   real_T rtb_Gain2;
+  real_T rtb_tau[3];
   real_T rtb_a_1[3];
   real_T rtb_R[9];
+  int32_T i;
   real_T tmp[3];
-  real_T R_0[3];
+  real_T rtb_Gain1_f[3];
   real_T S_0[9];
   real_T S_1[3];
-  real_T R_1[3];
-  real_T a_1[3];
+  int32_T i_0;
+  real_T R_0[3];
+  real_T a_0[3];
   real_T tmp_0[9];
   real_T tmp_1[9];
   real_T tmp_2[9];
-  real_T b_data[10];
   real_T rtb_y_idx_0;
   real_T rtb_y_idx_1;
   real_T rtb_y_idx_2;
@@ -462,34 +506,30 @@ void ctrl_student_HIL_output(void)
   /*  Extended thrust configuration matrix */
   /*  Extended thrust coefficient matrix */
   /*  tau = T*K*u inverse */
-  /* '<S42>:1:23' */
-  u[1] = ctrl_student_HIL_B.Product[1] - rtb_Gain1_k * 0.0;
-  u[2] = (ctrl_student_HIL_B.Product[2] - rtb_Gain1_k * 0.0) - u[1] * -0.4575;
-  u[2] /= 2.221505;
-  u[0] = rtb_Gain1_k - u[2] * 0.0;
-  u[1] -= u[2] * 2.629;
-  rtb_u = u[1] / 1.165;
-  u[1] /= 1.165;
-  u[0] -= u[1] * 0.0;
+  /* u = (T*K)\tau; opprinelig */
+  /* '<S42>:1:24' */
+  rtb_Gain1_f[0] = rtb_Gain1_k;
+  rtb_Gain1_f[1] = ctrl_student_HIL_B.Product[1];
+  rtb_Gain1_f[2] = ctrl_student_HIL_B.Product[2];
+  ctrl_student_HIL_mldivide(c, rtb_Gain1_f, rtb_tau);
+  ctrl_student_HIL_mldivide(b, rtb_tau, u);
 
-  /* '<S42>:1:25' */
-  /* '<S42>:1:27' */
-  u_VSP_x = u[0] / 1.165;
-
+  /* '<S42>:1:26' */
   /* '<S42>:1:28' */
   /* '<S42>:1:29' */
   /* '<S42>:1:30' */
+  /* '<S42>:1:31' */
   if (ctrl_student_HIL_P.True_Value != 0.0) {
-    /* '<S42>:1:33' */
+    /* '<S42>:1:34' */
     ctrl_student_HIL_B.omega_VSP_h = 0.3;
   } else {
-    /* '<S42>:1:35' */
+    /* '<S42>:1:36' */
     ctrl_student_HIL_B.omega_VSP_h = 0.0;
   }
 
   ctrl_student_HIL_B.u_BT_d = u[2];
-  ctrl_student_HIL_B.u_VSP_p = sqrt(u_VSP_x * u_VSP_x + rtb_u * rtb_u);
-  ctrl_student_HIL_B.alpha_VSP_b = rt_atan2d_snf(rtb_u, u[0] / 1.165);
+  ctrl_student_HIL_B.u_VSP_p = sqrt(u[0] * u[0] + u[1] * u[1]);
+  ctrl_student_HIL_B.alpha_VSP_b = rt_atan2d_snf(u[1], u[0]);
 
   /* End of MATLAB Function: '<S7>/Thrust allocation' */
   if (rtmIsMajorTimeStep(ctrl_student_HIL_M)) {
@@ -516,29 +556,233 @@ void ctrl_student_HIL_output(void)
   /* % Function that takes in impulse button sigals [0,1] and sends out a  */
   /*  different signal depentent pn which button has been pressed */
   /* '<S44>:1:8' */
-  rtb_u = ctrl_student_HIL_B.Memory;
+  rtb_u_h = ctrl_student_HIL_B.Memory;
   if (ctrl_student_HIL_B.ArrowUp != 0.0) {
     /* '<S44>:1:10' */
     /* '<S44>:1:11' */
-    rtb_u = 1.0;
+    rtb_u_h = 1.0;
   }
 
   if (ctrl_student_HIL_B.ArrowDown != 0.0) {
     /* '<S44>:1:14' */
     /* '<S44>:1:15' */
-    rtb_u = 2.0;
+    rtb_u_h = 2.0;
   }
 
   if (ctrl_student_HIL_B.ArrowLeft != 0.0) {
     /* '<S44>:1:18' */
     /* '<S44>:1:19' */
-    rtb_u = 3.0;
+    rtb_u_h = 3.0;
   }
 
   /* '<S44>:1:22' */
-  ctrl_student_HIL_B.switch_signal = rtb_u;
+  ctrl_student_HIL_B.switch_signal = rtb_u_h;
 
   /* End of MATLAB Function: '<S9>/Switch_function' */
+
+  /* Switch: '<S5>/Switch1' incorporates:
+   *  Constant: '<S5>/Constant'
+   *  Constant: '<S5>/Constant1'
+   */
+  if (ctrl_student_HIL_B.dead != 0.0) {
+    rtb_u_h = ctrl_student_HIL_P.Constant_Value;
+  } else {
+    rtb_u_h = ctrl_student_HIL_P.Constant1_Value;
+  }
+
+  /* End of Switch: '<S5>/Switch1' */
+  if (rtmIsMajorTimeStep(ctrl_student_HIL_M)) {
+    /* Memory: '<S21>/counter' */
+    ctrl_student_HIL_B.counter = ctrl_student_HIL_DW.counter_PreviousInput;
+  }
+
+  /* MATLAB Function: '<S21>/MATLAB Function' incorporates:
+   *  Constant: '<S2>/Step size'
+   */
+  /* MATLAB Function 'Noise generator1/Downsample	signal/MATLAB Function': '<S24>:1' */
+  /* '<S24>:1:3' */
+  if ((ctrl_student_HIL_B.counter + 1.0) * ctrl_student_HIL_P.Stepsize_Value >=
+      1.0 / ctrl_student_HIL_B.Samp_freq) {
+    /* '<S24>:1:4' */
+    /* '<S24>:1:5' */
+    ctrl_student_HIL_B.count = 0.0;
+  } else {
+    /* '<S24>:1:7' */
+    ctrl_student_HIL_B.count = ctrl_student_HIL_B.counter + 1.0;
+  }
+
+  /* End of MATLAB Function: '<S21>/MATLAB Function' */
+  if (rtmIsMajorTimeStep(ctrl_student_HIL_M)) {
+    /* RandomNumber: '<S27>/White Noise' */
+    ctrl_student_HIL_B.WhiteNoise = ctrl_student_HIL_DW.NextOutput;
+
+    /* RandomNumber: '<S28>/White Noise' */
+    ctrl_student_HIL_B.WhiteNoise_n = ctrl_student_HIL_DW.NextOutput_n;
+  }
+
+  if (rtmIsMajorTimeStep(ctrl_student_HIL_M)) {
+    /* RandomNumber: '<S26>/White Noise' */
+    ctrl_student_HIL_B.WhiteNoise_d = ctrl_student_HIL_DW.NextOutput_i;
+  }
+
+  /* Gain: '<Root>/Gain2' */
+  rtb_Gain2 = ctrl_student_HIL_P.Gain2_Gain * ctrl_student_HIL_B.psi;
+  if (rtmIsMajorTimeStep(ctrl_student_HIL_M)) {
+    /* Memory: '<S22>/Hold' */
+    ctrl_student_HIL_B.Hold[0] = ctrl_student_HIL_DW.Hold_PreviousInput[0];
+    ctrl_student_HIL_B.Hold[1] = ctrl_student_HIL_DW.Hold_PreviousInput[1];
+    ctrl_student_HIL_B.Hold[2] = ctrl_student_HIL_DW.Hold_PreviousInput[2];
+  }
+
+  /* MATLAB Function: '<S22>/MATLAB Function1' incorporates:
+   *  Constant: '<S2>/Step size'
+   *  Product: '<S26>/Divide'
+   *  Product: '<S26>/Product'
+   *  Product: '<S27>/Divide'
+   *  Product: '<S27>/Product'
+   *  Product: '<S28>/Divide'
+   *  Product: '<S28>/Product'
+   *  Sqrt: '<S26>/Sqrt'
+   *  Sqrt: '<S27>/Sqrt'
+   *  Sqrt: '<S28>/Sqrt'
+   *  Sum: '<S2>/Sum'
+   */
+  /* MATLAB Function 'Noise generator1/Sample & hold/MATLAB Function1': '<S25>:1' */
+  if (ctrl_student_HIL_B.count == 0.0) {
+    /* '<S25>:1:4' */
+    /* '<S25>:1:5' */
+    ctrl_student_HIL_B.output[0] = sqrt(ctrl_student_HIL_B.N_power /
+      ctrl_student_HIL_P.Stepsize_Value) * ctrl_student_HIL_B.WhiteNoise +
+      rtb_Gain;
+    ctrl_student_HIL_B.output[1] = sqrt(ctrl_student_HIL_B.N_power /
+      ctrl_student_HIL_P.Stepsize_Value) * ctrl_student_HIL_B.WhiteNoise_n +
+      rtb_Gain1;
+    ctrl_student_HIL_B.output[2] = sqrt(ctrl_student_HIL_B.N_power_H /
+      ctrl_student_HIL_P.Stepsize_Value) * ctrl_student_HIL_B.WhiteNoise_d +
+      rtb_Gain2;
+  } else {
+    /* '<S25>:1:7' */
+    ctrl_student_HIL_B.output[0] = ctrl_student_HIL_B.Hold[0];
+    ctrl_student_HIL_B.output[1] = ctrl_student_HIL_B.Hold[1];
+    ctrl_student_HIL_B.output[2] = ctrl_student_HIL_B.Hold[2];
+  }
+
+  /* End of MATLAB Function: '<S22>/MATLAB Function1' */
+  if (rtmIsMajorTimeStep(ctrl_student_HIL_M)) {
+    for (i = 0; i < 20; i++) {
+      /* Memory: '<S8>/Memory' */
+      ctrl_student_HIL_B.Memory_f[i] =
+        ctrl_student_HIL_DW.Memory_PreviousInput_c[i];
+
+      /* Memory: '<S8>/Memory1' */
+      ctrl_student_HIL_B.Memory1[i] =
+        ctrl_student_HIL_DW.Memory1_PreviousInput[i];
+    }
+
+    /* Memory: '<S8>/Memory3' */
+    ctrl_student_HIL_B.Memory3 = ctrl_student_HIL_DW.Memory3_PreviousInput;
+
+    /* Memory: '<S8>/Memory2' */
+    ctrl_student_HIL_B.Memory2 = ctrl_student_HIL_DW.Memory2_PreviousInput;
+  }
+
+  /* Switch: '<S2>/Switch' */
+  if (ctrl_student_HIL_B.Enable_noise != 0.0) {
+    V1_s = ctrl_student_HIL_B.output[0];
+  } else {
+    V1_s = rtb_Gain;
+  }
+
+  /* Product: '<Root>/Product' */
+  ctrl_student_HIL_B.Product_i[0] = rtb_u_h * V1_s;
+
+  /* Switch: '<S2>/Switch' */
+  if (ctrl_student_HIL_B.Enable_noise != 0.0) {
+    V1_s = ctrl_student_HIL_B.output[1];
+  } else {
+    V1_s = rtb_Gain1;
+  }
+
+  /* Product: '<Root>/Product' */
+  ctrl_student_HIL_B.Product_i[1] = rtb_u_h * V1_s;
+
+  /* Switch: '<S2>/Switch' */
+  if (ctrl_student_HIL_B.Enable_noise != 0.0) {
+    V1_s = ctrl_student_HIL_B.output[2];
+  } else {
+    V1_s = rtb_Gain2;
+  }
+
+  /* Product: '<Root>/Product' */
+  ctrl_student_HIL_B.Product_i[2] = rtb_u_h * V1_s;
+
+  /* MATLAB Function: '<S8>/MATLAB Function' incorporates:
+   *  SignalConversion: '<S43>/TmpSignal ConversionAt SFunction Inport2'
+   */
+  /* MATLAB Function 'signal dropout check /MATLAB Function': '<S43>:1' */
+  /* '<S43>:1:2' */
+  /* '<S43>:1:3' */
+  for (i = 0; i < 20; i++) {
+    ctrl_student_HIL_B.vecx[i] = ctrl_student_HIL_B.Memory_f[i];
+    ctrl_student_HIL_B.vecy[i] = ctrl_student_HIL_B.Memory1[i];
+  }
+
+  /* '<S43>:1:4' */
+  for (i = 0; i < 29; i++) {
+    /* '<S43>:1:4' */
+    /* '<S43>:1:5' */
+    ctrl_student_HIL_B.vecx[i + 1] = ctrl_student_HIL_B.vecx[i];
+
+    /* '<S43>:1:6' */
+    ctrl_student_HIL_B.vecy[i + 1] = ctrl_student_HIL_B.vecy[i];
+
+    /* '<S43>:1:4' */
+  }
+
+  /* '<S43>:1:8' */
+  ctrl_student_HIL_B.vecx[0] = ctrl_student_HIL_B.Product_i[0];
+
+  /* '<S43>:1:9' */
+  ctrl_student_HIL_B.vecy[0] = ctrl_student_HIL_B.Product_i[1];
+
+  /* '<S43>:1:13' */
+  /* '<S43>:1:14' */
+  /* '<S43>:1:15' */
+  rtb_u_h = ctrl_student_HIL_B.Product_i[0];
+
+  /* '<S43>:1:16' */
+  V1_s = ctrl_student_HIL_B.Product_i[1];
+  for (i = 0; i < 19; i++) {
+    rtb_u_h += ctrl_student_HIL_B.vecx[i + 1];
+    V1_s += ctrl_student_HIL_B.vecy[i + 1];
+  }
+
+  if ((ctrl_student_HIL_B.Memory3 == rtb_u_h) || (ctrl_student_HIL_B.Memory2 ==
+       V1_s)) {
+    /* '<S43>:1:19' */
+    /* '<S43>:1:20' */
+    rtb_y_idx_0 = rtb_Gain;
+    rtb_y_idx_1 = rtb_Gain1;
+    rtb_y_idx_2 = rtb_Gain2;
+
+    /* '<S43>:1:21' */
+    ctrl_student_HIL_B.d = 0.0;
+  } else {
+    /* '<S43>:1:23' */
+    rtb_y_idx_0 = ctrl_student_HIL_B.Product_i[0];
+    rtb_y_idx_1 = ctrl_student_HIL_B.Product_i[1];
+    rtb_y_idx_2 = ctrl_student_HIL_B.Product_i[2];
+
+    /* '<S43>:1:24' */
+    ctrl_student_HIL_B.d = 1.0;
+  }
+
+  /* '<S43>:1:27' */
+  /* '<S43>:1:28' */
+  ctrl_student_HIL_B.s1 = rtb_u_h;
+  ctrl_student_HIL_B.s2 = V1_s;
+
+  /* End of MATLAB Function: '<S8>/MATLAB Function' */
   if (rtmIsMajorTimeStep(ctrl_student_HIL_M)) {
     /* Memory: '<S1>/Memory4' */
     ctrl_student_HIL_B.Memory4[0] = ctrl_student_HIL_DW.Memory4_PreviousInput[0];
@@ -551,7 +795,7 @@ void ctrl_student_HIL_output(void)
     ctrl_student_HIL_B.Memory5[2] = ctrl_student_HIL_DW.Memory5_PreviousInput[2];
 
     /* Memory: '<S1>/Memory2' */
-    ctrl_student_HIL_B.Memory2 = ctrl_student_HIL_DW.Memory2_PreviousInput;
+    ctrl_student_HIL_B.Memory2_e = ctrl_student_HIL_DW.Memory2_PreviousInput_k;
   }
 
   /* Integrator: '<S3>/Integrator' */
@@ -559,7 +803,7 @@ void ctrl_student_HIL_output(void)
     ZCEventType zcEvent;
     zcEvent = rt_ZCFcn(ANY_ZERO_CROSSING,
                        &ctrl_student_HIL_PrevZCX.Integrator_Reset_ZCE,
-                       ctrl_student_HIL_B.ArrowRight);
+                       ctrl_student_HIL_P.Constant_Value_j);
 
     /* evaluate zero-crossings */
     if (zcEvent) {
@@ -628,14 +872,14 @@ void ctrl_student_HIL_output(void)
 
   /* '<S16>:1:5' */
   ctrl_student_HIL_B.eta_d[0] = ctrl_student_HIL_B.temp[0];
-  ctrl_student_HIL_B.eta_d[1] = ctrl_student_HIL_B.temp[1] + 2.0;
+  ctrl_student_HIL_B.eta_d[1] = ctrl_student_HIL_B.temp[1] + 1.5;
 
   /* '<S16>:1:6' */
   /* '<S16>:1:7' */
   /* '<S16>:1:9' */
   /*  my må være null hvis dp = 1 */
   /* '<S16>:1:11' */
-  ctrl_student_HIL_B.U_ref_l = 0.06;
+  ctrl_student_HIL_B.U_ref_l = 0.04;
 
   /* MATLAB Function: '<S1>/Straight -line ' */
   /* '<S16>:1:12' */
@@ -691,8 +935,8 @@ void ctrl_student_HIL_output(void)
   /* '<S14>:1:7' */
   /* '<S14>:1:10' */
   /* '<S14>:1:15' */
-  rtb_u = ctrl_student_HIL_B.eta_d[0] - ctrl_student_HIL_B.eta_0[0];
-  u_VSP_x = ctrl_student_HIL_B.eta_d[1] - ctrl_student_HIL_B.eta_0[1];
+  rtb_u_h = ctrl_student_HIL_B.eta_d[0] - ctrl_student_HIL_B.eta_0[0];
+  V1_s = ctrl_student_HIL_B.eta_d[1] - ctrl_student_HIL_B.eta_0[1];
 
   /* '<S14>:1:17' */
   /* '<S14>:1:20' */
@@ -707,40 +951,29 @@ void ctrl_student_HIL_output(void)
    */
   /* MATLAB Function 'DP-system/Ellipsoidal path': '<S11>:1' */
   /* '<S11>:1:3' */
-  tau[2] = rt_atan2d_snf(cos(6.2831853071795862 * ctrl_student_HIL_B.Integrator1)
-    * -7.0, sin(6.2831853071795862 * ctrl_student_HIL_B.Integrator1) * 7.0);
-
   /* wrapping psi_d      */
-  /* '<S11>:1:9' */
-  k = 0;
-  if (fabs(tau[2] - ctrl_student_HIL_B.Memory_k[2]) > 3.1415926535897931) {
-    /* '<S11>:1:11' */
-    if (ctrl_student_HIL_B.Memory_k[2] < tau[2]) {
-      /* '<S11>:1:12' */
-      /* '<S11>:1:13' */
-      k = -1;
-    } else {
-      if (ctrl_student_HIL_B.Memory_k[2] > tau[2]) {
-        /* '<S11>:1:14' */
-        /* '<S11>:1:15' */
-        k = 1;
-      }
-    }
-  }
-
-  /* '<S11>:1:18' */
-  tau[2] += 6.2831853071795862 * (real_T)k;
-
+  /*  persistent k; */
+  /*  k=0;				 */
+  /*   */
+  /*  if abs((eta_d(3)+(2*pi*k))-(psi)) > pi */
+  /*     if (psi) < eta_d(3)+(2*pi*k) */
+  /*         k = k-1; */
+  /*     elseif (psi) > eta_d(3)+(2*pi*k) */
+  /*         k = k+1; */
+  /*     end */
+  /*  end  */
+  /* eta_d(3)=eta_d(3)+(2*pi*k); */
   /* '<S11>:1:21' */
-  x = cos(6.2831853071795862 * ctrl_student_HIL_B.Integrator1);
-  b_x = sin(6.2831853071795862 * ctrl_student_HIL_B.Integrator1);
+  rtb_Gain2 = cos(6.2831853071795862 * ctrl_student_HIL_B.Integrator1);
+  rtb_Gain = sin(6.2831853071795862 * ctrl_student_HIL_B.Integrator1);
 
   /* '<S11>:1:25' */
-  a = (cos(12.566370614359172 * ctrl_student_HIL_B.Integrator1) * 49.0 + 98.0) -
-    cos(12.566370614359172 * ctrl_student_HIL_B.Integrator1) * 49.0;
+  rtb_Gain1 = (cos(12.566370614359172 * ctrl_student_HIL_B.Integrator1) * 49.0 +
+               98.0) - cos(12.566370614359172 * ctrl_student_HIL_B.Integrator1) *
+    49.0;
 
   /* '<S11>:1:30' */
-  rtb_Gain2 = sin(6.2831853071795862 * ctrl_student_HIL_B.Integrator1);
+  c_x = sin(6.2831853071795862 * ctrl_student_HIL_B.Integrator1);
   d_x = cos(6.2831853071795862 * ctrl_student_HIL_B.Integrator1);
 
   /* '<S11>:1:32' */
@@ -754,29 +987,29 @@ void ctrl_student_HIL_output(void)
     ctrl_student_HIL_B.Integrator1) * 7.0;
   ctrl_student_HIL_B.eta_v[1] = sin(6.2831853071795862 *
     ctrl_student_HIL_B.Integrator1) * 7.0;
-  ctrl_student_HIL_B.eta_v[2] = tau[2];
+  ctrl_student_HIL_B.eta_v[2] = rt_atan2d_snf(cos(6.2831853071795862 *
+    ctrl_student_HIL_B.Integrator1) * -7.0, sin(6.2831853071795862 *
+    ctrl_student_HIL_B.Integrator1) * 7.0);
   ctrl_student_HIL_B.eta_v[3] = sin(6.2831853071795862 *
     ctrl_student_HIL_B.Integrator1) * -7.0 * 6.2831853071795862;
   ctrl_student_HIL_B.eta_v[4] = cos(6.2831853071795862 *
     ctrl_student_HIL_B.Integrator1) * 7.0 * 6.2831853071795862;
-  ctrl_student_HIL_B.eta_v[5] = -49.0 / (x * x * 49.0 + b_x * b_x * 49.0) *
-    6.2831853071795862;
+  ctrl_student_HIL_B.eta_v[5] = -49.0 / (rtb_Gain2 * rtb_Gain2 * 49.0 + rtb_Gain
+    * rtb_Gain * 49.0) * 6.2831853071795862;
   ctrl_student_HIL_B.eta_v[6] = cos(6.2831853071795862 *
     ctrl_student_HIL_B.Integrator1) * -7.0 * 39.478417604357432;
   ctrl_student_HIL_B.eta_v[7] = sin(6.2831853071795862 *
     ctrl_student_HIL_B.Integrator1) * -7.0 * 39.478417604357432;
   ctrl_student_HIL_B.eta_v[8] = sin(12.566370614359172 *
-    ctrl_student_HIL_B.Integrator1) * 0.0 / (a * a) * 39.478417604357432;
-  ctrl_student_HIL_B.eta_v[9] = 0.05 / sqrt(rtb_Gain2 * rtb_Gain2 * 49.0 + d_x *
-    d_x * 49.0);
+    ctrl_student_HIL_B.Integrator1) * 0.0 / (rtb_Gain1 * rtb_Gain1) *
+    39.478417604357432;
+  ctrl_student_HIL_B.eta_v[9] = 0.05 / sqrt(c_x * c_x * 49.0 + d_x * d_x * 49.0);
   ctrl_student_HIL_B.eta_v[10] = (sin(6.2831853071795862 *
     ctrl_student_HIL_B.Integrator1) * 49.0 * 248.05021344239853 * cos
     (6.2831853071795862 * ctrl_student_HIL_B.Integrator1) - cos
     (6.2831853071795862 * ctrl_student_HIL_B.Integrator1) * 49.0 *
     248.05021344239853 * sin(6.2831853071795862 * ctrl_student_HIL_B.Integrator1))
     * -0.05 / rt_powd_snf(b_a * b_a + c_a * c_a, 1.5);
-
-  /* End of MATLAB Function: '<S1>/Ellipsoidal path' */
 
   /* MATLAB Function: '<S1>/signal switch ' incorporates:
    *  MATLAB Function: '<S1>/Straight -line '
@@ -789,7 +1022,7 @@ void ctrl_student_HIL_output(void)
   ctrl_student_HIL_B.signal[1] = (ctrl_student_HIL_B.eta_d[1] -
     ctrl_student_HIL_B.eta_0[1]) * ctrl_student_HIL_B.Integrator1 +
     ctrl_student_HIL_B.eta_0[1];
-  ctrl_student_HIL_B.signal[2] = atan((ctrl_student_HIL_B.eta_d[1] -
+  ctrl_student_HIL_B.signal[2] = -atan((ctrl_student_HIL_B.eta_d[1] -
     ctrl_student_HIL_B.eta_0[1]) / (ctrl_student_HIL_B.eta_d[0] -
     ctrl_student_HIL_B.eta_0[0]));
   ctrl_student_HIL_B.signal[3] = ctrl_student_HIL_B.eta_d[0] -
@@ -800,8 +1033,8 @@ void ctrl_student_HIL_output(void)
   ctrl_student_HIL_B.signal[6] = 0.0;
   ctrl_student_HIL_B.signal[7] = 0.0;
   ctrl_student_HIL_B.signal[8] = 0.0;
-  ctrl_student_HIL_B.signal[9] = ctrl_student_HIL_B.U_ref_l / sqrt(rtb_u * rtb_u
-    + u_VSP_x * u_VSP_x);
+  ctrl_student_HIL_B.signal[9] = ctrl_student_HIL_B.U_ref_l / sqrt(rtb_u_h *
+    rtb_u_h + V1_s * V1_s);
   ctrl_student_HIL_B.signal[10] = 0.0;
   if (ctrl_student_HIL_B.switch_signal == 2.0) {
     /* '<S17>:1:8' */
@@ -817,7 +1050,7 @@ void ctrl_student_HIL_output(void)
     ZCEventType zcEvent;
     zcEvent = rt_ZCFcn(ANY_ZERO_CROSSING,
                        &ctrl_student_HIL_PrevZCX.Integrator1_Reset_ZCE_l,
-                       ctrl_student_HIL_B.ArrowRight);
+                       ctrl_student_HIL_P.Constant_Value_j);
 
     /* evaluate zero-crossings */
     if (zcEvent) {
@@ -933,15 +1166,15 @@ void ctrl_student_HIL_output(void)
   /* Kd = diag([25 15 30]); */
   /* Controller alpha 1 */
   /* '<S15>:1:82' */
-  for (k = 0; k < 3; k++) {
-    R_0[k] = R[3 * k + 2] * ctrl_student_HIL_B.signal[5] + (R[3 * k + 1] *
-      ctrl_student_HIL_B.signal[4] + R[3 * k] * ctrl_student_HIL_B.signal[3]);
+  for (i = 0; i < 3; i++) {
+    rtb_Gain1_f[i] = R[3 * i + 2] * ctrl_student_HIL_B.signal[5] + (R[3 * i + 1]
+      * ctrl_student_HIL_B.signal[4] + R[3 * i] * ctrl_student_HIL_B.signal[3]);
   }
 
-  for (k = 0; k < 3; k++) {
-    rtb_a_1[k] = ((a_0[k + 3] * ctrl_student_HIL_B.Memory4[1] + a_0[k] *
-                   ctrl_student_HIL_B.Memory4[0]) + a_0[k + 6] *
-                  ctrl_student_HIL_B.Memory4[2]) + R_0[k] *
+  for (i = 0; i < 3; i++) {
+    rtb_a_1[i] = ((a[i + 3] * ctrl_student_HIL_B.Memory4[1] + a[i] *
+                   ctrl_student_HIL_B.Memory4[0]) + a[i + 6] *
+                  ctrl_student_HIL_B.Memory4[2]) + rtb_Gain1_f[i] *
       ctrl_student_HIL_B.signal[9];
   }
 
@@ -949,83 +1182,86 @@ void ctrl_student_HIL_output(void)
   /* '<S15>:1:86' */
   /* '<S15>:1:87' */
   /* '<S15>:1:88' */
-  for (k = 0; k < 3; k++) {
-    S_0[3 * k] = -S[3 * k];
-    S_0[1 + 3 * k] = -S[3 * k + 1];
-    S_0[2 + 3 * k] = -S[3 * k + 2];
+  for (i = 0; i < 3; i++) {
+    S_0[3 * i] = -S[3 * i];
+    S_0[1 + 3 * i] = -S[3 * i + 1];
+    S_0[2 + 3 * i] = -S[3 * i + 2];
   }
 
-  for (k = 0; k < 3; k++) {
-    u[k] = ((S_0[k + 3] * ctrl_student_HIL_B.Memory4[1] + S_0[k] *
-             ctrl_student_HIL_B.Memory4[0]) + S_0[k + 6] *
-            ctrl_student_HIL_B.Memory4[2]) + ctrl_student_HIL_B.Integrator1_k[k];
+  for (i = 0; i < 3; i++) {
+    rtb_tau[i] = ((S_0[i + 3] * ctrl_student_HIL_B.Memory4[1] + S_0[i] *
+                   ctrl_student_HIL_B.Memory4[0]) + S_0[i + 6] *
+                  ctrl_student_HIL_B.Memory4[2]) +
+      ctrl_student_HIL_B.Integrator1_k[i];
   }
 
-  for (k = 0; k < 3; k++) {
-    for (d = 0; d < 3; d++) {
-      S_0[k + 3 * d] = 0.0;
-      S_0[k + 3 * d] += S[k] * R[d];
-      S_0[k + 3 * d] += S[k + 3] * R[d + 3];
+  for (i = 0; i < 3; i++) {
+    for (i_0 = 0; i_0 < 3; i_0++) {
+      S_0[i + 3 * i_0] = 0.0;
+      S_0[i + 3 * i_0] += S[i] * R[i_0];
+      S_0[i + 3 * i_0] += S[i + 3] * R[i_0 + 3];
     }
   }
 
-  for (k = 0; k < 3; k++) {
-    S_1[k] = S_0[k + 6] * ctrl_student_HIL_B.signal[5] + (S_0[k + 3] *
-      ctrl_student_HIL_B.signal[4] + S_0[k] * ctrl_student_HIL_B.signal[3]);
+  for (i = 0; i < 3; i++) {
+    S_1[i] = S_0[i + 6] * ctrl_student_HIL_B.signal[5] + (S_0[i + 3] *
+      ctrl_student_HIL_B.signal[4] + S_0[i] * ctrl_student_HIL_B.signal[3]);
   }
 
-  for (k = 0; k < 3; k++) {
-    for (d = 0; d < 3; d++) {
-      S[k + 3 * d] = 0.0;
-      S[k + 3 * d] += a_0[k] * R[d];
-      S[k + 3 * d] += a_0[k + 3] * R[d + 3];
-      S[k + 3 * d] += a_0[k + 6] * R[d + 6];
+  for (i = 0; i < 3; i++) {
+    for (i_0 = 0; i_0 < 3; i_0++) {
+      S[i + 3 * i_0] = 0.0;
+      S[i + 3 * i_0] += a[i] * R[i_0];
+      S[i + 3 * i_0] += a[i + 3] * R[i_0 + 3];
+      S[i + 3 * i_0] += a[i + 6] * R[i_0 + 6];
     }
   }
 
-  for (k = 0; k < 3; k++) {
-    R_0[k] = R[3 * k + 2] * ctrl_student_HIL_B.signal[8] + (R[3 * k + 1] *
-      ctrl_student_HIL_B.signal[7] + R[3 * k] * ctrl_student_HIL_B.signal[6]);
+  for (i = 0; i < 3; i++) {
+    rtb_Gain1_f[i] = R[3 * i + 2] * ctrl_student_HIL_B.signal[8] + (R[3 * i + 1]
+      * ctrl_student_HIL_B.signal[7] + R[3 * i] * ctrl_student_HIL_B.signal[6]);
   }
 
-  for (k = 0; k < 3; k++) {
-    R_1[k] = R[3 * k + 2] * ctrl_student_HIL_B.signal[5] + (R[3 * k + 1] *
-      ctrl_student_HIL_B.signal[4] + R[3 * k] * ctrl_student_HIL_B.signal[3]);
+  for (i = 0; i < 3; i++) {
+    R_0[i] = R[3 * i + 2] * ctrl_student_HIL_B.signal[5] + (R[3 * i + 1] *
+      ctrl_student_HIL_B.signal[4] + R[3 * i] * ctrl_student_HIL_B.signal[3]);
   }
 
-  for (k = 0; k < 3; k++) {
-    a_1[k] = (((S[k + 3] * ctrl_student_HIL_B.signal[4] + S[k] *
-                ctrl_student_HIL_B.signal[3]) + S[k + 6] *
-               ctrl_student_HIL_B.signal[5]) + R_0[k] *
-              ctrl_student_HIL_B.signal[9]) + R_1[k] *
+  for (i = 0; i < 3; i++) {
+    a_0[i] = (((S[i + 3] * ctrl_student_HIL_B.signal[4] + S[i] *
+                ctrl_student_HIL_B.signal[3]) + S[i + 6] *
+               ctrl_student_HIL_B.signal[5]) + rtb_Gain1_f[i] *
+              ctrl_student_HIL_B.signal[9]) + R_0[i] *
       ctrl_student_HIL_B.signal[10];
   }
 
-  for (k = 0; k < 3; k++) {
-    tau[k] = (((a_0[k + 3] * u[1] + a_0[k] * u[0]) + a_0[k + 6] * u[2]) - S_1[k]
-              * ctrl_student_HIL_B.signal[9]) + a_1[k] *
-      ctrl_student_HIL_B.Memory2;
+  for (i = 0; i < 3; i++) {
+    u[i] = (((a[i + 3] * rtb_tau[1] + a[i] * rtb_tau[0]) + a[i + 6] * rtb_tau[2])
+            - S_1[i] * ctrl_student_HIL_B.signal[9]) + a_0[i] *
+      ctrl_student_HIL_B.Memory2_e;
   }
 
   /* Controller tau - C removed */
   /* '<S15>:1:91' */
-  for (k = 0; k < 3; k++) {
-    R_0[k] = ((D[k + 3] * ctrl_student_HIL_B.Integrator1_k[1] + D[k] *
-               ctrl_student_HIL_B.Integrator1_k[0]) + D[k + 6] *
-              ctrl_student_HIL_B.Integrator1_k[2]) -
-      ctrl_student_HIL_B.Memory4[k];
+  for (i = 0; i < 3; i++) {
+    rtb_Gain1_f[i] = ((D[i + 3] * ctrl_student_HIL_B.Integrator1_k[1] + D[i] *
+                       ctrl_student_HIL_B.Integrator1_k[0]) + D[i + 6] *
+                      ctrl_student_HIL_B.Integrator1_k[2]) -
+      ctrl_student_HIL_B.Memory4[i];
   }
 
-  for (k = 0; k < 3; k++) {
-    R_1[k] = b_a_0[k + 6] * tau[2] + (b_a_0[k + 3] * tau[1] + b_a_0[k] * tau[0]);
+  for (i = 0; i < 3; i++) {
+    R_0[i] = b_a_0[i + 6] * u[2] + (b_a_0[i + 3] * u[1] + b_a_0[i] * u[0]);
   }
 
-  for (k = 0; k < 3; k++) {
-    u[k] = (R_0[k] + R_1[k]) - ((ctrl_student_HIL_B.sf_MATLABFunction_m.y[k + 3]
-      * ctrl_student_HIL_B.Memory5[1] +
-      ctrl_student_HIL_B.sf_MATLABFunction_m.y[k] * ctrl_student_HIL_B.Memory5[0])
-      + ctrl_student_HIL_B.sf_MATLABFunction_m.y[k + 6] *
-      ctrl_student_HIL_B.Memory5[2]);
+  for (i = 0; i < 3; i++) {
+    rtb_tau[i] = (rtb_Gain1_f[i] + R_0[i]) -
+      ((ctrl_student_HIL_B.sf_MATLABFunction_m.y[i + 3] *
+        ctrl_student_HIL_B.Memory5[1] +
+        ctrl_student_HIL_B.sf_MATLABFunction_m.y[i] *
+        ctrl_student_HIL_B.Memory5[0]) +
+       ctrl_student_HIL_B.sf_MATLABFunction_m.y[i + 6] *
+       ctrl_student_HIL_B.Memory5[2]);
   }
 
   /* '<S15>:1:92' */
@@ -1038,27 +1274,27 @@ void ctrl_student_HIL_output(void)
   /* '<S15>:1:95' */
   /* tau = a_1; */
   /* tau = [tau(1);tau(2);tau(3)]; */
-  for (k = 0; k < 3; k++) {
-    ctrl_student_HIL_B.D1[k] = 0.0;
-    ctrl_student_HIL_B.D1[k] += D[k] * ctrl_student_HIL_B.Integrator1_k[0];
-    ctrl_student_HIL_B.D1[k] += D[k + 3] * ctrl_student_HIL_B.Integrator1_k[1];
-    ctrl_student_HIL_B.D1[k] += D[k + 6] * ctrl_student_HIL_B.Integrator1_k[2];
+  for (i = 0; i < 3; i++) {
+    ctrl_student_HIL_B.D1[i] = 0.0;
+    ctrl_student_HIL_B.D1[i] += D[i] * ctrl_student_HIL_B.Integrator1_k[0];
+    ctrl_student_HIL_B.D1[i] += D[i + 3] * ctrl_student_HIL_B.Integrator1_k[1];
+    ctrl_student_HIL_B.D1[i] += D[i + 6] * ctrl_student_HIL_B.Integrator1_k[2];
   }
 
-  for (k = 0; k < 3; k++) {
-    ctrl_student_HIL_B.ma[k] = 0.0;
-    ctrl_student_HIL_B.ma[k] += b_a_0[k] * tau[0];
-    ctrl_student_HIL_B.ma[k] += b_a_0[k + 3] * tau[1];
-    ctrl_student_HIL_B.ma[k] += b_a_0[k + 6] * tau[2];
+  for (i = 0; i < 3; i++) {
+    ctrl_student_HIL_B.ma[i] = 0.0;
+    ctrl_student_HIL_B.ma[i] += b_a_0[i] * u[0];
+    ctrl_student_HIL_B.ma[i] += b_a_0[i + 3] * u[1];
+    ctrl_student_HIL_B.ma[i] += b_a_0[i + 6] * u[2];
   }
 
-  for (k = 0; k < 3; k++) {
-    ctrl_student_HIL_B.Kdz[k] = 0.0;
-    ctrl_student_HIL_B.Kdz[k] += ctrl_student_HIL_B.sf_MATLABFunction_m.y[k] *
+  for (i = 0; i < 3; i++) {
+    ctrl_student_HIL_B.Kdz[i] = 0.0;
+    ctrl_student_HIL_B.Kdz[i] += ctrl_student_HIL_B.sf_MATLABFunction_m.y[i] *
       ctrl_student_HIL_B.Memory5[0];
-    ctrl_student_HIL_B.Kdz[k] += ctrl_student_HIL_B.sf_MATLABFunction_m.y[k + 3]
+    ctrl_student_HIL_B.Kdz[i] += ctrl_student_HIL_B.sf_MATLABFunction_m.y[i + 3]
       * ctrl_student_HIL_B.Memory5[1];
-    ctrl_student_HIL_B.Kdz[k] += ctrl_student_HIL_B.sf_MATLABFunction_m.y[k + 6]
+    ctrl_student_HIL_B.Kdz[i] += ctrl_student_HIL_B.sf_MATLABFunction_m.y[i + 6]
       * ctrl_student_HIL_B.Memory5[2];
   }
 
@@ -1069,7 +1305,7 @@ void ctrl_student_HIL_output(void)
     ZCEventType zcEvent;
     zcEvent = rt_ZCFcn(ANY_ZERO_CROSSING,
                        &ctrl_student_HIL_PrevZCX.Integrator2_Reset_ZCE,
-                       ctrl_student_HIL_B.ArrowRight);
+                       ctrl_student_HIL_P.Constant_Value_j);
 
     /* evaluate zero-crossings */
     if (zcEvent) {
@@ -1086,6 +1322,11 @@ void ctrl_student_HIL_output(void)
   ctrl_student_HIL_B.Integrator2[1] = ctrl_student_HIL_X.Integrator2_CSTATE[1];
   ctrl_student_HIL_B.Integrator2[2] = ctrl_student_HIL_X.Integrator2_CSTATE[2];
 
+  /* Product: '<Root>/1' */
+  rtb_tau[0] *= ctrl_student_HIL_B.d;
+  rtb_tau[1] *= ctrl_student_HIL_B.d;
+  V1_s = ctrl_student_HIL_B.d * rtb_tau[2];
+
   /* MATLAB Function: '<Root>/Switch joystick  and DP-system' incorporates:
    *  SignalConversion: '<S4>/TmpSignal ConversionAt SFunction Inport3'
    */
@@ -1093,44 +1334,45 @@ void ctrl_student_HIL_output(void)
   /* % Function that takes in impulse button sigals [0,1] and sends out a  */
   /*  different signal depentent pn which button has been pressed */
   /* '<S4>:1:6' */
-  tau[0] = 0.0;
-  tau[1] = 0.0;
-  tau[2] = 0.0;
+  u[0] = 0.0;
+  u[1] = 0.0;
+  u[2] = 0.0;
   if (ctrl_student_HIL_B.switch_signal == 1.0) {
     /* '<S4>:1:7' */
     /* '<S4>:1:8' */
-    tau[0] = u[0];
-    tau[1] = u[1];
-    tau[2] = u[2];
+    u[0] = rtb_tau[0];
+    u[1] = rtb_tau[1];
+    u[2] = V1_s;
   }
 
   if (ctrl_student_HIL_B.switch_signal == 2.0) {
     /* '<S4>:1:11' */
     /* '<S4>:1:12' */
-    tau[0] = u[0];
-    tau[1] = u[1];
-    tau[2] = u[2];
+    u[0] = rtb_tau[0];
+    u[1] = rtb_tau[1];
+    u[2] = V1_s;
   }
 
   if (ctrl_student_HIL_B.switch_signal == 3.0) {
     /* '<S4>:1:15' */
     /* '<S4>:1:16' */
-    tau[0] = rtb_Gain1_k;
-    tau[1] = ctrl_student_HIL_B.Product[1];
-    tau[2] = ctrl_student_HIL_B.Product[2];
+    u[0] = rtb_Gain1_k;
+    u[1] = ctrl_student_HIL_B.Product[1];
+    u[2] = ctrl_student_HIL_B.Product[2];
   }
 
   /* End of MATLAB Function: '<Root>/Switch joystick  and DP-system' */
 
   /* Sum: '<Root>/Sum' incorporates:
    *  Constant: '<Root>/Constant'
+   *  Product: '<Root>/2'
    */
-  ctrl_student_HIL_B.Sum_c[0] = (ctrl_student_HIL_P.Constant_Value[0] + tau[0])
-    + ctrl_student_HIL_B.Integrator2[0];
-  ctrl_student_HIL_B.Sum_c[1] = (ctrl_student_HIL_P.Constant_Value[1] + tau[1])
-    + ctrl_student_HIL_B.Integrator2[1];
-  ctrl_student_HIL_B.Sum_c[2] = (ctrl_student_HIL_P.Constant_Value[2] + tau[2])
-    + ctrl_student_HIL_B.Integrator2[2];
+  ctrl_student_HIL_B.Sum_c[0] = (ctrl_student_HIL_P.Constant_Value_jx[0] + u[0])
+    + ctrl_student_HIL_B.Integrator2[0] * ctrl_student_HIL_B.d;
+  ctrl_student_HIL_B.Sum_c[1] = (ctrl_student_HIL_P.Constant_Value_jx[1] + u[1])
+    + ctrl_student_HIL_B.Integrator2[1] * ctrl_student_HIL_B.d;
+  ctrl_student_HIL_B.Sum_c[2] = (ctrl_student_HIL_P.Constant_Value_jx[2] + u[2])
+    + ctrl_student_HIL_B.Integrator2[2] * ctrl_student_HIL_B.d;
 
   /* SignalConversion: '<Root>/TmpSignal ConversionAttauJInport1' */
   ctrl_student_HIL_B.TmpSignalConversionAttauJInport[0] = rtb_Gain1_k;
@@ -1138,123 +1380,6 @@ void ctrl_student_HIL_output(void)
     ctrl_student_HIL_B.Product[1];
   ctrl_student_HIL_B.TmpSignalConversionAttauJInport[2] =
     ctrl_student_HIL_B.Product[2];
-
-  /* Switch: '<S5>/Switch1' incorporates:
-   *  Constant: '<S5>/Constant'
-   *  Constant: '<S5>/Constant1'
-   */
-  if (ctrl_student_HIL_B.dead != 0.0) {
-    rtb_u = ctrl_student_HIL_P.Constant_Value_k;
-  } else {
-    rtb_u = ctrl_student_HIL_P.Constant1_Value;
-  }
-
-  /* End of Switch: '<S5>/Switch1' */
-  if (rtmIsMajorTimeStep(ctrl_student_HIL_M)) {
-    /* Memory: '<S21>/counter' */
-    ctrl_student_HIL_B.counter = ctrl_student_HIL_DW.counter_PreviousInput;
-  }
-
-  /* MATLAB Function: '<S21>/MATLAB Function' incorporates:
-   *  Constant: '<S2>/Step size'
-   */
-  /* MATLAB Function 'Noise generator1/Downsample	signal/MATLAB Function': '<S24>:1' */
-  /* '<S24>:1:3' */
-  if ((ctrl_student_HIL_B.counter + 1.0) * ctrl_student_HIL_P.Stepsize_Value >=
-      1.0 / ctrl_student_HIL_B.Samp_freq) {
-    /* '<S24>:1:4' */
-    /* '<S24>:1:5' */
-    ctrl_student_HIL_B.count = 0.0;
-  } else {
-    /* '<S24>:1:7' */
-    ctrl_student_HIL_B.count = ctrl_student_HIL_B.counter + 1.0;
-  }
-
-  /* End of MATLAB Function: '<S21>/MATLAB Function' */
-  if (rtmIsMajorTimeStep(ctrl_student_HIL_M)) {
-    /* RandomNumber: '<S27>/White Noise' */
-    ctrl_student_HIL_B.WhiteNoise = ctrl_student_HIL_DW.NextOutput;
-
-    /* RandomNumber: '<S28>/White Noise' */
-    ctrl_student_HIL_B.WhiteNoise_n = ctrl_student_HIL_DW.NextOutput_n;
-
-    /* RandomNumber: '<S26>/White Noise' */
-    ctrl_student_HIL_B.WhiteNoise_d = ctrl_student_HIL_DW.NextOutput_i;
-  }
-
-  /* Gain: '<Root>/Gain2' */
-  rtb_Gain2 = ctrl_student_HIL_P.Gain2_Gain * ctrl_student_HIL_B.psi;
-  if (rtmIsMajorTimeStep(ctrl_student_HIL_M)) {
-    /* Memory: '<S22>/Hold' */
-    ctrl_student_HIL_B.Hold[0] = ctrl_student_HIL_DW.Hold_PreviousInput[0];
-    ctrl_student_HIL_B.Hold[1] = ctrl_student_HIL_DW.Hold_PreviousInput[1];
-    ctrl_student_HIL_B.Hold[2] = ctrl_student_HIL_DW.Hold_PreviousInput[2];
-  }
-
-  /* MATLAB Function: '<S22>/MATLAB Function1' incorporates:
-   *  Constant: '<S2>/Step size'
-   *  Product: '<S26>/Divide'
-   *  Product: '<S26>/Product'
-   *  Product: '<S27>/Divide'
-   *  Product: '<S27>/Product'
-   *  Product: '<S28>/Divide'
-   *  Product: '<S28>/Product'
-   *  Sqrt: '<S26>/Sqrt'
-   *  Sqrt: '<S27>/Sqrt'
-   *  Sqrt: '<S28>/Sqrt'
-   *  Sum: '<S2>/Sum'
-   */
-  /* MATLAB Function 'Noise generator1/Sample & hold/MATLAB Function1': '<S25>:1' */
-  if (ctrl_student_HIL_B.count == 0.0) {
-    /* '<S25>:1:4' */
-    /* '<S25>:1:5' */
-    ctrl_student_HIL_B.output[0] = sqrt(ctrl_student_HIL_B.N_power /
-      ctrl_student_HIL_P.Stepsize_Value) * ctrl_student_HIL_B.WhiteNoise +
-      rtb_Gain;
-    ctrl_student_HIL_B.output[1] = sqrt(ctrl_student_HIL_B.N_power /
-      ctrl_student_HIL_P.Stepsize_Value) * ctrl_student_HIL_B.WhiteNoise_n +
-      rtb_Gain1;
-    ctrl_student_HIL_B.output[2] = sqrt(ctrl_student_HIL_B.N_power_H /
-      ctrl_student_HIL_P.Stepsize_Value) * ctrl_student_HIL_B.WhiteNoise_d +
-      rtb_Gain2;
-  } else {
-    /* '<S25>:1:7' */
-    ctrl_student_HIL_B.output[0] = ctrl_student_HIL_B.Hold[0];
-    ctrl_student_HIL_B.output[1] = ctrl_student_HIL_B.Hold[1];
-    ctrl_student_HIL_B.output[2] = ctrl_student_HIL_B.Hold[2];
-  }
-
-  /* End of MATLAB Function: '<S22>/MATLAB Function1' */
-
-  /* Switch: '<S2>/Switch' */
-  if (ctrl_student_HIL_B.Enable_noise != 0.0) {
-    rtb_Gain1_k = ctrl_student_HIL_B.output[0];
-  } else {
-    rtb_Gain1_k = rtb_Gain;
-  }
-
-  /* Product: '<Root>/Product' */
-  ctrl_student_HIL_B.Product_i[0] = rtb_u * rtb_Gain1_k;
-
-  /* Switch: '<S2>/Switch' */
-  if (ctrl_student_HIL_B.Enable_noise != 0.0) {
-    rtb_Gain1_k = ctrl_student_HIL_B.output[1];
-  } else {
-    rtb_Gain1_k = rtb_Gain1;
-  }
-
-  /* Product: '<Root>/Product' */
-  ctrl_student_HIL_B.Product_i[1] = rtb_u * rtb_Gain1_k;
-
-  /* Switch: '<S2>/Switch' */
-  if (ctrl_student_HIL_B.Enable_noise != 0.0) {
-    rtb_Gain1_k = ctrl_student_HIL_B.output[2];
-  } else {
-    rtb_Gain1_k = rtb_Gain2;
-  }
-
-  /* Product: '<Root>/Product' */
-  ctrl_student_HIL_B.Product_i[2] = rtb_u * rtb_Gain1_k;
 
   /* MATLAB Function: '<S10>/Full thrust allocation' incorporates:
    *  Constant: '<S10>/Constant'
@@ -1269,8 +1394,8 @@ void ctrl_student_HIL_output(void)
   tmp[0] = ctrl_student_HIL_B.Sum_c[0];
   tmp[1] = ctrl_student_HIL_B.Sum_c[1];
   tmp[2] = ctrl_student_HIL_B.Sum_c[2];
-  ctrl_student_HIL_mldivide(c, tmp, R_0);
-  ctrl_student_HIL_mldivide(b, R_0, u);
+  ctrl_student_HIL_mldivide_c(c_0, tmp, rtb_tau);
+  ctrl_student_HIL_mldivide_c(b_0, rtb_tau, u);
 
   /* '<S45>:1:25' */
   /* '<S45>:1:27' */
@@ -1316,14 +1441,20 @@ void ctrl_student_HIL_output(void)
     1.0));
   if (rtmIsMajorTimeStep(ctrl_student_HIL_M)) {
     /* Memory: '<S1>/Memory3' */
-    ctrl_student_HIL_B.Memory3[0] = ctrl_student_HIL_DW.Memory3_PreviousInput[0];
-    ctrl_student_HIL_B.Memory3[1] = ctrl_student_HIL_DW.Memory3_PreviousInput[1];
-    ctrl_student_HIL_B.Memory3[2] = ctrl_student_HIL_DW.Memory3_PreviousInput[2];
+    ctrl_student_HIL_B.Memory3_c[0] =
+      ctrl_student_HIL_DW.Memory3_PreviousInput_n[0];
+    ctrl_student_HIL_B.Memory3_c[1] =
+      ctrl_student_HIL_DW.Memory3_PreviousInput_n[1];
+    ctrl_student_HIL_B.Memory3_c[2] =
+      ctrl_student_HIL_DW.Memory3_PreviousInput_n[2];
 
     /* Memory: '<S1>/Memory1' */
-    ctrl_student_HIL_B.Memory1[0] = ctrl_student_HIL_DW.Memory1_PreviousInput[0];
-    ctrl_student_HIL_B.Memory1[1] = ctrl_student_HIL_DW.Memory1_PreviousInput[1];
-    ctrl_student_HIL_B.Memory1[2] = ctrl_student_HIL_DW.Memory1_PreviousInput[2];
+    ctrl_student_HIL_B.Memory1_n[0] =
+      ctrl_student_HIL_DW.Memory1_PreviousInput_i[0];
+    ctrl_student_HIL_B.Memory1_n[1] =
+      ctrl_student_HIL_DW.Memory1_PreviousInput_i[1];
+    ctrl_student_HIL_B.Memory1_n[2] =
+      ctrl_student_HIL_DW.Memory1_PreviousInput_i[2];
   }
 
   /* MATLAB Function: '<S1>/update law' incorporates:
@@ -1331,7 +1462,7 @@ void ctrl_student_HIL_output(void)
    */
   /* MATLAB Function 'DP-system/update law': '<S18>:1' */
   /* '<S18>:1:3' */
-  rtb_u = ctrl_student_HIL_B.Memory1[0];
+  rtb_u_h = ctrl_student_HIL_B.Memory1_n[0];
 
   /* '<S18>:1:4' */
   /* Getting vectors */
@@ -1348,41 +1479,41 @@ void ctrl_student_HIL_output(void)
   tmp_0[6] = 0.0;
   tmp_0[7] = 0.0;
   tmp_0[8] = 1.0;
-  for (k = 0; k < 3; k++) {
-    tmp[k] = tmp_0[3 * k + 2] * -ctrl_student_HIL_B.Memory3[2] + (tmp_0[3 * k +
-      1] * -ctrl_student_HIL_B.Memory3[1] + tmp_0[3 * k] *
-      -ctrl_student_HIL_B.Memory3[0]);
+  for (i = 0; i < 3; i++) {
+    rtb_tau[i] = tmp_0[3 * i + 2] * -ctrl_student_HIL_B.Memory3_c[2] + (tmp_0[3 *
+      i + 1] * -ctrl_student_HIL_B.Memory3_c[1] + tmp_0[3 * i] *
+      -ctrl_student_HIL_B.Memory3_c[0]);
   }
 
-  rtb_Gain1_k = (tmp[0] * ctrl_student_HIL_B.signal[3] + tmp[1] *
-                 ctrl_student_HIL_B.signal[4]) + tmp[2] *
+  V1_s = (rtb_tau[0] * ctrl_student_HIL_B.signal[3] + rtb_tau[1] *
+          ctrl_student_HIL_B.signal[4]) + rtb_tau[2] *
     ctrl_student_HIL_B.signal[5];
 
   /* '<S18>:1:21' */
-  a = ctrl_student_HIL_B.signal[9] - 0.0 / ctrl_student_HIL_norm(*(real_T (*)[3])
-    &ctrl_student_HIL_B.signal[3]) * rtb_Gain1_k;
-  if ((ctrl_student_HIL_B.Memory1[0] == 0.0) && (ctrl_student_HIL_B.Memory1[2] >
-       1.0)) {
+  rtb_Gain2 = ctrl_student_HIL_B.signal[9] - 0.0 / ctrl_student_HIL_norm
+    (*(real_T (*)[3])&ctrl_student_HIL_B.signal[3]) * V1_s;
+  if ((ctrl_student_HIL_B.Memory1_n[0] == 0.0) && (ctrl_student_HIL_B.Memory1_n
+       [2] > 1.0)) {
     /* '<S18>:1:23' */
     /* '<S18>:1:25' */
     /* '<S18>:1:26' */
-    rtb_u = 1.0;
+    rtb_u_h = 1.0;
   }
 
-  if (rtb_u == 1.0) {
+  if (rtb_u_h == 1.0) {
     /* '<S18>:1:30' */
     /* '<S18>:1:31' */
-    a = -(ctrl_student_HIL_B.signal[9] - 0.0 / ctrl_student_HIL_norm(*(real_T (*)
-            [3])&ctrl_student_HIL_B.signal[3]) * rtb_Gain1_k);
-    if (ctrl_student_HIL_B.Memory1[2] < 0.0) {
+    rtb_Gain2 = -(ctrl_student_HIL_B.signal[9] - 0.0 / ctrl_student_HIL_norm
+                  (*(real_T (*)[3])&ctrl_student_HIL_B.signal[3]) * V1_s);
+    if (ctrl_student_HIL_B.Memory1_n[2] < 0.0) {
       /* '<S18>:1:32' */
       /* '<S18>:1:33' */
-      rtb_u = 0.0;
+      rtb_u_h = 0.0;
     }
   }
 
-  ctrl_student_HIL_B.s_dot1 = a;
-  ctrl_student_HIL_B.i = rtb_u;
+  ctrl_student_HIL_B.s_dot1 = rtb_Gain2;
+  ctrl_student_HIL_B.i = rtb_u_h;
 
   /* End of MATLAB Function: '<S1>/update law' */
 
@@ -1405,352 +1536,17 @@ void ctrl_student_HIL_output(void)
   tmp_1[6] = 0.0;
   tmp_1[7] = 0.0;
   tmp_1[8] = 1.0;
-  rtb_Gain1_k = ctrl_student_HIL_B.Integrator[0] - ctrl_student_HIL_B.signal[0];
-  u_VSP_x = ctrl_student_HIL_B.Integrator[1] - ctrl_student_HIL_B.signal[1];
-  x = ctrl_student_HIL_B.Integrator[2] - ctrl_student_HIL_B.signal[2];
-  for (k = 0; k < 3; k++) {
-    ctrl_student_HIL_B.z1[k] = 0.0;
-    ctrl_student_HIL_B.z1[k] += tmp_1[k] * rtb_Gain1_k;
-    ctrl_student_HIL_B.z1[k] += tmp_1[k + 3] * u_VSP_x;
-    ctrl_student_HIL_B.z1[k] += tmp_1[k + 6] * x;
+  c_x = ctrl_student_HIL_B.Integrator[0] - ctrl_student_HIL_B.signal[0];
+  d_x = ctrl_student_HIL_B.Integrator[1] - ctrl_student_HIL_B.signal[1];
+  V1_s = ctrl_student_HIL_B.Integrator[2] - ctrl_student_HIL_B.signal[2];
+  for (i = 0; i < 3; i++) {
+    ctrl_student_HIL_B.z1[i] = 0.0;
+    ctrl_student_HIL_B.z1[i] += tmp_1[i] * c_x;
+    ctrl_student_HIL_B.z1[i] += tmp_1[i + 3] * d_x;
+    ctrl_student_HIL_B.z1[i] += tmp_1[i + 6] * V1_s;
   }
 
   /* End of MATLAB Function: '<S1>/z1-jjz2' */
-  if (rtmIsMajorTimeStep(ctrl_student_HIL_M)) {
-    for (k = 0; k < 10; k++) {
-      /* Memory: '<S8>/Memory' */
-      ctrl_student_HIL_B.Memory_f[k] =
-        ctrl_student_HIL_DW.Memory_PreviousInput_c[k];
-
-      /* Memory: '<S8>/Memory1' */
-      ctrl_student_HIL_B.Memory1_o[k] =
-        ctrl_student_HIL_DW.Memory1_PreviousInput_j[k];
-    }
-  }
-
-  /* MATLAB Function: '<S8>/MATLAB Function' incorporates:
-   *  SignalConversion: '<S43>/TmpSignal ConversionAt SFunction Inport2'
-   */
-  /* MATLAB Function 'signal dropout check /MATLAB Function': '<S43>:1' */
-  /* '<S43>:1:2' */
-  /* '<S43>:1:3' */
-  for (k = 0; k < 10; k++) {
-    ctrl_student_HIL_B.vecx[k] = ctrl_student_HIL_B.Memory_f[k];
-    ctrl_student_HIL_B.vecy[k] = ctrl_student_HIL_B.Memory1_o[k];
-  }
-
-  /* '<S43>:1:4' */
-  for (k = 0; k < 9; k++) {
-    /* '<S43>:1:4' */
-    /* '<S43>:1:5' */
-    ctrl_student_HIL_B.vecx[k + 1] = ctrl_student_HIL_B.vecx[k];
-
-    /* '<S43>:1:6' */
-    ctrl_student_HIL_B.vecy[k + 1] = ctrl_student_HIL_B.vecy[k];
-
-    /* '<S43>:1:4' */
-  }
-
-  /* '<S43>:1:8' */
-  ctrl_student_HIL_B.vecx[0] = ctrl_student_HIL_B.Product_i[0];
-
-  /* '<S43>:1:9' */
-  ctrl_student_HIL_B.vecy[0] = ctrl_student_HIL_B.Product_i[1];
-
-  /* '<S43>:1:11' */
-  d = 1;
-  for (k = 0; k <= 9; k += 2) {
-    if ((ctrl_student_HIL_B.vecx[k] <= ctrl_student_HIL_B.vecx[k + 1]) ||
-        rtIsNaN(ctrl_student_HIL_B.vecx[k + 1])) {
-      idx[k] = k + 1;
-      idx[k + 1] = k + 2;
-    } else {
-      idx[k] = k + 2;
-      idx[k + 1] = k + 1;
-    }
-  }
-
-  b_i = 2;
-  while (b_i < 10) {
-    d_j = b_i << 1;
-    b_qEnd = 1;
-    for (k = 1 + b_i; k < 11; k = b_kEnd + b_i) {
-      f_k = b_qEnd;
-      khi = k - 1;
-      b_kEnd = b_qEnd + d_j;
-      if (b_kEnd > 11) {
-        b_kEnd = 11;
-      }
-
-      nb = 0;
-      kEnd = b_kEnd - b_qEnd;
-      while (nb + 1 <= kEnd) {
-        if ((ctrl_student_HIL_B.vecx[idx[f_k - 1] - 1] <=
-             ctrl_student_HIL_B.vecx[idx[khi] - 1]) || rtIsNaN
-            (ctrl_student_HIL_B.vecx[idx[khi] - 1])) {
-          iwork[nb] = idx[f_k - 1];
-          f_k++;
-          if (f_k == k) {
-            while (khi + 1 < b_kEnd) {
-              nb++;
-              iwork[nb] = idx[khi];
-              khi++;
-            }
-          }
-        } else {
-          iwork[nb] = idx[khi];
-          khi++;
-          if (khi + 1 == b_kEnd) {
-            while (f_k < k) {
-              nb++;
-              iwork[nb] = idx[f_k - 1];
-              f_k++;
-            }
-          }
-        }
-
-        nb++;
-      }
-
-      for (b_pEnd = 0; b_pEnd + 1 <= kEnd; b_pEnd++) {
-        idx[(b_qEnd + b_pEnd) - 1] = iwork[b_pEnd];
-      }
-
-      b_qEnd = b_kEnd;
-    }
-
-    b_i = d_j;
-  }
-
-  for (k = 0; k < 10; k++) {
-    b_data[k] = ctrl_student_HIL_B.vecx[idx[k] - 1];
-  }
-
-  f_k = 0;
-  while ((f_k + 1 <= 10) && rtIsInf(b_data[f_k]) && (b_data[f_k] < 0.0)) {
-    f_k++;
-  }
-
-  k = f_k;
-  f_k = 10;
-  while ((f_k >= 1) && rtIsNaN(b_data[f_k - 1])) {
-    f_k--;
-  }
-
-  b_i = 10 - f_k;
-  while ((f_k >= 1) && rtIsInf(b_data[f_k - 1]) && (b_data[f_k - 1] > 0.0)) {
-    f_k--;
-  }
-
-  nb = 0;
-  if (k > 0) {
-    nb = 1;
-  }
-
-  khi = (k + f_k) - k;
-  while (k + 1 <= khi) {
-    x = b_data[k];
-    do {
-      b_pEnd = 0;
-      k++;
-      if (k + 1 > khi) {
-        b_pEnd = 1;
-      } else {
-        rtb_u = fabs(x / 2.0);
-        if ((!rtIsInf(rtb_u)) && (!rtIsNaN(rtb_u))) {
-          if (rtb_u <= 2.2250738585072014E-308) {
-            rtb_u = 4.94065645841247E-324;
-          } else {
-            frexp(rtb_u, &exponent);
-            rtb_u = ldexp(1.0, exponent - 53);
-          }
-        } else {
-          rtb_u = (rtNaN);
-        }
-
-        if (!((fabs(x - b_data[k]) < rtb_u) || (rtIsInf(b_data[k]) && rtIsInf(x)
-              && ((b_data[k] > 0.0) == (x > 0.0))))) {
-          b_pEnd = 1;
-        }
-      }
-    } while (b_pEnd == 0);
-
-    nb++;
-    b_data[nb - 1] = x;
-  }
-
-  if (10 - (f_k + b_i) > 0) {
-    nb++;
-  }
-
-  for (k = 1; k <= b_i; k++) {
-    nb++;
-  }
-
-  if (1 > nb) {
-    nb = 0;
-  }
-
-  if (nb == 1) {
-    /* '<S43>:1:12' */
-    guard1 = true;
-  } else {
-    for (k = 0; k <= 9; k += 2) {
-      if ((ctrl_student_HIL_B.vecy[k] <= ctrl_student_HIL_B.vecy[k + 1]) ||
-          rtIsNaN(ctrl_student_HIL_B.vecy[k + 1])) {
-        idx[k] = k + 1;
-        idx[k + 1] = k + 2;
-      } else {
-        idx[k] = k + 2;
-        idx[k + 1] = k + 1;
-      }
-    }
-
-    b_i = 2;
-    while (b_i < 10) {
-      nb = b_i << 1;
-      d_j = 1;
-      for (b_pEnd = 1 + b_i; b_pEnd < 11; b_pEnd = b_qEnd + b_i) {
-        k = d_j;
-        f_k = b_pEnd - 1;
-        b_qEnd = d_j + nb;
-        if (b_qEnd > 11) {
-          b_qEnd = 11;
-        }
-
-        khi = 0;
-        b_kEnd = b_qEnd - d_j;
-        while (khi + 1 <= b_kEnd) {
-          if ((ctrl_student_HIL_B.vecy[idx[k - 1] - 1] <=
-               ctrl_student_HIL_B.vecy[idx[f_k] - 1]) || rtIsNaN
-              (ctrl_student_HIL_B.vecy[idx[f_k] - 1])) {
-            iwork[khi] = idx[k - 1];
-            k++;
-            if (k == b_pEnd) {
-              while (f_k + 1 < b_qEnd) {
-                khi++;
-                iwork[khi] = idx[f_k];
-                f_k++;
-              }
-            }
-          } else {
-            iwork[khi] = idx[f_k];
-            f_k++;
-            if (f_k + 1 == b_qEnd) {
-              while (k < b_pEnd) {
-                khi++;
-                iwork[khi] = idx[k - 1];
-                k++;
-              }
-            }
-          }
-
-          khi++;
-        }
-
-        for (k = 0; k + 1 <= b_kEnd; k++) {
-          idx[(d_j + k) - 1] = iwork[k];
-        }
-
-        d_j = b_qEnd;
-      }
-
-      b_i = nb;
-    }
-
-    for (k = 0; k < 10; k++) {
-      b_data[k] = ctrl_student_HIL_B.vecy[idx[k] - 1];
-    }
-
-    k = 0;
-    while ((k + 1 <= 10) && rtIsInf(b_data[k]) && (b_data[k] < 0.0)) {
-      k++;
-    }
-
-    khi = k;
-    k = 10;
-    while ((k >= 1) && rtIsNaN(b_data[k - 1])) {
-      k--;
-    }
-
-    b_i = 10 - k;
-    while ((k >= 1) && rtIsInf(b_data[k - 1]) && (b_data[k - 1] > 0.0)) {
-      k--;
-    }
-
-    nb = 0;
-    if (khi > 0) {
-      nb = 1;
-    }
-
-    f_k = (khi + k) - khi;
-    while (khi + 1 <= f_k) {
-      b_x = b_data[khi];
-      do {
-        b_pEnd = 0;
-        khi++;
-        if (khi + 1 > f_k) {
-          b_pEnd = 1;
-        } else {
-          rtb_u = fabs(b_x / 2.0);
-          if ((!rtIsInf(rtb_u)) && (!rtIsNaN(rtb_u))) {
-            if (rtb_u <= 2.2250738585072014E-308) {
-              rtb_u = 4.94065645841247E-324;
-            } else {
-              frexp(rtb_u, &b_exponent);
-              rtb_u = ldexp(1.0, b_exponent - 53);
-            }
-          } else {
-            rtb_u = (rtNaN);
-          }
-
-          if (!((fabs(b_x - b_data[khi]) < rtb_u) || (rtIsInf(b_data[khi]) &&
-                rtIsInf(b_x) && ((b_data[khi] > 0.0) == (b_x > 0.0))))) {
-            b_pEnd = 1;
-          }
-        }
-      } while (b_pEnd == 0);
-
-      nb++;
-      b_data[nb - 1] = b_x;
-    }
-
-    if (10 - (k + b_i) > 0) {
-      nb++;
-    }
-
-    for (k = 1; k <= b_i; k++) {
-      nb++;
-    }
-
-    if (1 > nb) {
-      nb = 0;
-    }
-
-    if (nb == 1) {
-      /* '<S43>:1:12' */
-      guard1 = true;
-    } else {
-      /* '<S43>:1:16' */
-      rtb_y_idx_0 = ctrl_student_HIL_B.Product_i[0];
-      rtb_y_idx_1 = ctrl_student_HIL_B.Product_i[1];
-      rtb_y_idx_2 = ctrl_student_HIL_B.Product_i[2];
-    }
-  }
-
-  if (guard1) {
-    /* '<S43>:1:13' */
-    rtb_y_idx_0 = rtb_Gain;
-    rtb_y_idx_1 = rtb_Gain1;
-    rtb_y_idx_2 = rtb_Gain2;
-
-    /* '<S43>:1:14' */
-    d = 0;
-  }
-
-  ctrl_student_HIL_B.d = d;
-
-  /* End of MATLAB Function: '<S8>/MATLAB Function' */
 
   /* Sum: '<S3>/Sum1' */
   ctrl_student_HIL_B.Sum1[0] = rtb_y_idx_0 - ctrl_student_HIL_B.Integrator[0];
@@ -1791,22 +1587,22 @@ void ctrl_student_HIL_output(void)
   rtb_R[8] = 1.0;
 
   /* '<S33>:1:6' */
-  for (k = 0; k < 3; k++) {
-    S[3 * k] = rtb_R[k];
-    S[1 + 3 * k] = rtb_R[k + 3];
-    S[2 + 3 * k] = rtb_R[k + 6];
+  for (i = 0; i < 3; i++) {
+    S[3 * i] = rtb_R[i];
+    S[1 + 3 * i] = rtb_R[i + 3];
+    S[2 + 3 * i] = rtb_R[i + 6];
   }
 
   /* End of MATLAB Function: '<S3>/Rotation matrix' */
 
   /* Product: '<S3>/Product3' */
-  for (k = 0; k < 3; k++) {
-    ctrl_student_HIL_B.Product3[k] = 0.0;
-    ctrl_student_HIL_B.Product3[k] += ctrl_student_HIL_B.sf_MATLABFunction_o.y[k]
+  for (i = 0; i < 3; i++) {
+    ctrl_student_HIL_B.Product3[i] = 0.0;
+    ctrl_student_HIL_B.Product3[i] += ctrl_student_HIL_B.sf_MATLABFunction_o.y[i]
       * ctrl_student_HIL_B.Sum1[0];
-    ctrl_student_HIL_B.Product3[k] += ctrl_student_HIL_B.sf_MATLABFunction_o.y[k
+    ctrl_student_HIL_B.Product3[i] += ctrl_student_HIL_B.sf_MATLABFunction_o.y[i
       + 3] * ctrl_student_HIL_B.Sum1[1];
-    ctrl_student_HIL_B.Product3[k] += ctrl_student_HIL_B.sf_MATLABFunction_o.y[k
+    ctrl_student_HIL_B.Product3[i] += ctrl_student_HIL_B.sf_MATLABFunction_o.y[i
       + 6] * ctrl_student_HIL_B.Sum1[2];
   }
 
@@ -1815,11 +1611,11 @@ void ctrl_student_HIL_output(void)
   /* Product: '<S3>/Product' incorporates:
    *  Sum: '<S3>/Sum'
    */
-  for (k = 0; k < 3; k++) {
-    tmp[k] = ctrl_student_HIL_B.sf_MATLABFunction_l.y[k + 6] *
-      ctrl_student_HIL_B.Sum1[2] + (ctrl_student_HIL_B.sf_MATLABFunction_l.y[k +
+  for (i = 0; i < 3; i++) {
+    rtb_tau[i] = ctrl_student_HIL_B.sf_MATLABFunction_l.y[i + 6] *
+      ctrl_student_HIL_B.Sum1[2] + (ctrl_student_HIL_B.sf_MATLABFunction_l.y[i +
       3] * ctrl_student_HIL_B.Sum1[1] +
-      ctrl_student_HIL_B.sf_MATLABFunction_l.y[k] * ctrl_student_HIL_B.Sum1[0]);
+      ctrl_student_HIL_B.sf_MATLABFunction_l.y[i] * ctrl_student_HIL_B.Sum1[0]);
   }
 
   /* End of Product: '<S3>/Product' */
@@ -1827,29 +1623,30 @@ void ctrl_student_HIL_output(void)
   /* Product: '<S3>/Product1' incorporates:
    *  Sum: '<S3>/Sum'
    */
-  for (k = 0; k < 3; k++) {
-    R_0[k] = rtb_R[k + 6] * ctrl_student_HIL_B.Integrator1_k[2] + (rtb_R[k + 3] *
-      ctrl_student_HIL_B.Integrator1_k[1] + rtb_R[k] *
-      ctrl_student_HIL_B.Integrator1_k[0]);
+  for (i = 0; i < 3; i++) {
+    rtb_Gain1_f[i] = rtb_R[i + 6] * ctrl_student_HIL_B.Integrator1_k[2] +
+      (rtb_R[i + 3] * ctrl_student_HIL_B.Integrator1_k[1] + rtb_R[i] *
+       ctrl_student_HIL_B.Integrator1_k[0]);
   }
 
   /* End of Product: '<S3>/Product1' */
 
   /* Sum: '<S3>/Sum' */
-  ctrl_student_HIL_B.Sum_b[0] = tmp[0] + R_0[0];
-  ctrl_student_HIL_B.Sum_b[1] = tmp[1] + R_0[1];
-  ctrl_student_HIL_B.Sum_b[2] = tmp[2] + R_0[2];
+  ctrl_student_HIL_B.Sum_b[0] = rtb_tau[0] + rtb_Gain1_f[0];
+  ctrl_student_HIL_B.Sum_b[1] = rtb_tau[1] + rtb_Gain1_f[1];
+  ctrl_student_HIL_B.Sum_b[2] = rtb_tau[2] + rtb_Gain1_f[2];
 
   /* Product: '<S3>/Product5' */
-  for (k = 0; k < 3; k++) {
-    tmp[k] = ctrl_student_HIL_B.sf_MATLABFunction_fv.y[k + 6] *
-      ctrl_student_HIL_B.Sum1[2] + (ctrl_student_HIL_B.sf_MATLABFunction_fv.y[k
+  for (i = 0; i < 3; i++) {
+    rtb_tau[i] = ctrl_student_HIL_B.sf_MATLABFunction_fv.y[i + 6] *
+      ctrl_student_HIL_B.Sum1[2] + (ctrl_student_HIL_B.sf_MATLABFunction_fv.y[i
       + 3] * ctrl_student_HIL_B.Sum1[1] +
-      ctrl_student_HIL_B.sf_MATLABFunction_fv.y[k] * ctrl_student_HIL_B.Sum1[0]);
+      ctrl_student_HIL_B.sf_MATLABFunction_fv.y[i] * ctrl_student_HIL_B.Sum1[0]);
   }
 
-  for (k = 0; k < 3; k++) {
-    R_0[k] = S[k + 6] * tmp[2] + (S[k + 3] * tmp[1] + S[k] * tmp[0]);
+  for (i = 0; i < 3; i++) {
+    rtb_Gain1_f[i] = S[i + 6] * rtb_tau[2] + (S[i + 3] * rtb_tau[1] + S[i] *
+      rtb_tau[0]);
   }
 
   /* MATLAB Function: '<S3>/D' */
@@ -1874,9 +1671,9 @@ void ctrl_student_HIL_output(void)
   /* Product: '<S3>/Product4' incorporates:
    *  Sum: '<S3>/Sum3'
    */
-  for (k = 0; k < 3; k++) {
-    R_1[k] = S[k + 6] * ctrl_student_HIL_B.Integrator2[2] + (S[k + 3] *
-      ctrl_student_HIL_B.Integrator2[1] + S[k] * ctrl_student_HIL_B.Integrator2
+  for (i = 0; i < 3; i++) {
+    R_0[i] = S[i + 6] * ctrl_student_HIL_B.Integrator2[2] + (S[i + 3] *
+      ctrl_student_HIL_B.Integrator2[1] + S[i] * ctrl_student_HIL_B.Integrator2
       [0]);
   }
 
@@ -1885,9 +1682,9 @@ void ctrl_student_HIL_output(void)
   /* Product: '<S3>/Product2' incorporates:
    *  Sum: '<S3>/Sum3'
    */
-  for (k = 0; k < 3; k++) {
-    tmp[k] = tmp_2[k + 6] * ctrl_student_HIL_B.Integrator1_k[2] + (tmp_2[k + 3] *
-      ctrl_student_HIL_B.Integrator1_k[1] + tmp_2[k] *
+  for (i = 0; i < 3; i++) {
+    rtb_tau[i] = tmp_2[i + 6] * ctrl_student_HIL_B.Integrator1_k[2] + (tmp_2[i +
+      3] * ctrl_student_HIL_B.Integrator1_k[1] + tmp_2[i] *
       ctrl_student_HIL_B.Integrator1_k[0]);
   }
 
@@ -1898,16 +1695,16 @@ void ctrl_student_HIL_output(void)
    *  Product: '<S3>/Product5'
    *  Sum: '<S3>/Sum3'
    */
-  rtb_Gain1_k = (R_0[0] + ctrl_student_HIL_B.Sum_c[0]) + (R_1[0] - tmp[0]);
-  u_VSP_x = (R_0[1] + ctrl_student_HIL_B.Sum_c[1]) + (R_1[1] - tmp[1]);
-  x = (R_0[2] + ctrl_student_HIL_B.Sum_c[2]) + (R_1[2] - tmp[2]);
+  V1_s = (rtb_Gain1_f[0] + ctrl_student_HIL_B.Sum_c[0]) + (R_0[0] - rtb_tau[0]);
+  c_x = (rtb_Gain1_f[1] + ctrl_student_HIL_B.Sum_c[1]) + (R_0[1] - rtb_tau[1]);
+  d_x = (rtb_Gain1_f[2] + ctrl_student_HIL_B.Sum_c[2]) + (R_0[2] - rtb_tau[2]);
 
   /* Gain: '<S3>/inv(M)' */
-  for (k = 0; k < 3; k++) {
-    ctrl_student_HIL_B.invM[k] = 0.0;
-    ctrl_student_HIL_B.invM[k] += ctrl_student_HIL_P.invM_Gain[k] * rtb_Gain1_k;
-    ctrl_student_HIL_B.invM[k] += ctrl_student_HIL_P.invM_Gain[k + 3] * u_VSP_x;
-    ctrl_student_HIL_B.invM[k] += ctrl_student_HIL_P.invM_Gain[k + 6] * x;
+  for (i = 0; i < 3; i++) {
+    ctrl_student_HIL_B.invM[i] = 0.0;
+    ctrl_student_HIL_B.invM[i] += ctrl_student_HIL_P.invM_Gain[i] * V1_s;
+    ctrl_student_HIL_B.invM[i] += ctrl_student_HIL_P.invM_Gain[i + 3] * c_x;
+    ctrl_student_HIL_B.invM[i] += ctrl_student_HIL_P.invM_Gain[i + 6] * d_x;
   }
 
   if (rtmIsMajorTimeStep(ctrl_student_HIL_M)) {
@@ -1922,31 +1719,6 @@ void ctrl_student_HIL_update(void)
     /* Update for Memory: '<S9>/Memory' */
     ctrl_student_HIL_DW.Memory_PreviousInput = ctrl_student_HIL_B.switch_signal;
 
-    /* Update for Memory: '<S1>/Memory4' */
-    ctrl_student_HIL_DW.Memory4_PreviousInput[0] = ctrl_student_HIL_B.z1[0];
-    ctrl_student_HIL_DW.Memory4_PreviousInput[1] = ctrl_student_HIL_B.z1[1];
-    ctrl_student_HIL_DW.Memory4_PreviousInput[2] = ctrl_student_HIL_B.z1[2];
-
-    /* Update for Memory: '<S1>/Memory5' */
-    ctrl_student_HIL_DW.Memory5_PreviousInput[0] = ctrl_student_HIL_B.z2[0];
-    ctrl_student_HIL_DW.Memory5_PreviousInput[1] = ctrl_student_HIL_B.z2[1];
-    ctrl_student_HIL_DW.Memory5_PreviousInput[2] = ctrl_student_HIL_B.z2[2];
-
-    /* Update for Memory: '<S1>/Memory2' */
-    ctrl_student_HIL_DW.Memory2_PreviousInput = ctrl_student_HIL_B.s_dot1;
-  }
-
-  if (rtmIsMajorTimeStep(ctrl_student_HIL_M)) {
-    /* Update for Memory: '<S1>/Memory6' */
-    ctrl_student_HIL_DW.Memory6_PreviousInput[0] = ctrl_student_HIL_B.temp[0];
-    ctrl_student_HIL_DW.Memory6_PreviousInput[1] = ctrl_student_HIL_B.temp[1];
-
-    /* Update for Memory: '<S1>/Memory' */
-    memcpy(&ctrl_student_HIL_DW.Memory_PreviousInput_l[0],
-           &ctrl_student_HIL_B.eta_v[0], 11U * sizeof(real_T));
-  }
-
-  if (rtmIsMajorTimeStep(ctrl_student_HIL_M)) {
     /* Update for Memory: '<S21>/counter' */
     ctrl_student_HIL_DW.counter_PreviousInput = ctrl_student_HIL_B.count;
 
@@ -1969,24 +1741,55 @@ void ctrl_student_HIL_update(void)
     ctrl_student_HIL_DW.Hold_PreviousInput[0] = ctrl_student_HIL_B.output[0];
     ctrl_student_HIL_DW.Hold_PreviousInput[1] = ctrl_student_HIL_B.output[1];
     ctrl_student_HIL_DW.Hold_PreviousInput[2] = ctrl_student_HIL_B.output[2];
-
-    /* Update for Memory: '<S1>/Memory3' */
-    ctrl_student_HIL_DW.Memory3_PreviousInput[0] = ctrl_student_HIL_B.z1[0];
-    ctrl_student_HIL_DW.Memory3_PreviousInput[1] = ctrl_student_HIL_B.z1[1];
-    ctrl_student_HIL_DW.Memory3_PreviousInput[2] = ctrl_student_HIL_B.z1[2];
-
-    /* Update for Memory: '<S1>/Memory1' */
-    ctrl_student_HIL_DW.Memory1_PreviousInput[0] = ctrl_student_HIL_B.i;
-    ctrl_student_HIL_DW.Memory1_PreviousInput[1] = ctrl_student_HIL_B.s_dot1;
-    ctrl_student_HIL_DW.Memory1_PreviousInput[2] =
-      ctrl_student_HIL_B.Integrator1;
-    for (i = 0; i < 10; i++) {
+    for (i = 0; i < 20; i++) {
       /* Update for Memory: '<S8>/Memory' */
       ctrl_student_HIL_DW.Memory_PreviousInput_c[i] = ctrl_student_HIL_B.vecx[i];
 
       /* Update for Memory: '<S8>/Memory1' */
-      ctrl_student_HIL_DW.Memory1_PreviousInput_j[i] = ctrl_student_HIL_B.vecy[i];
+      ctrl_student_HIL_DW.Memory1_PreviousInput[i] = ctrl_student_HIL_B.vecy[i];
     }
+
+    /* Update for Memory: '<S8>/Memory3' */
+    ctrl_student_HIL_DW.Memory3_PreviousInput = ctrl_student_HIL_B.s1;
+
+    /* Update for Memory: '<S8>/Memory2' */
+    ctrl_student_HIL_DW.Memory2_PreviousInput = ctrl_student_HIL_B.s2;
+
+    /* Update for Memory: '<S1>/Memory4' */
+    ctrl_student_HIL_DW.Memory4_PreviousInput[0] = ctrl_student_HIL_B.z1[0];
+    ctrl_student_HIL_DW.Memory4_PreviousInput[1] = ctrl_student_HIL_B.z1[1];
+    ctrl_student_HIL_DW.Memory4_PreviousInput[2] = ctrl_student_HIL_B.z1[2];
+
+    /* Update for Memory: '<S1>/Memory5' */
+    ctrl_student_HIL_DW.Memory5_PreviousInput[0] = ctrl_student_HIL_B.z2[0];
+    ctrl_student_HIL_DW.Memory5_PreviousInput[1] = ctrl_student_HIL_B.z2[1];
+    ctrl_student_HIL_DW.Memory5_PreviousInput[2] = ctrl_student_HIL_B.z2[2];
+
+    /* Update for Memory: '<S1>/Memory2' */
+    ctrl_student_HIL_DW.Memory2_PreviousInput_k = ctrl_student_HIL_B.s_dot1;
+  }
+
+  if (rtmIsMajorTimeStep(ctrl_student_HIL_M)) {
+    /* Update for Memory: '<S1>/Memory6' */
+    ctrl_student_HIL_DW.Memory6_PreviousInput[0] = ctrl_student_HIL_B.temp[0];
+    ctrl_student_HIL_DW.Memory6_PreviousInput[1] = ctrl_student_HIL_B.temp[1];
+
+    /* Update for Memory: '<S1>/Memory' */
+    memcpy(&ctrl_student_HIL_DW.Memory_PreviousInput_l[0],
+           &ctrl_student_HIL_B.eta_v[0], 11U * sizeof(real_T));
+  }
+
+  if (rtmIsMajorTimeStep(ctrl_student_HIL_M)) {
+    /* Update for Memory: '<S1>/Memory3' */
+    ctrl_student_HIL_DW.Memory3_PreviousInput_n[0] = ctrl_student_HIL_B.z1[0];
+    ctrl_student_HIL_DW.Memory3_PreviousInput_n[1] = ctrl_student_HIL_B.z1[1];
+    ctrl_student_HIL_DW.Memory3_PreviousInput_n[2] = ctrl_student_HIL_B.z1[2];
+
+    /* Update for Memory: '<S1>/Memory1' */
+    ctrl_student_HIL_DW.Memory1_PreviousInput_i[0] = ctrl_student_HIL_B.i;
+    ctrl_student_HIL_DW.Memory1_PreviousInput_i[1] = ctrl_student_HIL_B.s_dot1;
+    ctrl_student_HIL_DW.Memory1_PreviousInput_i[2] =
+      ctrl_student_HIL_B.Integrator1;
   }
 
   if (rtmIsMajorTimeStep(ctrl_student_HIL_M)) {
@@ -2087,59 +1890,6 @@ void ctrl_student_HIL_initialize(void)
     /* InitializeConditions for Memory: '<S9>/Memory' */
     ctrl_student_HIL_DW.Memory_PreviousInput = ctrl_student_HIL_P.Memory_X0;
 
-    /* InitializeConditions for Memory: '<S1>/Memory4' */
-    ctrl_student_HIL_DW.Memory4_PreviousInput[0] =
-      ctrl_student_HIL_P.Memory4_X0[0];
-    ctrl_student_HIL_DW.Memory4_PreviousInput[1] =
-      ctrl_student_HIL_P.Memory4_X0[1];
-    ctrl_student_HIL_DW.Memory4_PreviousInput[2] =
-      ctrl_student_HIL_P.Memory4_X0[2];
-
-    /* InitializeConditions for Memory: '<S1>/Memory5' */
-    ctrl_student_HIL_DW.Memory5_PreviousInput[0] =
-      ctrl_student_HIL_P.Memory5_X0[0];
-    ctrl_student_HIL_DW.Memory5_PreviousInput[1] =
-      ctrl_student_HIL_P.Memory5_X0[1];
-    ctrl_student_HIL_DW.Memory5_PreviousInput[2] =
-      ctrl_student_HIL_P.Memory5_X0[2];
-
-    /* InitializeConditions for Memory: '<S1>/Memory2' */
-    ctrl_student_HIL_DW.Memory2_PreviousInput = ctrl_student_HIL_P.Memory2_X0;
-
-    /* InitializeConditions for Integrator: '<S3>/Integrator' */
-    ctrl_student_HIL_X.Integrator_CSTATE[0] = ctrl_student_HIL_P.Integrator_IC;
-    ctrl_student_HIL_X.Integrator_CSTATE[1] = ctrl_student_HIL_P.Integrator_IC;
-    ctrl_student_HIL_X.Integrator_CSTATE[2] = ctrl_student_HIL_P.Integrator_IC;
-
-    /* InitializeConditions for Integrator: '<S1>/Integrator1' */
-    ctrl_student_HIL_X.Integrator1_CSTATE = ctrl_student_HIL_P.Integrator1_IC;
-
-    /* InitializeConditions for Memory: '<S1>/Memory6' */
-    ctrl_student_HIL_DW.Memory6_PreviousInput[0] =
-      ctrl_student_HIL_P.Memory6_X0[0];
-    ctrl_student_HIL_DW.Memory6_PreviousInput[1] =
-      ctrl_student_HIL_P.Memory6_X0[1];
-
-    /* InitializeConditions for Memory: '<S1>/Memory' */
-    for (i = 0; i < 11; i++) {
-      ctrl_student_HIL_DW.Memory_PreviousInput_l[i] =
-        ctrl_student_HIL_P.Memory_X0_d;
-    }
-
-    /* End of InitializeConditions for Memory: '<S1>/Memory' */
-    /* InitializeConditions for Integrator: '<S3>/Integrator1' */
-    ctrl_student_HIL_X.Integrator1_CSTATE_b[0] =
-      ctrl_student_HIL_P.Integrator1_IC_l;
-    ctrl_student_HIL_X.Integrator1_CSTATE_b[1] =
-      ctrl_student_HIL_P.Integrator1_IC_l;
-    ctrl_student_HIL_X.Integrator1_CSTATE_b[2] =
-      ctrl_student_HIL_P.Integrator1_IC_l;
-
-    /* InitializeConditions for Integrator: '<S3>/Integrator2' */
-    ctrl_student_HIL_X.Integrator2_CSTATE[0] = ctrl_student_HIL_P.Integrator2_IC;
-    ctrl_student_HIL_X.Integrator2_CSTATE[1] = ctrl_student_HIL_P.Integrator2_IC;
-    ctrl_student_HIL_X.Integrator2_CSTATE[2] = ctrl_student_HIL_P.Integrator2_IC;
-
     /* InitializeConditions for Memory: '<S21>/counter' */
     ctrl_student_HIL_DW.counter_PreviousInput = ctrl_student_HIL_P.counter_X0;
 
@@ -2228,28 +1978,91 @@ void ctrl_student_HIL_initialize(void)
     ctrl_student_HIL_DW.Hold_PreviousInput[0] = ctrl_student_HIL_P.Hold_X0;
     ctrl_student_HIL_DW.Hold_PreviousInput[1] = ctrl_student_HIL_P.Hold_X0;
     ctrl_student_HIL_DW.Hold_PreviousInput[2] = ctrl_student_HIL_P.Hold_X0;
-
-    /* InitializeConditions for Memory: '<S1>/Memory3' */
-    ctrl_student_HIL_DW.Memory3_PreviousInput[0] = ctrl_student_HIL_P.Memory3_X0;
-    ctrl_student_HIL_DW.Memory3_PreviousInput[1] = ctrl_student_HIL_P.Memory3_X0;
-    ctrl_student_HIL_DW.Memory3_PreviousInput[2] = ctrl_student_HIL_P.Memory3_X0;
-
-    /* InitializeConditions for Memory: '<S1>/Memory1' */
-    ctrl_student_HIL_DW.Memory1_PreviousInput[0] =
-      ctrl_student_HIL_P.Memory1_X0[0];
-    ctrl_student_HIL_DW.Memory1_PreviousInput[1] =
-      ctrl_student_HIL_P.Memory1_X0[1];
-    ctrl_student_HIL_DW.Memory1_PreviousInput[2] =
-      ctrl_student_HIL_P.Memory1_X0[2];
-    for (i = 0; i < 10; i++) {
+    for (i = 0; i < 20; i++) {
       /* InitializeConditions for Memory: '<S8>/Memory' */
       ctrl_student_HIL_DW.Memory_PreviousInput_c[i] =
         ctrl_student_HIL_P.Memory_X0_g[i];
 
       /* InitializeConditions for Memory: '<S8>/Memory1' */
-      ctrl_student_HIL_DW.Memory1_PreviousInput_j[i] =
-        ctrl_student_HIL_P.Memory1_X0_o[i];
+      ctrl_student_HIL_DW.Memory1_PreviousInput[i] =
+        ctrl_student_HIL_P.Memory1_X0[i];
     }
+
+    /* InitializeConditions for Memory: '<S8>/Memory3' */
+    ctrl_student_HIL_DW.Memory3_PreviousInput = ctrl_student_HIL_P.Memory3_X0;
+
+    /* InitializeConditions for Memory: '<S8>/Memory2' */
+    ctrl_student_HIL_DW.Memory2_PreviousInput = ctrl_student_HIL_P.Memory2_X0;
+
+    /* InitializeConditions for Memory: '<S1>/Memory4' */
+    ctrl_student_HIL_DW.Memory4_PreviousInput[0] =
+      ctrl_student_HIL_P.Memory4_X0[0];
+    ctrl_student_HIL_DW.Memory4_PreviousInput[1] =
+      ctrl_student_HIL_P.Memory4_X0[1];
+    ctrl_student_HIL_DW.Memory4_PreviousInput[2] =
+      ctrl_student_HIL_P.Memory4_X0[2];
+
+    /* InitializeConditions for Memory: '<S1>/Memory5' */
+    ctrl_student_HIL_DW.Memory5_PreviousInput[0] =
+      ctrl_student_HIL_P.Memory5_X0[0];
+    ctrl_student_HIL_DW.Memory5_PreviousInput[1] =
+      ctrl_student_HIL_P.Memory5_X0[1];
+    ctrl_student_HIL_DW.Memory5_PreviousInput[2] =
+      ctrl_student_HIL_P.Memory5_X0[2];
+
+    /* InitializeConditions for Memory: '<S1>/Memory2' */
+    ctrl_student_HIL_DW.Memory2_PreviousInput_k =
+      ctrl_student_HIL_P.Memory2_X0_p;
+
+    /* InitializeConditions for Integrator: '<S3>/Integrator' */
+    ctrl_student_HIL_X.Integrator_CSTATE[0] = ctrl_student_HIL_P.Integrator_IC;
+    ctrl_student_HIL_X.Integrator_CSTATE[1] = ctrl_student_HIL_P.Integrator_IC;
+    ctrl_student_HIL_X.Integrator_CSTATE[2] = ctrl_student_HIL_P.Integrator_IC;
+
+    /* InitializeConditions for Integrator: '<S1>/Integrator1' */
+    ctrl_student_HIL_X.Integrator1_CSTATE = ctrl_student_HIL_P.Integrator1_IC;
+
+    /* InitializeConditions for Memory: '<S1>/Memory6' */
+    ctrl_student_HIL_DW.Memory6_PreviousInput[0] =
+      ctrl_student_HIL_P.Memory6_X0[0];
+    ctrl_student_HIL_DW.Memory6_PreviousInput[1] =
+      ctrl_student_HIL_P.Memory6_X0[1];
+
+    /* InitializeConditions for Memory: '<S1>/Memory' */
+    for (i = 0; i < 11; i++) {
+      ctrl_student_HIL_DW.Memory_PreviousInput_l[i] =
+        ctrl_student_HIL_P.Memory_X0_d;
+    }
+
+    /* End of InitializeConditions for Memory: '<S1>/Memory' */
+    /* InitializeConditions for Integrator: '<S3>/Integrator1' */
+    ctrl_student_HIL_X.Integrator1_CSTATE_b[0] =
+      ctrl_student_HIL_P.Integrator1_IC_l;
+    ctrl_student_HIL_X.Integrator1_CSTATE_b[1] =
+      ctrl_student_HIL_P.Integrator1_IC_l;
+    ctrl_student_HIL_X.Integrator1_CSTATE_b[2] =
+      ctrl_student_HIL_P.Integrator1_IC_l;
+
+    /* InitializeConditions for Integrator: '<S3>/Integrator2' */
+    ctrl_student_HIL_X.Integrator2_CSTATE[0] = ctrl_student_HIL_P.Integrator2_IC;
+    ctrl_student_HIL_X.Integrator2_CSTATE[1] = ctrl_student_HIL_P.Integrator2_IC;
+    ctrl_student_HIL_X.Integrator2_CSTATE[2] = ctrl_student_HIL_P.Integrator2_IC;
+
+    /* InitializeConditions for Memory: '<S1>/Memory3' */
+    ctrl_student_HIL_DW.Memory3_PreviousInput_n[0] =
+      ctrl_student_HIL_P.Memory3_X0_l;
+    ctrl_student_HIL_DW.Memory3_PreviousInput_n[1] =
+      ctrl_student_HIL_P.Memory3_X0_l;
+    ctrl_student_HIL_DW.Memory3_PreviousInput_n[2] =
+      ctrl_student_HIL_P.Memory3_X0_l;
+
+    /* InitializeConditions for Memory: '<S1>/Memory1' */
+    ctrl_student_HIL_DW.Memory1_PreviousInput_i[0] =
+      ctrl_student_HIL_P.Memory1_X0_f[0];
+    ctrl_student_HIL_DW.Memory1_PreviousInput_i[1] =
+      ctrl_student_HIL_P.Memory1_X0_f[1];
+    ctrl_student_HIL_DW.Memory1_PreviousInput_i[2] =
+      ctrl_student_HIL_P.Memory1_X0_f[2];
   }
 }
 
@@ -2453,9 +2266,9 @@ RT_MODEL_ctrl_student_HIL_T *ctrl_student_HIL(void)
   ctrl_student_HIL_M->Sizes.numU = (0);/* Number of model inputs */
   ctrl_student_HIL_M->Sizes.sysDirFeedThru = (0);/* The model is not direct feedthrough */
   ctrl_student_HIL_M->Sizes.numSampTimes = (2);/* Number of sample times */
-  ctrl_student_HIL_M->Sizes.numBlocks = (190);/* Number of blocks */
-  ctrl_student_HIL_M->Sizes.numBlockIO = (93);/* Number of block outputs */
-  ctrl_student_HIL_M->Sizes.numBlockPrms = (556);/* Sum of parameter "widths" */
+  ctrl_student_HIL_M->Sizes.numBlocks = (197);/* Number of blocks */
+  ctrl_student_HIL_M->Sizes.numBlockIO = (97);/* Number of block outputs */
+  ctrl_student_HIL_M->Sizes.numBlockPrms = (591);/* Sum of parameter "widths" */
   return ctrl_student_HIL_M;
 }
 
@@ -2813,38 +2626,17 @@ void SetExternalInputs(double* data, int* TaskSampleHit)
     index += 1;
   }
 
-  // DP-system/Kd/Kd1
+  // dead rec  switch/dead
   if (TaskSampleHit[0]) {
-    NIRT_SetValueByDataType(&ctrl_student_HIL_B.Kd1, 0, data[index++], 42, 0);
+    NIRT_SetValueByDataType(&ctrl_student_HIL_B.dead, 0, data[index++], 0, 0);
   } else {
     index += 1;
   }
 
-  // DP-system/Kd/Kd2
+  // Samp_freq
   if (TaskSampleHit[0]) {
-    NIRT_SetValueByDataType(&ctrl_student_HIL_B.Kd2, 0, data[index++], 42, 0);
-  } else {
-    index += 1;
-  }
-
-  // DP-system/Kd/Kd3
-  if (TaskSampleHit[0]) {
-    NIRT_SetValueByDataType(&ctrl_student_HIL_B.Kd3, 0, data[index++], 42, 0);
-  } else {
-    index += 1;
-  }
-
-  // psi
-  if (TaskSampleHit[0]) {
-    NIRT_SetValueByDataType(&ctrl_student_HIL_B.psi, 0, data[index++], 0, 0);
-  } else {
-    index += 1;
-  }
-
-  // Enable_noise
-  if (TaskSampleHit[0]) {
-    NIRT_SetValueByDataType(&ctrl_student_HIL_B.Enable_noise, 0, data[index++],
-      0, 0);
+    NIRT_SetValueByDataType(&ctrl_student_HIL_B.Samp_freq, 0, data[index++], 0,
+      0);
   } else {
     index += 1;
   }
@@ -2864,17 +2656,38 @@ void SetExternalInputs(double* data, int* TaskSampleHit)
     index += 1;
   }
 
-  // dead rec  switch/dead
+  // psi
   if (TaskSampleHit[0]) {
-    NIRT_SetValueByDataType(&ctrl_student_HIL_B.dead, 0, data[index++], 0, 0);
+    NIRT_SetValueByDataType(&ctrl_student_HIL_B.psi, 0, data[index++], 0, 0);
   } else {
     index += 1;
   }
 
-  // Samp_freq
+  // Enable_noise
   if (TaskSampleHit[0]) {
-    NIRT_SetValueByDataType(&ctrl_student_HIL_B.Samp_freq, 0, data[index++], 0,
-      0);
+    NIRT_SetValueByDataType(&ctrl_student_HIL_B.Enable_noise, 0, data[index++],
+      0, 0);
+  } else {
+    index += 1;
+  }
+
+  // DP-system/Kd/Kd1
+  if (TaskSampleHit[0]) {
+    NIRT_SetValueByDataType(&ctrl_student_HIL_B.Kd1, 0, data[index++], 42, 0);
+  } else {
+    index += 1;
+  }
+
+  // DP-system/Kd/Kd2
+  if (TaskSampleHit[0]) {
+    NIRT_SetValueByDataType(&ctrl_student_HIL_B.Kd2, 0, data[index++], 42, 0);
+  } else {
+    index += 1;
+  }
+
+  // DP-system/Kd/Kd3
+  if (TaskSampleHit[0]) {
+    NIRT_SetValueByDataType(&ctrl_student_HIL_B.Kd3, 0, data[index++], 42, 0);
   } else {
     index += 1;
   }
@@ -2948,7 +2761,7 @@ long NumInputPorts(void)
   return 32;
 }
 
-double ni_extout[74];
+double ni_extout[76];
 void SetExternalOutputs(double* data, int* TaskSampleHit)
 {
   int index = 0, count = 0;
@@ -3350,13 +3163,27 @@ void SetExternalOutputs(double* data, int* TaskSampleHit)
     index += 1;
   }
 
+  // signal dropout check /s1: Virtual Signal # 0
+  if (TaskSampleHit[0]) {              // sample and hold
+    ni_extout[index++] = NIRT_GetValueByDataType(&ctrl_student_HIL_B.s1,0,0,0);
+  } else {
+    index += 1;
+  }
+
+  // signal dropout check /s2: Virtual Signal # 0
+  if (TaskSampleHit[0]) {              // sample and hold
+    ni_extout[index++] = NIRT_GetValueByDataType(&ctrl_student_HIL_B.s2,0,0,0);
+  } else {
+    index += 1;
+  }
+
   if (data)
     memcpy(&data[0], &ni_extout[0], sizeof(ni_extout));
 }
 
 long NumOutputPorts(void)
 {
-  return 74;
+  return 76;
 }
 
 int NI_InitExternalOutputs()
@@ -3555,6 +3382,12 @@ int NI_InitExternalOutputs()
 
   // signal dropout check /lost: Virtual Signal # 0
   ni_extout[index++] = NIRT_GetValueByDataType(&ctrl_student_HIL_B.d,0,0,0);
+
+  // signal dropout check /s1: Virtual Signal # 0
+  ni_extout[index++] = NIRT_GetValueByDataType(&ctrl_student_HIL_B.s1,0,0,0);
+
+  // signal dropout check /s2: Virtual Signal # 0
+  ni_extout[index++] = NIRT_GetValueByDataType(&ctrl_student_HIL_B.s2,0,0,0);
   return NI_OK;
 }
 
@@ -3579,113 +3412,122 @@ static NI_Parameter NI_ParamList[] DataSection(".NIVS.paramlist") =
   { 5, "ctrl_student_hil/switch/Memory/X0", offsetof(P_ctrl_student_HIL_T,
     Memory_X0), 42, 1, 2, 10, 0 },
 
-  { 6, "ctrl_student_hil/DP-system/Memory4/X0", offsetof(P_ctrl_student_HIL_T,
-    Memory4_X0), 29, 3, 2, 12, 0 },
+  { 6, "ctrl_student_hil/dead rec  switch/Constant/Value", offsetof
+    (P_ctrl_student_HIL_T, Constant_Value), 42, 1, 2, 12, 0 },
 
-  { 7, "ctrl_student_hil/DP-system/Memory5/X0", offsetof(P_ctrl_student_HIL_T,
-    Memory5_X0), 29, 3, 2, 14, 0 },
+  { 7, "ctrl_student_hil/dead rec  switch/Constant1/Value", offsetof
+    (P_ctrl_student_HIL_T, Constant1_Value), 42, 1, 2, 14, 0 },
 
-  { 8, "ctrl_student_hil/DP-system/Memory2/X0", offsetof(P_ctrl_student_HIL_T,
-    Memory2_X0), 42, 1, 2, 16, 0 },
+  { 8, "ctrl_student_hil/Noise generator1/Step size/Value", offsetof
+    (P_ctrl_student_HIL_T, Stepsize_Value), 42, 1, 2, 16, 0 },
 
-  { 9, "ctrl_student_hil/Observer/Integrator/InitialCondition", offsetof
-    (P_ctrl_student_HIL_T, Integrator_IC), 42, 1, 2, 18, 0 },
+  { 9, "ctrl_student_hil/Noise generator1/Downsamplesignal/counter/X0", offsetof
+    (P_ctrl_student_HIL_T, counter_X0), 42, 1, 2, 18, 0 },
 
-  { 10, "ctrl_student_hil/DP-system/Gain/Gain", offsetof(P_ctrl_student_HIL_T,
-    Gain_Gain_g), 30, 3, 2, 20, 0 },
-
-  { 11, "ctrl_student_hil/DP-system/Integrator1/InitialCondition", offsetof
-    (P_ctrl_student_HIL_T, Integrator1_IC), 42, 1, 2, 22, 0 },
-
-  { 12, "ctrl_student_hil/DP-system/Memory6/X0", offsetof(P_ctrl_student_HIL_T,
-    Memory6_X0), 19, 2, 2, 24, 0 },
-
-  { 13, "ctrl_student_hil/DP-system/Memory/X0", offsetof(P_ctrl_student_HIL_T,
-    Memory_X0_d), 42, 1, 2, 26, 0 },
-
-  { 14, "ctrl_student_hil/Observer/Integrator1/InitialCondition", offsetof
-    (P_ctrl_student_HIL_T, Integrator1_IC_l), 42, 1, 2, 28, 0 },
-
-  { 15, "ctrl_student_hil/Observer/Integrator2/InitialCondition", offsetof
-    (P_ctrl_student_HIL_T, Integrator2_IC), 42, 1, 2, 30, 0 },
-
-  { 16, "ctrl_student_hil/Constant/Value", offsetof(P_ctrl_student_HIL_T,
-    Constant_Value), 29, 3, 2, 32, 0 },
-
-  { 17, "ctrl_student_hil/dead rec  switch/Constant/Value", offsetof
-    (P_ctrl_student_HIL_T, Constant_Value_k), 42, 1, 2, 34, 0 },
-
-  { 18, "ctrl_student_hil/dead rec  switch/Constant1/Value", offsetof
-    (P_ctrl_student_HIL_T, Constant1_Value), 42, 1, 2, 36, 0 },
-
-  { 19, "ctrl_student_hil/Noise generator1/Step size/Value", offsetof
-    (P_ctrl_student_HIL_T, Stepsize_Value), 42, 1, 2, 38, 0 },
-
-  { 20, "ctrl_student_hil/Noise generator1/Downsamplesignal/counter/X0",
-    offsetof(P_ctrl_student_HIL_T, counter_X0), 42, 1, 2, 40, 0 },
-
-  { 21,
+  { 10,
     "ctrl_student_hil/Noise generator1/noise generator/Band-limited white noise x/White Noise/Mean",
-    offsetof(P_ctrl_student_HIL_T, WhiteNoise_Mean), 42, 1, 2, 42, 0 },
+    offsetof(P_ctrl_student_HIL_T, WhiteNoise_Mean), 42, 1, 2, 20, 0 },
 
-  { 22,
+  { 11,
     "ctrl_student_hil/Noise generator1/noise generator/Band-limited white noise x/White Noise/StdDev",
-    offsetof(P_ctrl_student_HIL_T, WhiteNoise_StdDev), 42, 1, 2, 44, 0 },
+    offsetof(P_ctrl_student_HIL_T, WhiteNoise_StdDev), 42, 1, 2, 22, 0 },
 
-  { 23,
+  { 12,
     "ctrl_student_hil/Noise generator1/noise generator/Band-limited white noise x/White Noise/Seed",
-    offsetof(P_ctrl_student_HIL_T, WhiteNoise_Seed), 42, 1, 2, 46, 0 },
+    offsetof(P_ctrl_student_HIL_T, WhiteNoise_Seed), 42, 1, 2, 24, 0 },
 
-  { 24,
+  { 13,
     "ctrl_student_hil/Noise generator1/noise generator/Band-limited white noise y/White Noise/Mean",
-    offsetof(P_ctrl_student_HIL_T, WhiteNoise_Mean_d), 42, 1, 2, 48, 0 },
+    offsetof(P_ctrl_student_HIL_T, WhiteNoise_Mean_d), 42, 1, 2, 26, 0 },
 
-  { 25,
+  { 14,
     "ctrl_student_hil/Noise generator1/noise generator/Band-limited white noise y/White Noise/StdDev",
-    offsetof(P_ctrl_student_HIL_T, WhiteNoise_StdDev_f), 42, 1, 2, 50, 0 },
+    offsetof(P_ctrl_student_HIL_T, WhiteNoise_StdDev_f), 42, 1, 2, 28, 0 },
 
-  { 26,
+  { 15,
     "ctrl_student_hil/Noise generator1/noise generator/Band-limited white noise y/White Noise/Seed",
-    offsetof(P_ctrl_student_HIL_T, WhiteNoise_Seed_o), 42, 1, 2, 52, 0 },
+    offsetof(P_ctrl_student_HIL_T, WhiteNoise_Seed_o), 42, 1, 2, 30, 0 },
 
-  { 27,
+  { 16,
     "ctrl_student_hil/Noise generator1/noise generator/Band-limited white noise psi/White Noise/Mean",
-    offsetof(P_ctrl_student_HIL_T, WhiteNoise_Mean_c), 42, 1, 2, 54, 0 },
+    offsetof(P_ctrl_student_HIL_T, WhiteNoise_Mean_c), 42, 1, 2, 32, 0 },
 
-  { 28,
+  { 17,
     "ctrl_student_hil/Noise generator1/noise generator/Band-limited white noise psi/White Noise/StdDev",
-    offsetof(P_ctrl_student_HIL_T, WhiteNoise_StdDev_p), 42, 1, 2, 56, 0 },
+    offsetof(P_ctrl_student_HIL_T, WhiteNoise_StdDev_p), 42, 1, 2, 34, 0 },
 
-  { 29,
+  { 18,
     "ctrl_student_hil/Noise generator1/noise generator/Band-limited white noise psi/White Noise/Seed",
-    offsetof(P_ctrl_student_HIL_T, WhiteNoise_Seed_h), 42, 1, 2, 58, 0 },
+    offsetof(P_ctrl_student_HIL_T, WhiteNoise_Seed_h), 42, 1, 2, 36, 0 },
 
-  { 30, "ctrl_student_hil/Gain2/Gain", offsetof(P_ctrl_student_HIL_T, Gain2_Gain),
-    42, 1, 2, 60, 0 },
+  { 19, "ctrl_student_hil/Gain2/Gain", offsetof(P_ctrl_student_HIL_T, Gain2_Gain),
+    42, 1, 2, 38, 0 },
 
-  { 31, "ctrl_student_hil/Noise generator1/Sample & hold/Hold/X0", offsetof
-    (P_ctrl_student_HIL_T, Hold_X0), 42, 1, 2, 62, 0 },
+  { 20, "ctrl_student_hil/Noise generator1/Sample & hold/Hold/X0", offsetof
+    (P_ctrl_student_HIL_T, Hold_X0), 42, 1, 2, 40, 0 },
 
-  { 32, "ctrl_student_hil/tau to real ship (only use in MCLab)/Constant/Value",
-    offsetof(P_ctrl_student_HIL_T, Constant_Value_l), 42, 1, 2, 64, 0 },
+  { 21, "ctrl_student_hil/signal dropout check /Memory/X0", offsetof
+    (P_ctrl_student_HIL_T, Memory_X0_g), 29, 20, 2, 42, 0 },
 
-  { 33, "ctrl_student_hil/DP-system/Memory3/X0", offsetof(P_ctrl_student_HIL_T,
-    Memory3_X0), 42, 1, 2, 66, 0 },
+  { 22, "ctrl_student_hil/signal dropout check /Memory1/X0", offsetof
+    (P_ctrl_student_HIL_T, Memory1_X0), 29, 20, 2, 44, 0 },
 
-  { 34, "ctrl_student_hil/DP-system/Memory1/X0", offsetof(P_ctrl_student_HIL_T,
-    Memory1_X0), 30, 3, 2, 68, 0 },
+  { 23, "ctrl_student_hil/signal dropout check /Memory3/X0", offsetof
+    (P_ctrl_student_HIL_T, Memory3_X0), 42, 1, 2, 46, 0 },
 
-  { 35, "ctrl_student_hil/signal dropout check /Memory/X0", offsetof
-    (P_ctrl_student_HIL_T, Memory_X0_g), 31, 10, 2, 70, 0 },
+  { 24, "ctrl_student_hil/signal dropout check /Memory2/X0", offsetof
+    (P_ctrl_student_HIL_T, Memory2_X0), 42, 1, 2, 48, 0 },
 
-  { 36, "ctrl_student_hil/signal dropout check /Memory1/X0", offsetof
-    (P_ctrl_student_HIL_T, Memory1_X0_o), 31, 10, 2, 72, 0 },
+  { 25, "ctrl_student_hil/DP-system/Memory4/X0", offsetof(P_ctrl_student_HIL_T,
+    Memory4_X0), 30, 3, 2, 50, 0 },
 
-  { 37, "ctrl_student_hil/Observer/inv(M)/Gain", offsetof(P_ctrl_student_HIL_T,
-    invM_Gain), 22, 9, 2, 74, 0 },
+  { 26, "ctrl_student_hil/DP-system/Memory5/X0", offsetof(P_ctrl_student_HIL_T,
+    Memory5_X0), 30, 3, 2, 52, 0 },
+
+  { 27, "ctrl_student_hil/DP-system/Memory2/X0", offsetof(P_ctrl_student_HIL_T,
+    Memory2_X0_p), 42, 1, 2, 54, 0 },
+
+  { 28, "ctrl_student_hil/Observer/Constant/Value", offsetof
+    (P_ctrl_student_HIL_T, Constant_Value_j), 42, 1, 2, 56, 0 },
+
+  { 29, "ctrl_student_hil/Observer/Integrator/InitialCondition", offsetof
+    (P_ctrl_student_HIL_T, Integrator_IC), 42, 1, 2, 58, 0 },
+
+  { 30, "ctrl_student_hil/DP-system/Gain/Gain", offsetof(P_ctrl_student_HIL_T,
+    Gain_Gain_g), 31, 3, 2, 60, 0 },
+
+  { 31, "ctrl_student_hil/DP-system/Integrator1/InitialCondition", offsetof
+    (P_ctrl_student_HIL_T, Integrator1_IC), 42, 1, 2, 62, 0 },
+
+  { 32, "ctrl_student_hil/DP-system/Memory6/X0", offsetof(P_ctrl_student_HIL_T,
+    Memory6_X0), 19, 2, 2, 64, 0 },
+
+  { 33, "ctrl_student_hil/DP-system/Memory/X0", offsetof(P_ctrl_student_HIL_T,
+    Memory_X0_d), 42, 1, 2, 66, 0 },
+
+  { 34, "ctrl_student_hil/Observer/Integrator1/InitialCondition", offsetof
+    (P_ctrl_student_HIL_T, Integrator1_IC_l), 42, 1, 2, 68, 0 },
+
+  { 35, "ctrl_student_hil/Observer/Integrator2/InitialCondition", offsetof
+    (P_ctrl_student_HIL_T, Integrator2_IC), 42, 1, 2, 70, 0 },
+
+  { 36, "ctrl_student_hil/Constant/Value", offsetof(P_ctrl_student_HIL_T,
+    Constant_Value_jx), 30, 3, 2, 72, 0 },
+
+  { 37, "ctrl_student_hil/tau to real ship (only use in MCLab)/Constant/Value",
+    offsetof(P_ctrl_student_HIL_T, Constant_Value_l), 42, 1, 2, 74, 0 },
+
+  { 38, "ctrl_student_hil/DP-system/Memory3/X0", offsetof(P_ctrl_student_HIL_T,
+    Memory3_X0_l), 42, 1, 2, 76, 0 },
+
+  { 39, "ctrl_student_hil/DP-system/Memory1/X0", offsetof(P_ctrl_student_HIL_T,
+    Memory1_X0_f), 31, 3, 2, 78, 0 },
+
+  { 40, "ctrl_student_hil/Observer/inv(M)/Gain", offsetof(P_ctrl_student_HIL_T,
+    invM_Gain), 22, 9, 2, 80, 0 },
 };
 
-static int NI_ParamListSize DataSection(".NIVS.paramlistsize") = 38;
+static int NI_ParamListSize DataSection(".NIVS.paramlistsize") = 41;
 static int NI_ParamDimList[] DataSection(".NIVS.paramdimlist") =
 {
   1, 1,                                /* Parameter at index 0 */
@@ -3694,38 +3536,41 @@ static int NI_ParamDimList[] DataSection(".NIVS.paramdimlist") =
   1, 1,                                /* Parameter at index 3 */
   1, 1,                                /* Parameter at index 4 */
   1, 1,                                /* Parameter at index 5 */
-  3, 1,                                /* Parameter at index 6 */
-  3, 1,                                /* Parameter at index 7 */
+  1, 1,                                /* Parameter at index 6 */
+  1, 1,                                /* Parameter at index 7 */
   1, 1,                                /* Parameter at index 8 */
   1, 1,                                /* Parameter at index 9 */
-  1, 3,                                /* Parameter at index 10 */
+  1, 1,                                /* Parameter at index 10 */
   1, 1,                                /* Parameter at index 11 */
-  1, 2,                                /* Parameter at index 12 */
+  1, 1,                                /* Parameter at index 12 */
   1, 1,                                /* Parameter at index 13 */
   1, 1,                                /* Parameter at index 14 */
   1, 1,                                /* Parameter at index 15 */
-  3, 1,                                /* Parameter at index 16 */
+  1, 1,                                /* Parameter at index 16 */
   1, 1,                                /* Parameter at index 17 */
   1, 1,                                /* Parameter at index 18 */
   1, 1,                                /* Parameter at index 19 */
   1, 1,                                /* Parameter at index 20 */
-  1, 1,                                /* Parameter at index 21 */
-  1, 1,                                /* Parameter at index 22 */
+  1, 20,                               /* Parameter at index 21 */
+  1, 20,                               /* Parameter at index 22 */
   1, 1,                                /* Parameter at index 23 */
   1, 1,                                /* Parameter at index 24 */
-  1, 1,                                /* Parameter at index 25 */
-  1, 1,                                /* Parameter at index 26 */
+  3, 1,                                /* Parameter at index 25 */
+  3, 1,                                /* Parameter at index 26 */
   1, 1,                                /* Parameter at index 27 */
   1, 1,                                /* Parameter at index 28 */
   1, 1,                                /* Parameter at index 29 */
-  1, 1,                                /* Parameter at index 30 */
+  1, 3,                                /* Parameter at index 30 */
   1, 1,                                /* Parameter at index 31 */
-  1, 1,                                /* Parameter at index 32 */
+  1, 2,                                /* Parameter at index 32 */
   1, 1,                                /* Parameter at index 33 */
-  1, 3,                                /* Parameter at index 34 */
-  1, 10,                               /* Parameter at index 35 */
-  1, 10,                               /* Parameter at index 36 */
-  3, 3,                                /* Parameter at index 37 */
+  1, 1,                                /* Parameter at index 34 */
+  1, 1,                                /* Parameter at index 35 */
+  3, 1,                                /* Parameter at index 36 */
+  1, 1,                                /* Parameter at index 37 */
+  1, 1,                                /* Parameter at index 38 */
+  1, 3,                                /* Parameter at index 39 */
+  3, 3,                                /* Parameter at index 40 */
 };
 
 static NI_Signal NI_SigList[] DataSection(".NIVS.siglist") =
@@ -3797,870 +3642,1048 @@ static NI_Signal NI_SigList[] DataSection(".NIVS.siglist") =
   { 17, "ctrl_student_hil/switch/Memory", 0, "", offsetof(B_ctrl_student_HIL_T,
     Memory)+0*sizeof(real_T), BLOCKIO_SIG, 0, 1, 2, 34, 0 },
 
-  { 18, "ctrl_student_hil/DP-system/Memory4", 0, "(1,1)", offsetof
-    (B_ctrl_student_HIL_T, Memory4)+0*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2, 36,
-    0 },
+  { 18, "ctrl_student_hil/dead rec  switch/dead", 0, "", offsetof
+    (B_ctrl_student_HIL_T, dead)+0*sizeof(real_T), BLOCKIO_SIG, 0, 1, 2, 36, 0 },
 
-  { 19, "ctrl_student_hil/DP-system/Memory4", 0, "(1,2)", offsetof
-    (B_ctrl_student_HIL_T, Memory4)+1*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2, 38,
-    0 },
-
-  { 20, "ctrl_student_hil/DP-system/Memory4", 0, "(1,3)", offsetof
-    (B_ctrl_student_HIL_T, Memory4)+2*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2, 40,
-    0 },
-
-  { 21, "ctrl_student_hil/DP-system/Memory5", 0, "(1,1)", offsetof
-    (B_ctrl_student_HIL_T, Memory5)+0*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2, 42,
-    0 },
-
-  { 22, "ctrl_student_hil/DP-system/Memory5", 0, "(1,2)", offsetof
-    (B_ctrl_student_HIL_T, Memory5)+1*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2, 44,
-    0 },
-
-  { 23, "ctrl_student_hil/DP-system/Memory5", 0, "(1,3)", offsetof
-    (B_ctrl_student_HIL_T, Memory5)+2*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2, 46,
-    0 },
-
-  { 24, "ctrl_student_hil/DP-system/Memory2", 0, "", offsetof
-    (B_ctrl_student_HIL_T, Memory2)+0*sizeof(real_T), BLOCKIO_SIG, 0, 1, 2, 48,
-    0 },
-
-  { 25, "ctrl_student_hil/Observer/Integrator", 0, "(1,1)", offsetof
-    (B_ctrl_student_HIL_T, Integrator)+0*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2,
-    50, 0 },
-
-  { 26, "ctrl_student_hil/Observer/Integrator", 0, "(1,2)", offsetof
-    (B_ctrl_student_HIL_T, Integrator)+1*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2,
-    52, 0 },
-
-  { 27, "ctrl_student_hil/Observer/Integrator", 0, "(1,3)", offsetof
-    (B_ctrl_student_HIL_T, Integrator)+2*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2,
-    54, 0 },
-
-  { 28, "ctrl_student_hil/DP-system/Sum", 0, "", offsetof(B_ctrl_student_HIL_T,
-    Sum)+0*sizeof(real_T), BLOCKIO_SIG, 0, 1, 2, 56, 0 },
-
-  { 29, "ctrl_student_hil/DP-system/Integrator1", 0, "", offsetof
-    (B_ctrl_student_HIL_T, Integrator1)+0*sizeof(real_T), BLOCKIO_SIG, 0, 1, 2,
-    58, 0 },
-
-  { 30, "ctrl_student_hil/DP-system/Memory6", 0, "(1,1)", offsetof
-    (B_ctrl_student_HIL_T, Memory6)+0*sizeof(real_T), BLOCKIO_SIG, 21, 1, 2, 60,
-    0 },
-
-  { 31, "ctrl_student_hil/DP-system/Memory6", 0, "(1,2)", offsetof
-    (B_ctrl_student_HIL_T, Memory6)+1*sizeof(real_T), BLOCKIO_SIG, 21, 1, 2, 62,
-    0 },
-
-  { 32, "ctrl_student_hil/DP-system/Memory", 0, "(1,1)", offsetof
-    (B_ctrl_student_HIL_T, Memory_k)+0*sizeof(real_T), BLOCKIO_SIG, 20, 1, 2, 64,
-    0 },
-
-  { 33, "ctrl_student_hil/DP-system/Memory", 0, "(1,2)", offsetof
-    (B_ctrl_student_HIL_T, Memory_k)+1*sizeof(real_T), BLOCKIO_SIG, 20, 1, 2, 66,
-    0 },
-
-  { 34, "ctrl_student_hil/DP-system/Memory", 0, "(1,3)", offsetof
-    (B_ctrl_student_HIL_T, Memory_k)+2*sizeof(real_T), BLOCKIO_SIG, 20, 1, 2, 68,
-    0 },
-
-  { 35, "ctrl_student_hil/DP-system/Memory", 0, "(1,4)", offsetof
-    (B_ctrl_student_HIL_T, Memory_k)+3*sizeof(real_T), BLOCKIO_SIG, 20, 1, 2, 70,
-    0 },
-
-  { 36, "ctrl_student_hil/DP-system/Memory", 0, "(1,5)", offsetof
-    (B_ctrl_student_HIL_T, Memory_k)+4*sizeof(real_T), BLOCKIO_SIG, 20, 1, 2, 72,
-    0 },
-
-  { 37, "ctrl_student_hil/DP-system/Memory", 0, "(1,6)", offsetof
-    (B_ctrl_student_HIL_T, Memory_k)+5*sizeof(real_T), BLOCKIO_SIG, 20, 1, 2, 74,
-    0 },
-
-  { 38, "ctrl_student_hil/DP-system/Memory", 0, "(1,7)", offsetof
-    (B_ctrl_student_HIL_T, Memory_k)+6*sizeof(real_T), BLOCKIO_SIG, 20, 1, 2, 76,
-    0 },
-
-  { 39, "ctrl_student_hil/DP-system/Memory", 0, "(1,8)", offsetof
-    (B_ctrl_student_HIL_T, Memory_k)+7*sizeof(real_T), BLOCKIO_SIG, 20, 1, 2, 78,
-    0 },
-
-  { 40, "ctrl_student_hil/DP-system/Memory", 0, "(1,9)", offsetof
-    (B_ctrl_student_HIL_T, Memory_k)+8*sizeof(real_T), BLOCKIO_SIG, 20, 1, 2, 80,
-    0 },
-
-  { 41, "ctrl_student_hil/DP-system/Memory", 0, "(1,10)", offsetof
-    (B_ctrl_student_HIL_T, Memory_k)+9*sizeof(real_T), BLOCKIO_SIG, 20, 1, 2, 82,
-    0 },
-
-  { 42, "ctrl_student_hil/DP-system/Memory", 0, "(1,11)", offsetof
-    (B_ctrl_student_HIL_T, Memory_k)+10*sizeof(real_T), BLOCKIO_SIG, 20, 1, 2,
-    84, 0 },
-
-  { 43, "ctrl_student_hil/Observer/Integrator1", 0, "(1,1)", offsetof
-    (B_ctrl_student_HIL_T, Integrator1_k)+0*sizeof(real_T), BLOCKIO_SIG, 17, 1,
-    2, 86, 0 },
-
-  { 44, "ctrl_student_hil/Observer/Integrator1", 0, "(1,2)", offsetof
-    (B_ctrl_student_HIL_T, Integrator1_k)+1*sizeof(real_T), BLOCKIO_SIG, 17, 1,
-    2, 88, 0 },
-
-  { 45, "ctrl_student_hil/Observer/Integrator1", 0, "(1,3)", offsetof
-    (B_ctrl_student_HIL_T, Integrator1_k)+2*sizeof(real_T), BLOCKIO_SIG, 17, 1,
-    2, 90, 0 },
-
-  { 46, "ctrl_student_hil/DP-system/Kd/Kd1", 0, "", offsetof
-    (B_ctrl_student_HIL_T, Kd1)+0*sizeof(real_T), BLOCKIO_SIG, 42, 1, 2, 92, 0 },
-
-  { 47, "ctrl_student_hil/DP-system/Kd/Kd2", 0, "", offsetof
-    (B_ctrl_student_HIL_T, Kd2)+0*sizeof(real_T), BLOCKIO_SIG, 42, 1, 2, 94, 0 },
-
-  { 48, "ctrl_student_hil/DP-system/Kd/Kd3", 0, "", offsetof
-    (B_ctrl_student_HIL_T, Kd3)+0*sizeof(real_T), BLOCKIO_SIG, 42, 1, 2, 96, 0 },
-
-  { 49, "ctrl_student_hil/Observer/Integrator2", 0, "(1,1)", offsetof
-    (B_ctrl_student_HIL_T, Integrator2)+0*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2,
-    98, 0 },
-
-  { 50, "ctrl_student_hil/Observer/Integrator2", 0, "(1,2)", offsetof
-    (B_ctrl_student_HIL_T, Integrator2)+1*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2,
-    100, 0 },
-
-  { 51, "ctrl_student_hil/Observer/Integrator2", 0, "(1,3)", offsetof
-    (B_ctrl_student_HIL_T, Integrator2)+2*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2,
-    102, 0 },
-
-  { 52, "ctrl_student_hil/Sum", 0, "(1,1)", offsetof(B_ctrl_student_HIL_T, Sum_c)
-    +0*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2, 104, 0 },
-
-  { 53, "ctrl_student_hil/Sum", 0, "(1,2)", offsetof(B_ctrl_student_HIL_T, Sum_c)
-    +1*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2, 106, 0 },
-
-  { 54, "ctrl_student_hil/Sum", 0, "(1,3)", offsetof(B_ctrl_student_HIL_T, Sum_c)
-    +2*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2, 108, 0 },
-
-  { 55, "ctrl_student_hil/psi", 0, "", offsetof(B_ctrl_student_HIL_T, psi)+0*
-    sizeof(real_T), BLOCKIO_SIG, 0, 1, 2, 110, 0 },
-
-  { 56, "ctrl_student_hil/Enable_noise", 0, "", offsetof(B_ctrl_student_HIL_T,
-    Enable_noise)+0*sizeof(real_T), BLOCKIO_SIG, 0, 1, 2, 112, 0 },
-
-  { 57, "ctrl_student_hil/N_power", 0, "", offsetof(B_ctrl_student_HIL_T,
-    N_power)+0*sizeof(real_T), BLOCKIO_SIG, 0, 1, 2, 114, 0 },
-
-  { 58, "ctrl_student_hil/N_power_H", 0, "", offsetof(B_ctrl_student_HIL_T,
-    N_power_H)+0*sizeof(real_T), BLOCKIO_SIG, 0, 1, 2, 116, 0 },
-
-  { 59, "ctrl_student_hil/dead rec  switch/dead", 0, "", offsetof
-    (B_ctrl_student_HIL_T, dead)+0*sizeof(real_T), BLOCKIO_SIG, 0, 1, 2, 118, 0
-  },
-
-  { 60, "ctrl_student_hil/Samp_freq", 0, "", offsetof(B_ctrl_student_HIL_T,
-    Samp_freq)+0*sizeof(real_T), BLOCKIO_SIG, 0, 1, 2, 120, 0 },
-
-  { 61, "ctrl_student_hil/Noise generator1/Downsamplesignal/counter", 0, "",
+  { 19, "ctrl_student_hil/Noise generator1/Downsamplesignal/counter", 0, "",
     offsetof(B_ctrl_student_HIL_T, counter)+0*sizeof(real_T), BLOCKIO_SIG, 0, 1,
-    2, 122, 0 },
+    2, 38, 0 },
 
-  { 62,
+  { 20, "ctrl_student_hil/Samp_freq", 0, "", offsetof(B_ctrl_student_HIL_T,
+    Samp_freq)+0*sizeof(real_T), BLOCKIO_SIG, 0, 1, 2, 40, 0 },
+
+  { 21, "ctrl_student_hil/N_power", 0, "", offsetof(B_ctrl_student_HIL_T,
+    N_power)+0*sizeof(real_T), BLOCKIO_SIG, 0, 1, 2, 42, 0 },
+
+  { 22,
     "ctrl_student_hil/Noise generator1/noise generator/Band-limited white noise x/White Noise",
     0, "", offsetof(B_ctrl_student_HIL_T, WhiteNoise)+0*sizeof(real_T),
-    BLOCKIO_SIG, 0, 1, 2, 124, 0 },
+    BLOCKIO_SIG, 0, 1, 2, 44, 0 },
 
-  { 63,
+  { 23,
     "ctrl_student_hil/Noise generator1/noise generator/Band-limited white noise y/White Noise",
     0, "", offsetof(B_ctrl_student_HIL_T, WhiteNoise_n)+0*sizeof(real_T),
-    BLOCKIO_SIG, 0, 1, 2, 126, 0 },
+    BLOCKIO_SIG, 0, 1, 2, 46, 0 },
 
-  { 64,
+  { 24, "ctrl_student_hil/N_power_H", 0, "", offsetof(B_ctrl_student_HIL_T,
+    N_power_H)+0*sizeof(real_T), BLOCKIO_SIG, 0, 1, 2, 48, 0 },
+
+  { 25,
     "ctrl_student_hil/Noise generator1/noise generator/Band-limited white noise psi/White Noise",
     0, "", offsetof(B_ctrl_student_HIL_T, WhiteNoise_d)+0*sizeof(real_T),
-    BLOCKIO_SIG, 0, 1, 2, 128, 0 },
+    BLOCKIO_SIG, 0, 1, 2, 50, 0 },
 
-  { 65, "ctrl_student_hil/Noise generator1/Sample & hold/Hold", 0, "(1,1)",
+  { 26, "ctrl_student_hil/psi", 0, "", offsetof(B_ctrl_student_HIL_T, psi)+0*
+    sizeof(real_T), BLOCKIO_SIG, 0, 1, 2, 52, 0 },
+
+  { 27, "ctrl_student_hil/Noise generator1/Sample & hold/Hold", 0, "(1,1)",
     offsetof(B_ctrl_student_HIL_T, Hold)+0*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2,
+    54, 0 },
+
+  { 28, "ctrl_student_hil/Noise generator1/Sample & hold/Hold", 0, "(1,2)",
+    offsetof(B_ctrl_student_HIL_T, Hold)+1*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2,
+    56, 0 },
+
+  { 29, "ctrl_student_hil/Noise generator1/Sample & hold/Hold", 0, "(1,3)",
+    offsetof(B_ctrl_student_HIL_T, Hold)+2*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2,
+    58, 0 },
+
+  { 30, "ctrl_student_hil/Enable_noise", 0, "", offsetof(B_ctrl_student_HIL_T,
+    Enable_noise)+0*sizeof(real_T), BLOCKIO_SIG, 0, 1, 2, 60, 0 },
+
+  { 31, "ctrl_student_hil/signal dropout check /Memory", 0, "(1,1)", offsetof
+    (B_ctrl_student_HIL_T, Memory_f)+0*sizeof(real_T), BLOCKIO_SIG, 24, 1, 2, 62,
+    0 },
+
+  { 32, "ctrl_student_hil/signal dropout check /Memory", 0, "(1,2)", offsetof
+    (B_ctrl_student_HIL_T, Memory_f)+1*sizeof(real_T), BLOCKIO_SIG, 24, 1, 2, 64,
+    0 },
+
+  { 33, "ctrl_student_hil/signal dropout check /Memory", 0, "(1,3)", offsetof
+    (B_ctrl_student_HIL_T, Memory_f)+2*sizeof(real_T), BLOCKIO_SIG, 24, 1, 2, 66,
+    0 },
+
+  { 34, "ctrl_student_hil/signal dropout check /Memory", 0, "(1,4)", offsetof
+    (B_ctrl_student_HIL_T, Memory_f)+3*sizeof(real_T), BLOCKIO_SIG, 24, 1, 2, 68,
+    0 },
+
+  { 35, "ctrl_student_hil/signal dropout check /Memory", 0, "(1,5)", offsetof
+    (B_ctrl_student_HIL_T, Memory_f)+4*sizeof(real_T), BLOCKIO_SIG, 24, 1, 2, 70,
+    0 },
+
+  { 36, "ctrl_student_hil/signal dropout check /Memory", 0, "(1,6)", offsetof
+    (B_ctrl_student_HIL_T, Memory_f)+5*sizeof(real_T), BLOCKIO_SIG, 24, 1, 2, 72,
+    0 },
+
+  { 37, "ctrl_student_hil/signal dropout check /Memory", 0, "(1,7)", offsetof
+    (B_ctrl_student_HIL_T, Memory_f)+6*sizeof(real_T), BLOCKIO_SIG, 24, 1, 2, 74,
+    0 },
+
+  { 38, "ctrl_student_hil/signal dropout check /Memory", 0, "(1,8)", offsetof
+    (B_ctrl_student_HIL_T, Memory_f)+7*sizeof(real_T), BLOCKIO_SIG, 24, 1, 2, 76,
+    0 },
+
+  { 39, "ctrl_student_hil/signal dropout check /Memory", 0, "(1,9)", offsetof
+    (B_ctrl_student_HIL_T, Memory_f)+8*sizeof(real_T), BLOCKIO_SIG, 24, 1, 2, 78,
+    0 },
+
+  { 40, "ctrl_student_hil/signal dropout check /Memory", 0, "(1,10)", offsetof
+    (B_ctrl_student_HIL_T, Memory_f)+9*sizeof(real_T), BLOCKIO_SIG, 24, 1, 2, 80,
+    0 },
+
+  { 41, "ctrl_student_hil/signal dropout check /Memory", 0, "(1,11)", offsetof
+    (B_ctrl_student_HIL_T, Memory_f)+10*sizeof(real_T), BLOCKIO_SIG, 24, 1, 2,
+    82, 0 },
+
+  { 42, "ctrl_student_hil/signal dropout check /Memory", 0, "(1,12)", offsetof
+    (B_ctrl_student_HIL_T, Memory_f)+11*sizeof(real_T), BLOCKIO_SIG, 24, 1, 2,
+    84, 0 },
+
+  { 43, "ctrl_student_hil/signal dropout check /Memory", 0, "(1,13)", offsetof
+    (B_ctrl_student_HIL_T, Memory_f)+12*sizeof(real_T), BLOCKIO_SIG, 24, 1, 2,
+    86, 0 },
+
+  { 44, "ctrl_student_hil/signal dropout check /Memory", 0, "(1,14)", offsetof
+    (B_ctrl_student_HIL_T, Memory_f)+13*sizeof(real_T), BLOCKIO_SIG, 24, 1, 2,
+    88, 0 },
+
+  { 45, "ctrl_student_hil/signal dropout check /Memory", 0, "(1,15)", offsetof
+    (B_ctrl_student_HIL_T, Memory_f)+14*sizeof(real_T), BLOCKIO_SIG, 24, 1, 2,
+    90, 0 },
+
+  { 46, "ctrl_student_hil/signal dropout check /Memory", 0, "(1,16)", offsetof
+    (B_ctrl_student_HIL_T, Memory_f)+15*sizeof(real_T), BLOCKIO_SIG, 24, 1, 2,
+    92, 0 },
+
+  { 47, "ctrl_student_hil/signal dropout check /Memory", 0, "(1,17)", offsetof
+    (B_ctrl_student_HIL_T, Memory_f)+16*sizeof(real_T), BLOCKIO_SIG, 24, 1, 2,
+    94, 0 },
+
+  { 48, "ctrl_student_hil/signal dropout check /Memory", 0, "(1,18)", offsetof
+    (B_ctrl_student_HIL_T, Memory_f)+17*sizeof(real_T), BLOCKIO_SIG, 24, 1, 2,
+    96, 0 },
+
+  { 49, "ctrl_student_hil/signal dropout check /Memory", 0, "(1,19)", offsetof
+    (B_ctrl_student_HIL_T, Memory_f)+18*sizeof(real_T), BLOCKIO_SIG, 24, 1, 2,
+    98, 0 },
+
+  { 50, "ctrl_student_hil/signal dropout check /Memory", 0, "(1,20)", offsetof
+    (B_ctrl_student_HIL_T, Memory_f)+19*sizeof(real_T), BLOCKIO_SIG, 24, 1, 2,
+    100, 0 },
+
+  { 51, "ctrl_student_hil/signal dropout check /Memory1", 0, "(1,1)", offsetof
+    (B_ctrl_student_HIL_T, Memory1)+0*sizeof(real_T), BLOCKIO_SIG, 24, 1, 2, 102,
+    0 },
+
+  { 52, "ctrl_student_hil/signal dropout check /Memory1", 0, "(1,2)", offsetof
+    (B_ctrl_student_HIL_T, Memory1)+1*sizeof(real_T), BLOCKIO_SIG, 24, 1, 2, 104,
+    0 },
+
+  { 53, "ctrl_student_hil/signal dropout check /Memory1", 0, "(1,3)", offsetof
+    (B_ctrl_student_HIL_T, Memory1)+2*sizeof(real_T), BLOCKIO_SIG, 24, 1, 2, 106,
+    0 },
+
+  { 54, "ctrl_student_hil/signal dropout check /Memory1", 0, "(1,4)", offsetof
+    (B_ctrl_student_HIL_T, Memory1)+3*sizeof(real_T), BLOCKIO_SIG, 24, 1, 2, 108,
+    0 },
+
+  { 55, "ctrl_student_hil/signal dropout check /Memory1", 0, "(1,5)", offsetof
+    (B_ctrl_student_HIL_T, Memory1)+4*sizeof(real_T), BLOCKIO_SIG, 24, 1, 2, 110,
+    0 },
+
+  { 56, "ctrl_student_hil/signal dropout check /Memory1", 0, "(1,6)", offsetof
+    (B_ctrl_student_HIL_T, Memory1)+5*sizeof(real_T), BLOCKIO_SIG, 24, 1, 2, 112,
+    0 },
+
+  { 57, "ctrl_student_hil/signal dropout check /Memory1", 0, "(1,7)", offsetof
+    (B_ctrl_student_HIL_T, Memory1)+6*sizeof(real_T), BLOCKIO_SIG, 24, 1, 2, 114,
+    0 },
+
+  { 58, "ctrl_student_hil/signal dropout check /Memory1", 0, "(1,8)", offsetof
+    (B_ctrl_student_HIL_T, Memory1)+7*sizeof(real_T), BLOCKIO_SIG, 24, 1, 2, 116,
+    0 },
+
+  { 59, "ctrl_student_hil/signal dropout check /Memory1", 0, "(1,9)", offsetof
+    (B_ctrl_student_HIL_T, Memory1)+8*sizeof(real_T), BLOCKIO_SIG, 24, 1, 2, 118,
+    0 },
+
+  { 60, "ctrl_student_hil/signal dropout check /Memory1", 0, "(1,10)", offsetof
+    (B_ctrl_student_HIL_T, Memory1)+9*sizeof(real_T), BLOCKIO_SIG, 24, 1, 2, 120,
+    0 },
+
+  { 61, "ctrl_student_hil/signal dropout check /Memory1", 0, "(1,11)", offsetof
+    (B_ctrl_student_HIL_T, Memory1)+10*sizeof(real_T), BLOCKIO_SIG, 24, 1, 2,
+    122, 0 },
+
+  { 62, "ctrl_student_hil/signal dropout check /Memory1", 0, "(1,12)", offsetof
+    (B_ctrl_student_HIL_T, Memory1)+11*sizeof(real_T), BLOCKIO_SIG, 24, 1, 2,
+    124, 0 },
+
+  { 63, "ctrl_student_hil/signal dropout check /Memory1", 0, "(1,13)", offsetof
+    (B_ctrl_student_HIL_T, Memory1)+12*sizeof(real_T), BLOCKIO_SIG, 24, 1, 2,
+    126, 0 },
+
+  { 64, "ctrl_student_hil/signal dropout check /Memory1", 0, "(1,14)", offsetof
+    (B_ctrl_student_HIL_T, Memory1)+13*sizeof(real_T), BLOCKIO_SIG, 24, 1, 2,
+    128, 0 },
+
+  { 65, "ctrl_student_hil/signal dropout check /Memory1", 0, "(1,15)", offsetof
+    (B_ctrl_student_HIL_T, Memory1)+14*sizeof(real_T), BLOCKIO_SIG, 24, 1, 2,
     130, 0 },
 
-  { 66, "ctrl_student_hil/Noise generator1/Sample & hold/Hold", 0, "(1,2)",
-    offsetof(B_ctrl_student_HIL_T, Hold)+1*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2,
+  { 66, "ctrl_student_hil/signal dropout check /Memory1", 0, "(1,16)", offsetof
+    (B_ctrl_student_HIL_T, Memory1)+15*sizeof(real_T), BLOCKIO_SIG, 24, 1, 2,
     132, 0 },
 
-  { 67, "ctrl_student_hil/Noise generator1/Sample & hold/Hold", 0, "(1,3)",
-    offsetof(B_ctrl_student_HIL_T, Hold)+2*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2,
+  { 67, "ctrl_student_hil/signal dropout check /Memory1", 0, "(1,17)", offsetof
+    (B_ctrl_student_HIL_T, Memory1)+16*sizeof(real_T), BLOCKIO_SIG, 24, 1, 2,
     134, 0 },
 
-  { 68, "ctrl_student_hil/Product", 0, "(1,1)", offsetof(B_ctrl_student_HIL_T,
-    Product_i)+0*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2, 136, 0 },
+  { 68, "ctrl_student_hil/signal dropout check /Memory1", 0, "(1,18)", offsetof
+    (B_ctrl_student_HIL_T, Memory1)+17*sizeof(real_T), BLOCKIO_SIG, 24, 1, 2,
+    136, 0 },
 
-  { 69, "ctrl_student_hil/Product", 0, "(1,2)", offsetof(B_ctrl_student_HIL_T,
-    Product_i)+1*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2, 138, 0 },
+  { 69, "ctrl_student_hil/signal dropout check /Memory1", 0, "(1,19)", offsetof
+    (B_ctrl_student_HIL_T, Memory1)+18*sizeof(real_T), BLOCKIO_SIG, 24, 1, 2,
+    138, 0 },
 
-  { 70, "ctrl_student_hil/Product", 0, "(1,3)", offsetof(B_ctrl_student_HIL_T,
-    Product_i)+2*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2, 140, 0 },
+  { 70, "ctrl_student_hil/signal dropout check /Memory1", 0, "(1,20)", offsetof
+    (B_ctrl_student_HIL_T, Memory1)+19*sizeof(real_T), BLOCKIO_SIG, 24, 1, 2,
+    140, 0 },
 
-  { 71, "ctrl_student_hil/DP-system/Memory3", 0, "(1,1)", offsetof
-    (B_ctrl_student_HIL_T, Memory3)+0*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2, 142,
+  { 71, "ctrl_student_hil/signal dropout check /Memory3", 0, "", offsetof
+    (B_ctrl_student_HIL_T, Memory3)+0*sizeof(real_T), BLOCKIO_SIG, 0, 1, 2, 142,
     0 },
 
-  { 72, "ctrl_student_hil/DP-system/Memory3", 0, "(1,2)", offsetof
-    (B_ctrl_student_HIL_T, Memory3)+1*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2, 144,
+  { 72, "ctrl_student_hil/signal dropout check /Memory2", 0, "", offsetof
+    (B_ctrl_student_HIL_T, Memory2)+0*sizeof(real_T), BLOCKIO_SIG, 0, 1, 2, 144,
     0 },
 
-  { 73, "ctrl_student_hil/DP-system/Memory3", 0, "(1,3)", offsetof
-    (B_ctrl_student_HIL_T, Memory3)+2*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2, 146,
+  { 73, "ctrl_student_hil/Product", 0, "(1,1)", offsetof(B_ctrl_student_HIL_T,
+    Product_i)+0*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2, 146, 0 },
+
+  { 74, "ctrl_student_hil/Product", 0, "(1,2)", offsetof(B_ctrl_student_HIL_T,
+    Product_i)+1*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2, 148, 0 },
+
+  { 75, "ctrl_student_hil/Product", 0, "(1,3)", offsetof(B_ctrl_student_HIL_T,
+    Product_i)+2*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2, 150, 0 },
+
+  { 76, "ctrl_student_hil/DP-system/Memory4", 0, "(1,1)", offsetof
+    (B_ctrl_student_HIL_T, Memory4)+0*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2, 152,
     0 },
 
-  { 74, "ctrl_student_hil/DP-system/Memory1", 0, "(1,1)", offsetof
-    (B_ctrl_student_HIL_T, Memory1)+0*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2, 148,
+  { 77, "ctrl_student_hil/DP-system/Memory4", 0, "(1,2)", offsetof
+    (B_ctrl_student_HIL_T, Memory4)+1*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2, 154,
     0 },
 
-  { 75, "ctrl_student_hil/DP-system/Memory1", 0, "(1,2)", offsetof
-    (B_ctrl_student_HIL_T, Memory1)+1*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2, 150,
+  { 78, "ctrl_student_hil/DP-system/Memory4", 0, "(1,3)", offsetof
+    (B_ctrl_student_HIL_T, Memory4)+2*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2, 156,
     0 },
 
-  { 76, "ctrl_student_hil/DP-system/Memory1", 0, "(1,3)", offsetof
-    (B_ctrl_student_HIL_T, Memory1)+2*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2, 152,
+  { 79, "ctrl_student_hil/DP-system/Memory5", 0, "(1,1)", offsetof
+    (B_ctrl_student_HIL_T, Memory5)+0*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2, 158,
     0 },
 
-  { 77, "ctrl_student_hil/signal dropout check /Memory", 0, "(1,1)", offsetof
-    (B_ctrl_student_HIL_T, Memory_f)+0*sizeof(real_T), BLOCKIO_SIG, 24, 1, 2,
-    154, 0 },
+  { 80, "ctrl_student_hil/DP-system/Memory5", 0, "(1,2)", offsetof
+    (B_ctrl_student_HIL_T, Memory5)+1*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2, 160,
+    0 },
 
-  { 78, "ctrl_student_hil/signal dropout check /Memory", 0, "(1,2)", offsetof
-    (B_ctrl_student_HIL_T, Memory_f)+1*sizeof(real_T), BLOCKIO_SIG, 24, 1, 2,
-    156, 0 },
+  { 81, "ctrl_student_hil/DP-system/Memory5", 0, "(1,3)", offsetof
+    (B_ctrl_student_HIL_T, Memory5)+2*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2, 162,
+    0 },
 
-  { 79, "ctrl_student_hil/signal dropout check /Memory", 0, "(1,3)", offsetof
-    (B_ctrl_student_HIL_T, Memory_f)+2*sizeof(real_T), BLOCKIO_SIG, 24, 1, 2,
-    158, 0 },
-
-  { 80, "ctrl_student_hil/signal dropout check /Memory", 0, "(1,4)", offsetof
-    (B_ctrl_student_HIL_T, Memory_f)+3*sizeof(real_T), BLOCKIO_SIG, 24, 1, 2,
-    160, 0 },
-
-  { 81, "ctrl_student_hil/signal dropout check /Memory", 0, "(1,5)", offsetof
-    (B_ctrl_student_HIL_T, Memory_f)+4*sizeof(real_T), BLOCKIO_SIG, 24, 1, 2,
-    162, 0 },
-
-  { 82, "ctrl_student_hil/signal dropout check /Memory", 0, "(1,6)", offsetof
-    (B_ctrl_student_HIL_T, Memory_f)+5*sizeof(real_T), BLOCKIO_SIG, 24, 1, 2,
+  { 82, "ctrl_student_hil/DP-system/Memory2", 0, "", offsetof
+    (B_ctrl_student_HIL_T, Memory2_e)+0*sizeof(real_T), BLOCKIO_SIG, 0, 1, 2,
     164, 0 },
 
-  { 83, "ctrl_student_hil/signal dropout check /Memory", 0, "(1,7)", offsetof
-    (B_ctrl_student_HIL_T, Memory_f)+6*sizeof(real_T), BLOCKIO_SIG, 24, 1, 2,
+  { 83, "ctrl_student_hil/Observer/Integrator", 0, "(1,1)", offsetof
+    (B_ctrl_student_HIL_T, Integrator)+0*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2,
     166, 0 },
 
-  { 84, "ctrl_student_hil/signal dropout check /Memory", 0, "(1,8)", offsetof
-    (B_ctrl_student_HIL_T, Memory_f)+7*sizeof(real_T), BLOCKIO_SIG, 24, 1, 2,
+  { 84, "ctrl_student_hil/Observer/Integrator", 0, "(1,2)", offsetof
+    (B_ctrl_student_HIL_T, Integrator)+1*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2,
     168, 0 },
 
-  { 85, "ctrl_student_hil/signal dropout check /Memory", 0, "(1,9)", offsetof
-    (B_ctrl_student_HIL_T, Memory_f)+8*sizeof(real_T), BLOCKIO_SIG, 24, 1, 2,
+  { 85, "ctrl_student_hil/Observer/Integrator", 0, "(1,3)", offsetof
+    (B_ctrl_student_HIL_T, Integrator)+2*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2,
     170, 0 },
 
-  { 86, "ctrl_student_hil/signal dropout check /Memory", 0, "(1,10)", offsetof
-    (B_ctrl_student_HIL_T, Memory_f)+9*sizeof(real_T), BLOCKIO_SIG, 24, 1, 2,
-    172, 0 },
+  { 86, "ctrl_student_hil/DP-system/Sum", 0, "", offsetof(B_ctrl_student_HIL_T,
+    Sum)+0*sizeof(real_T), BLOCKIO_SIG, 0, 1, 2, 172, 0 },
 
-  { 87, "ctrl_student_hil/signal dropout check /Memory1", 0, "(1,1)", offsetof
-    (B_ctrl_student_HIL_T, Memory1_o)+0*sizeof(real_T), BLOCKIO_SIG, 24, 1, 2,
+  { 87, "ctrl_student_hil/DP-system/Integrator1", 0, "", offsetof
+    (B_ctrl_student_HIL_T, Integrator1)+0*sizeof(real_T), BLOCKIO_SIG, 0, 1, 2,
     174, 0 },
 
-  { 88, "ctrl_student_hil/signal dropout check /Memory1", 0, "(1,2)", offsetof
-    (B_ctrl_student_HIL_T, Memory1_o)+1*sizeof(real_T), BLOCKIO_SIG, 24, 1, 2,
-    176, 0 },
+  { 88, "ctrl_student_hil/DP-system/Memory6", 0, "(1,1)", offsetof
+    (B_ctrl_student_HIL_T, Memory6)+0*sizeof(real_T), BLOCKIO_SIG, 21, 1, 2, 176,
+    0 },
 
-  { 89, "ctrl_student_hil/signal dropout check /Memory1", 0, "(1,3)", offsetof
-    (B_ctrl_student_HIL_T, Memory1_o)+2*sizeof(real_T), BLOCKIO_SIG, 24, 1, 2,
-    178, 0 },
+  { 89, "ctrl_student_hil/DP-system/Memory6", 0, "(1,2)", offsetof
+    (B_ctrl_student_HIL_T, Memory6)+1*sizeof(real_T), BLOCKIO_SIG, 21, 1, 2, 178,
+    0 },
 
-  { 90, "ctrl_student_hil/signal dropout check /Memory1", 0, "(1,4)", offsetof
-    (B_ctrl_student_HIL_T, Memory1_o)+3*sizeof(real_T), BLOCKIO_SIG, 24, 1, 2,
+  { 90, "ctrl_student_hil/DP-system/Memory", 0, "(1,1)", offsetof
+    (B_ctrl_student_HIL_T, Memory_k)+0*sizeof(real_T), BLOCKIO_SIG, 20, 1, 2,
     180, 0 },
 
-  { 91, "ctrl_student_hil/signal dropout check /Memory1", 0, "(1,5)", offsetof
-    (B_ctrl_student_HIL_T, Memory1_o)+4*sizeof(real_T), BLOCKIO_SIG, 24, 1, 2,
+  { 91, "ctrl_student_hil/DP-system/Memory", 0, "(1,2)", offsetof
+    (B_ctrl_student_HIL_T, Memory_k)+1*sizeof(real_T), BLOCKIO_SIG, 20, 1, 2,
     182, 0 },
 
-  { 92, "ctrl_student_hil/signal dropout check /Memory1", 0, "(1,6)", offsetof
-    (B_ctrl_student_HIL_T, Memory1_o)+5*sizeof(real_T), BLOCKIO_SIG, 24, 1, 2,
+  { 92, "ctrl_student_hil/DP-system/Memory", 0, "(1,3)", offsetof
+    (B_ctrl_student_HIL_T, Memory_k)+2*sizeof(real_T), BLOCKIO_SIG, 20, 1, 2,
     184, 0 },
 
-  { 93, "ctrl_student_hil/signal dropout check /Memory1", 0, "(1,7)", offsetof
-    (B_ctrl_student_HIL_T, Memory1_o)+6*sizeof(real_T), BLOCKIO_SIG, 24, 1, 2,
+  { 93, "ctrl_student_hil/DP-system/Memory", 0, "(1,4)", offsetof
+    (B_ctrl_student_HIL_T, Memory_k)+3*sizeof(real_T), BLOCKIO_SIG, 20, 1, 2,
     186, 0 },
 
-  { 94, "ctrl_student_hil/signal dropout check /Memory1", 0, "(1,8)", offsetof
-    (B_ctrl_student_HIL_T, Memory1_o)+7*sizeof(real_T), BLOCKIO_SIG, 24, 1, 2,
+  { 94, "ctrl_student_hil/DP-system/Memory", 0, "(1,5)", offsetof
+    (B_ctrl_student_HIL_T, Memory_k)+4*sizeof(real_T), BLOCKIO_SIG, 20, 1, 2,
     188, 0 },
 
-  { 95, "ctrl_student_hil/signal dropout check /Memory1", 0, "(1,9)", offsetof
-    (B_ctrl_student_HIL_T, Memory1_o)+8*sizeof(real_T), BLOCKIO_SIG, 24, 1, 2,
+  { 95, "ctrl_student_hil/DP-system/Memory", 0, "(1,6)", offsetof
+    (B_ctrl_student_HIL_T, Memory_k)+5*sizeof(real_T), BLOCKIO_SIG, 20, 1, 2,
     190, 0 },
 
-  { 96, "ctrl_student_hil/signal dropout check /Memory1", 0, "(1,10)", offsetof
-    (B_ctrl_student_HIL_T, Memory1_o)+9*sizeof(real_T), BLOCKIO_SIG, 24, 1, 2,
+  { 96, "ctrl_student_hil/DP-system/Memory", 0, "(1,7)", offsetof
+    (B_ctrl_student_HIL_T, Memory_k)+6*sizeof(real_T), BLOCKIO_SIG, 20, 1, 2,
     192, 0 },
 
-  { 97, "ctrl_student_hil/Observer/Sum1", 0, "(1,1)", offsetof
-    (B_ctrl_student_HIL_T, Sum1)+0*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2, 194, 0
+  { 97, "ctrl_student_hil/DP-system/Memory", 0, "(1,8)", offsetof
+    (B_ctrl_student_HIL_T, Memory_k)+7*sizeof(real_T), BLOCKIO_SIG, 20, 1, 2,
+    194, 0 },
+
+  { 98, "ctrl_student_hil/DP-system/Memory", 0, "(1,9)", offsetof
+    (B_ctrl_student_HIL_T, Memory_k)+8*sizeof(real_T), BLOCKIO_SIG, 20, 1, 2,
+    196, 0 },
+
+  { 99, "ctrl_student_hil/DP-system/Memory", 0, "(1,10)", offsetof
+    (B_ctrl_student_HIL_T, Memory_k)+9*sizeof(real_T), BLOCKIO_SIG, 20, 1, 2,
+    198, 0 },
+
+  { 100, "ctrl_student_hil/DP-system/Memory", 0, "(1,11)", offsetof
+    (B_ctrl_student_HIL_T, Memory_k)+10*sizeof(real_T), BLOCKIO_SIG, 20, 1, 2,
+    200, 0 },
+
+  { 101, "ctrl_student_hil/Observer/Integrator1", 0, "(1,1)", offsetof
+    (B_ctrl_student_HIL_T, Integrator1_k)+0*sizeof(real_T), BLOCKIO_SIG, 17, 1,
+    2, 202, 0 },
+
+  { 102, "ctrl_student_hil/Observer/Integrator1", 0, "(1,2)", offsetof
+    (B_ctrl_student_HIL_T, Integrator1_k)+1*sizeof(real_T), BLOCKIO_SIG, 17, 1,
+    2, 204, 0 },
+
+  { 103, "ctrl_student_hil/Observer/Integrator1", 0, "(1,3)", offsetof
+    (B_ctrl_student_HIL_T, Integrator1_k)+2*sizeof(real_T), BLOCKIO_SIG, 17, 1,
+    2, 206, 0 },
+
+  { 104, "ctrl_student_hil/DP-system/Kd/Kd1", 0, "", offsetof
+    (B_ctrl_student_HIL_T, Kd1)+0*sizeof(real_T), BLOCKIO_SIG, 42, 1, 2, 208, 0
   },
 
-  { 98, "ctrl_student_hil/Observer/Sum1", 0, "(1,2)", offsetof
-    (B_ctrl_student_HIL_T, Sum1)+1*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2, 196, 0
+  { 105, "ctrl_student_hil/DP-system/Kd/Kd2", 0, "", offsetof
+    (B_ctrl_student_HIL_T, Kd2)+0*sizeof(real_T), BLOCKIO_SIG, 42, 1, 2, 210, 0
   },
 
-  { 99, "ctrl_student_hil/Observer/Sum1", 0, "(1,3)", offsetof
-    (B_ctrl_student_HIL_T, Sum1)+2*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2, 198, 0
+  { 106, "ctrl_student_hil/DP-system/Kd/Kd3", 0, "", offsetof
+    (B_ctrl_student_HIL_T, Kd3)+0*sizeof(real_T), BLOCKIO_SIG, 42, 1, 2, 212, 0
   },
 
-  { 100, "ctrl_student_hil/Observer/L1/L12", 0, "", offsetof
-    (B_ctrl_student_HIL_T, L12)+0*sizeof(real_T), BLOCKIO_SIG, 42, 1, 2, 200, 0
-  },
+  { 107, "ctrl_student_hil/Observer/Integrator2", 0, "(1,1)", offsetof
+    (B_ctrl_student_HIL_T, Integrator2)+0*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2,
+    214, 0 },
 
-  { 101, "ctrl_student_hil/Observer/L1/L11", 0, "", offsetof
-    (B_ctrl_student_HIL_T, L11)+0*sizeof(real_T), BLOCKIO_SIG, 42, 1, 2, 202, 0
-  },
+  { 108, "ctrl_student_hil/Observer/Integrator2", 0, "(1,2)", offsetof
+    (B_ctrl_student_HIL_T, Integrator2)+1*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2,
+    216, 0 },
 
-  { 102, "ctrl_student_hil/Observer/L1/L13", 0, "", offsetof
-    (B_ctrl_student_HIL_T, L13)+0*sizeof(real_T), BLOCKIO_SIG, 42, 1, 2, 204, 0
-  },
-
-  { 103, "ctrl_student_hil/Observer/L2/L21", 0, "", offsetof
-    (B_ctrl_student_HIL_T, L21)+0*sizeof(real_T), BLOCKIO_SIG, 42, 1, 2, 206, 0
-  },
-
-  { 104, "ctrl_student_hil/Observer/L2/L22", 0, "", offsetof
-    (B_ctrl_student_HIL_T, L22)+0*sizeof(real_T), BLOCKIO_SIG, 42, 1, 2, 208, 0
-  },
-
-  { 105, "ctrl_student_hil/Observer/L2/L23", 0, "", offsetof
-    (B_ctrl_student_HIL_T, L23)+0*sizeof(real_T), BLOCKIO_SIG, 42, 1, 2, 210, 0
-  },
-
-  { 106, "ctrl_student_hil/Observer/L3/L31", 0, "", offsetof
-    (B_ctrl_student_HIL_T, L31)+0*sizeof(real_T), BLOCKIO_SIG, 42, 1, 2, 212, 0
-  },
-
-  { 107, "ctrl_student_hil/Observer/L3/L32", 0, "", offsetof
-    (B_ctrl_student_HIL_T, L32)+0*sizeof(real_T), BLOCKIO_SIG, 42, 1, 2, 214, 0
-  },
-
-  { 108, "ctrl_student_hil/Observer/L3/L33", 0, "", offsetof
-    (B_ctrl_student_HIL_T, L33)+0*sizeof(real_T), BLOCKIO_SIG, 42, 1, 2, 216, 0
-  },
-
-  { 109, "ctrl_student_hil/Observer/Product3", 0, "(1,1)", offsetof
-    (B_ctrl_student_HIL_T, Product3)+0*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2,
+  { 109, "ctrl_student_hil/Observer/Integrator2", 0, "(1,3)", offsetof
+    (B_ctrl_student_HIL_T, Integrator2)+2*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2,
     218, 0 },
 
-  { 110, "ctrl_student_hil/Observer/Product3", 0, "(1,2)", offsetof
+  { 110, "ctrl_student_hil/Sum", 0, "(1,1)", offsetof(B_ctrl_student_HIL_T,
+    Sum_c)+0*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2, 220, 0 },
+
+  { 111, "ctrl_student_hil/Sum", 0, "(1,2)", offsetof(B_ctrl_student_HIL_T,
+    Sum_c)+1*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2, 222, 0 },
+
+  { 112, "ctrl_student_hil/Sum", 0, "(1,3)", offsetof(B_ctrl_student_HIL_T,
+    Sum_c)+2*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2, 224, 0 },
+
+  { 113, "ctrl_student_hil/DP-system/Memory3", 0, "(1,1)", offsetof
+    (B_ctrl_student_HIL_T, Memory3_c)+0*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2,
+    226, 0 },
+
+  { 114, "ctrl_student_hil/DP-system/Memory3", 0, "(1,2)", offsetof
+    (B_ctrl_student_HIL_T, Memory3_c)+1*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2,
+    228, 0 },
+
+  { 115, "ctrl_student_hil/DP-system/Memory3", 0, "(1,3)", offsetof
+    (B_ctrl_student_HIL_T, Memory3_c)+2*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2,
+    230, 0 },
+
+  { 116, "ctrl_student_hil/DP-system/Memory1", 0, "(1,1)", offsetof
+    (B_ctrl_student_HIL_T, Memory1_n)+0*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2,
+    232, 0 },
+
+  { 117, "ctrl_student_hil/DP-system/Memory1", 0, "(1,2)", offsetof
+    (B_ctrl_student_HIL_T, Memory1_n)+1*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2,
+    234, 0 },
+
+  { 118, "ctrl_student_hil/DP-system/Memory1", 0, "(1,3)", offsetof
+    (B_ctrl_student_HIL_T, Memory1_n)+2*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2,
+    236, 0 },
+
+  { 119, "ctrl_student_hil/Observer/Sum1", 0, "(1,1)", offsetof
+    (B_ctrl_student_HIL_T, Sum1)+0*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2, 238, 0
+  },
+
+  { 120, "ctrl_student_hil/Observer/Sum1", 0, "(1,2)", offsetof
+    (B_ctrl_student_HIL_T, Sum1)+1*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2, 240, 0
+  },
+
+  { 121, "ctrl_student_hil/Observer/Sum1", 0, "(1,3)", offsetof
+    (B_ctrl_student_HIL_T, Sum1)+2*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2, 242, 0
+  },
+
+  { 122, "ctrl_student_hil/Observer/L1/L12", 0, "", offsetof
+    (B_ctrl_student_HIL_T, L12)+0*sizeof(real_T), BLOCKIO_SIG, 42, 1, 2, 244, 0
+  },
+
+  { 123, "ctrl_student_hil/Observer/L1/L11", 0, "", offsetof
+    (B_ctrl_student_HIL_T, L11)+0*sizeof(real_T), BLOCKIO_SIG, 42, 1, 2, 246, 0
+  },
+
+  { 124, "ctrl_student_hil/Observer/L1/L13", 0, "", offsetof
+    (B_ctrl_student_HIL_T, L13)+0*sizeof(real_T), BLOCKIO_SIG, 42, 1, 2, 248, 0
+  },
+
+  { 125, "ctrl_student_hil/Observer/L2/L21", 0, "", offsetof
+    (B_ctrl_student_HIL_T, L21)+0*sizeof(real_T), BLOCKIO_SIG, 42, 1, 2, 250, 0
+  },
+
+  { 126, "ctrl_student_hil/Observer/L2/L22", 0, "", offsetof
+    (B_ctrl_student_HIL_T, L22)+0*sizeof(real_T), BLOCKIO_SIG, 42, 1, 2, 252, 0
+  },
+
+  { 127, "ctrl_student_hil/Observer/L2/L23", 0, "", offsetof
+    (B_ctrl_student_HIL_T, L23)+0*sizeof(real_T), BLOCKIO_SIG, 42, 1, 2, 254, 0
+  },
+
+  { 128, "ctrl_student_hil/Observer/L3/L31", 0, "", offsetof
+    (B_ctrl_student_HIL_T, L31)+0*sizeof(real_T), BLOCKIO_SIG, 42, 1, 2, 256, 0
+  },
+
+  { 129, "ctrl_student_hil/Observer/L3/L32", 0, "", offsetof
+    (B_ctrl_student_HIL_T, L32)+0*sizeof(real_T), BLOCKIO_SIG, 42, 1, 2, 258, 0
+  },
+
+  { 130, "ctrl_student_hil/Observer/L3/L33", 0, "", offsetof
+    (B_ctrl_student_HIL_T, L33)+0*sizeof(real_T), BLOCKIO_SIG, 42, 1, 2, 260, 0
+  },
+
+  { 131, "ctrl_student_hil/Observer/Product3", 0, "(1,1)", offsetof
+    (B_ctrl_student_HIL_T, Product3)+0*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2,
+    262, 0 },
+
+  { 132, "ctrl_student_hil/Observer/Product3", 0, "(1,2)", offsetof
     (B_ctrl_student_HIL_T, Product3)+1*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2,
-    220, 0 },
+    264, 0 },
 
-  { 111, "ctrl_student_hil/Observer/Product3", 0, "(1,3)", offsetof
+  { 133, "ctrl_student_hil/Observer/Product3", 0, "(1,3)", offsetof
     (B_ctrl_student_HIL_T, Product3)+2*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2,
-    222, 0 },
+    266, 0 },
 
-  { 112, "ctrl_student_hil/Observer/Sum", 0, "(1,1)", offsetof
-    (B_ctrl_student_HIL_T, Sum_b)+0*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2, 224,
+  { 134, "ctrl_student_hil/Observer/Sum", 0, "(1,1)", offsetof
+    (B_ctrl_student_HIL_T, Sum_b)+0*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2, 268,
     0 },
 
-  { 113, "ctrl_student_hil/Observer/Sum", 0, "(1,2)", offsetof
-    (B_ctrl_student_HIL_T, Sum_b)+1*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2, 226,
+  { 135, "ctrl_student_hil/Observer/Sum", 0, "(1,2)", offsetof
+    (B_ctrl_student_HIL_T, Sum_b)+1*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2, 270,
     0 },
 
-  { 114, "ctrl_student_hil/Observer/Sum", 0, "(1,3)", offsetof
-    (B_ctrl_student_HIL_T, Sum_b)+2*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2, 228,
+  { 136, "ctrl_student_hil/Observer/Sum", 0, "(1,3)", offsetof
+    (B_ctrl_student_HIL_T, Sum_b)+2*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2, 272,
     0 },
 
-  { 115, "ctrl_student_hil/Observer/inv(M)", 0, "(1,1)", offsetof
-    (B_ctrl_student_HIL_T, invM)+0*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2, 230, 0
+  { 137, "ctrl_student_hil/Observer/inv(M)", 0, "(1,1)", offsetof
+    (B_ctrl_student_HIL_T, invM)+0*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2, 274, 0
   },
 
-  { 116, "ctrl_student_hil/Observer/inv(M)", 0, "(1,2)", offsetof
-    (B_ctrl_student_HIL_T, invM)+1*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2, 232, 0
+  { 138, "ctrl_student_hil/Observer/inv(M)", 0, "(1,2)", offsetof
+    (B_ctrl_student_HIL_T, invM)+1*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2, 276, 0
   },
 
-  { 117, "ctrl_student_hil/Observer/inv(M)", 0, "(1,3)", offsetof
-    (B_ctrl_student_HIL_T, invM)+2*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2, 234, 0
+  { 139, "ctrl_student_hil/Observer/inv(M)", 0, "(1,3)", offsetof
+    (B_ctrl_student_HIL_T, invM)+2*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2, 278, 0
   },
 
-  { 118,
+  { 140,
     "ctrl_student_hil/tau to real ship (only use in MCLab)/Full thrust allocation",
     0, "u_BT", offsetof(B_ctrl_student_HIL_T, u_BT)+0*sizeof(real_T),
-    BLOCKIO_SIG, 0, 1, 2, 236, 0 },
+    BLOCKIO_SIG, 0, 1, 2, 280, 0 },
 
-  { 119,
+  { 141,
     "ctrl_student_hil/tau to real ship (only use in MCLab)/Full thrust allocation",
     1, "u_VSP", offsetof(B_ctrl_student_HIL_T, u_VSP)+0*sizeof(real_T),
-    BLOCKIO_SIG, 0, 1, 2, 238, 0 },
+    BLOCKIO_SIG, 0, 1, 2, 282, 0 },
 
-  { 120,
+  { 142,
     "ctrl_student_hil/tau to real ship (only use in MCLab)/Full thrust allocation",
     2, "alpha_VSP", offsetof(B_ctrl_student_HIL_T, alpha_VSP)+0*sizeof(real_T),
-    BLOCKIO_SIG, 0, 1, 2, 240, 0 },
+    BLOCKIO_SIG, 0, 1, 2, 284, 0 },
 
-  { 121,
+  { 143,
     "ctrl_student_hil/tau to real ship (only use in MCLab)/Full thrust allocation",
     3, "omega_VSP", offsetof(B_ctrl_student_HIL_T, omega_VSP)+0*sizeof(real_T),
-    BLOCKIO_SIG, 0, 1, 2, 242, 0 },
+    BLOCKIO_SIG, 0, 1, 2, 286, 0 },
 
-  { 122, "ctrl_student_hil/switch/Switch_function", 0, "switch_signal", offsetof
+  { 144, "ctrl_student_hil/switch/Switch_function", 0, "switch_signal", offsetof
     (B_ctrl_student_HIL_T, switch_signal)+0*sizeof(real_T), BLOCKIO_SIG, 0, 1, 2,
-    244, 0 },
+    288, 0 },
 
-  { 123, "ctrl_student_hil/signal dropout check /MATLAB Function", 1,
+  { 145, "ctrl_student_hil/signal dropout check /MATLAB Function", 1,
     "vecx(1,1)", offsetof(B_ctrl_student_HIL_T, vecx)+0*sizeof(real_T),
-    BLOCKIO_SIG, 24, 1, 2, 246, 0 },
+    BLOCKIO_SIG, 24, 1, 2, 290, 0 },
 
-  { 124, "ctrl_student_hil/signal dropout check /MATLAB Function", 1,
+  { 146, "ctrl_student_hil/signal dropout check /MATLAB Function", 1,
     "vecx(1,2)", offsetof(B_ctrl_student_HIL_T, vecx)+1*sizeof(real_T),
-    BLOCKIO_SIG, 24, 1, 2, 248, 0 },
+    BLOCKIO_SIG, 24, 1, 2, 292, 0 },
 
-  { 125, "ctrl_student_hil/signal dropout check /MATLAB Function", 1,
+  { 147, "ctrl_student_hil/signal dropout check /MATLAB Function", 1,
     "vecx(1,3)", offsetof(B_ctrl_student_HIL_T, vecx)+2*sizeof(real_T),
-    BLOCKIO_SIG, 24, 1, 2, 250, 0 },
+    BLOCKIO_SIG, 24, 1, 2, 294, 0 },
 
-  { 126, "ctrl_student_hil/signal dropout check /MATLAB Function", 1,
+  { 148, "ctrl_student_hil/signal dropout check /MATLAB Function", 1,
     "vecx(1,4)", offsetof(B_ctrl_student_HIL_T, vecx)+3*sizeof(real_T),
-    BLOCKIO_SIG, 24, 1, 2, 252, 0 },
+    BLOCKIO_SIG, 24, 1, 2, 296, 0 },
 
-  { 127, "ctrl_student_hil/signal dropout check /MATLAB Function", 1,
+  { 149, "ctrl_student_hil/signal dropout check /MATLAB Function", 1,
     "vecx(1,5)", offsetof(B_ctrl_student_HIL_T, vecx)+4*sizeof(real_T),
-    BLOCKIO_SIG, 24, 1, 2, 254, 0 },
+    BLOCKIO_SIG, 24, 1, 2, 298, 0 },
 
-  { 128, "ctrl_student_hil/signal dropout check /MATLAB Function", 1,
+  { 150, "ctrl_student_hil/signal dropout check /MATLAB Function", 1,
     "vecx(1,6)", offsetof(B_ctrl_student_HIL_T, vecx)+5*sizeof(real_T),
-    BLOCKIO_SIG, 24, 1, 2, 256, 0 },
+    BLOCKIO_SIG, 24, 1, 2, 300, 0 },
 
-  { 129, "ctrl_student_hil/signal dropout check /MATLAB Function", 1,
+  { 151, "ctrl_student_hil/signal dropout check /MATLAB Function", 1,
     "vecx(1,7)", offsetof(B_ctrl_student_HIL_T, vecx)+6*sizeof(real_T),
-    BLOCKIO_SIG, 24, 1, 2, 258, 0 },
+    BLOCKIO_SIG, 24, 1, 2, 302, 0 },
 
-  { 130, "ctrl_student_hil/signal dropout check /MATLAB Function", 1,
+  { 152, "ctrl_student_hil/signal dropout check /MATLAB Function", 1,
     "vecx(1,8)", offsetof(B_ctrl_student_HIL_T, vecx)+7*sizeof(real_T),
-    BLOCKIO_SIG, 24, 1, 2, 260, 0 },
+    BLOCKIO_SIG, 24, 1, 2, 304, 0 },
 
-  { 131, "ctrl_student_hil/signal dropout check /MATLAB Function", 1,
+  { 153, "ctrl_student_hil/signal dropout check /MATLAB Function", 1,
     "vecx(1,9)", offsetof(B_ctrl_student_HIL_T, vecx)+8*sizeof(real_T),
-    BLOCKIO_SIG, 24, 1, 2, 262, 0 },
+    BLOCKIO_SIG, 24, 1, 2, 306, 0 },
 
-  { 132, "ctrl_student_hil/signal dropout check /MATLAB Function", 1,
+  { 154, "ctrl_student_hil/signal dropout check /MATLAB Function", 1,
     "vecx(1,10)", offsetof(B_ctrl_student_HIL_T, vecx)+9*sizeof(real_T),
-    BLOCKIO_SIG, 24, 1, 2, 264, 0 },
+    BLOCKIO_SIG, 24, 1, 2, 308, 0 },
 
-  { 133, "ctrl_student_hil/signal dropout check /MATLAB Function", 2,
+  { 155, "ctrl_student_hil/signal dropout check /MATLAB Function", 1,
+    "vecx(1,11)", offsetof(B_ctrl_student_HIL_T, vecx)+10*sizeof(real_T),
+    BLOCKIO_SIG, 24, 1, 2, 310, 0 },
+
+  { 156, "ctrl_student_hil/signal dropout check /MATLAB Function", 1,
+    "vecx(1,12)", offsetof(B_ctrl_student_HIL_T, vecx)+11*sizeof(real_T),
+    BLOCKIO_SIG, 24, 1, 2, 312, 0 },
+
+  { 157, "ctrl_student_hil/signal dropout check /MATLAB Function", 1,
+    "vecx(1,13)", offsetof(B_ctrl_student_HIL_T, vecx)+12*sizeof(real_T),
+    BLOCKIO_SIG, 24, 1, 2, 314, 0 },
+
+  { 158, "ctrl_student_hil/signal dropout check /MATLAB Function", 1,
+    "vecx(1,14)", offsetof(B_ctrl_student_HIL_T, vecx)+13*sizeof(real_T),
+    BLOCKIO_SIG, 24, 1, 2, 316, 0 },
+
+  { 159, "ctrl_student_hil/signal dropout check /MATLAB Function", 1,
+    "vecx(1,15)", offsetof(B_ctrl_student_HIL_T, vecx)+14*sizeof(real_T),
+    BLOCKIO_SIG, 24, 1, 2, 318, 0 },
+
+  { 160, "ctrl_student_hil/signal dropout check /MATLAB Function", 1,
+    "vecx(1,16)", offsetof(B_ctrl_student_HIL_T, vecx)+15*sizeof(real_T),
+    BLOCKIO_SIG, 24, 1, 2, 320, 0 },
+
+  { 161, "ctrl_student_hil/signal dropout check /MATLAB Function", 1,
+    "vecx(1,17)", offsetof(B_ctrl_student_HIL_T, vecx)+16*sizeof(real_T),
+    BLOCKIO_SIG, 24, 1, 2, 322, 0 },
+
+  { 162, "ctrl_student_hil/signal dropout check /MATLAB Function", 1,
+    "vecx(1,18)", offsetof(B_ctrl_student_HIL_T, vecx)+17*sizeof(real_T),
+    BLOCKIO_SIG, 24, 1, 2, 324, 0 },
+
+  { 163, "ctrl_student_hil/signal dropout check /MATLAB Function", 1,
+    "vecx(1,19)", offsetof(B_ctrl_student_HIL_T, vecx)+18*sizeof(real_T),
+    BLOCKIO_SIG, 24, 1, 2, 326, 0 },
+
+  { 164, "ctrl_student_hil/signal dropout check /MATLAB Function", 1,
+    "vecx(1,20)", offsetof(B_ctrl_student_HIL_T, vecx)+19*sizeof(real_T),
+    BLOCKIO_SIG, 24, 1, 2, 328, 0 },
+
+  { 165, "ctrl_student_hil/signal dropout check /MATLAB Function", 2,
     "vecy(1,1)", offsetof(B_ctrl_student_HIL_T, vecy)+0*sizeof(real_T),
-    BLOCKIO_SIG, 24, 1, 2, 266, 0 },
+    BLOCKIO_SIG, 24, 1, 2, 330, 0 },
 
-  { 134, "ctrl_student_hil/signal dropout check /MATLAB Function", 2,
+  { 166, "ctrl_student_hil/signal dropout check /MATLAB Function", 2,
     "vecy(1,2)", offsetof(B_ctrl_student_HIL_T, vecy)+1*sizeof(real_T),
-    BLOCKIO_SIG, 24, 1, 2, 268, 0 },
+    BLOCKIO_SIG, 24, 1, 2, 332, 0 },
 
-  { 135, "ctrl_student_hil/signal dropout check /MATLAB Function", 2,
+  { 167, "ctrl_student_hil/signal dropout check /MATLAB Function", 2,
     "vecy(1,3)", offsetof(B_ctrl_student_HIL_T, vecy)+2*sizeof(real_T),
-    BLOCKIO_SIG, 24, 1, 2, 270, 0 },
+    BLOCKIO_SIG, 24, 1, 2, 334, 0 },
 
-  { 136, "ctrl_student_hil/signal dropout check /MATLAB Function", 2,
+  { 168, "ctrl_student_hil/signal dropout check /MATLAB Function", 2,
     "vecy(1,4)", offsetof(B_ctrl_student_HIL_T, vecy)+3*sizeof(real_T),
-    BLOCKIO_SIG, 24, 1, 2, 272, 0 },
+    BLOCKIO_SIG, 24, 1, 2, 336, 0 },
 
-  { 137, "ctrl_student_hil/signal dropout check /MATLAB Function", 2,
+  { 169, "ctrl_student_hil/signal dropout check /MATLAB Function", 2,
     "vecy(1,5)", offsetof(B_ctrl_student_HIL_T, vecy)+4*sizeof(real_T),
-    BLOCKIO_SIG, 24, 1, 2, 274, 0 },
+    BLOCKIO_SIG, 24, 1, 2, 338, 0 },
 
-  { 138, "ctrl_student_hil/signal dropout check /MATLAB Function", 2,
+  { 170, "ctrl_student_hil/signal dropout check /MATLAB Function", 2,
     "vecy(1,6)", offsetof(B_ctrl_student_HIL_T, vecy)+5*sizeof(real_T),
-    BLOCKIO_SIG, 24, 1, 2, 276, 0 },
+    BLOCKIO_SIG, 24, 1, 2, 340, 0 },
 
-  { 139, "ctrl_student_hil/signal dropout check /MATLAB Function", 2,
+  { 171, "ctrl_student_hil/signal dropout check /MATLAB Function", 2,
     "vecy(1,7)", offsetof(B_ctrl_student_HIL_T, vecy)+6*sizeof(real_T),
-    BLOCKIO_SIG, 24, 1, 2, 278, 0 },
+    BLOCKIO_SIG, 24, 1, 2, 342, 0 },
 
-  { 140, "ctrl_student_hil/signal dropout check /MATLAB Function", 2,
+  { 172, "ctrl_student_hil/signal dropout check /MATLAB Function", 2,
     "vecy(1,8)", offsetof(B_ctrl_student_HIL_T, vecy)+7*sizeof(real_T),
-    BLOCKIO_SIG, 24, 1, 2, 280, 0 },
+    BLOCKIO_SIG, 24, 1, 2, 344, 0 },
 
-  { 141, "ctrl_student_hil/signal dropout check /MATLAB Function", 2,
+  { 173, "ctrl_student_hil/signal dropout check /MATLAB Function", 2,
     "vecy(1,9)", offsetof(B_ctrl_student_HIL_T, vecy)+8*sizeof(real_T),
-    BLOCKIO_SIG, 24, 1, 2, 282, 0 },
+    BLOCKIO_SIG, 24, 1, 2, 346, 0 },
 
-  { 142, "ctrl_student_hil/signal dropout check /MATLAB Function", 2,
+  { 174, "ctrl_student_hil/signal dropout check /MATLAB Function", 2,
     "vecy(1,10)", offsetof(B_ctrl_student_HIL_T, vecy)+9*sizeof(real_T),
-    BLOCKIO_SIG, 24, 1, 2, 284, 0 },
+    BLOCKIO_SIG, 24, 1, 2, 348, 0 },
 
-  { 143, "ctrl_student_hil/signal dropout check /MATLAB Function", 3, "d",
+  { 175, "ctrl_student_hil/signal dropout check /MATLAB Function", 2,
+    "vecy(1,11)", offsetof(B_ctrl_student_HIL_T, vecy)+10*sizeof(real_T),
+    BLOCKIO_SIG, 24, 1, 2, 350, 0 },
+
+  { 176, "ctrl_student_hil/signal dropout check /MATLAB Function", 2,
+    "vecy(1,12)", offsetof(B_ctrl_student_HIL_T, vecy)+11*sizeof(real_T),
+    BLOCKIO_SIG, 24, 1, 2, 352, 0 },
+
+  { 177, "ctrl_student_hil/signal dropout check /MATLAB Function", 2,
+    "vecy(1,13)", offsetof(B_ctrl_student_HIL_T, vecy)+12*sizeof(real_T),
+    BLOCKIO_SIG, 24, 1, 2, 354, 0 },
+
+  { 178, "ctrl_student_hil/signal dropout check /MATLAB Function", 2,
+    "vecy(1,14)", offsetof(B_ctrl_student_HIL_T, vecy)+13*sizeof(real_T),
+    BLOCKIO_SIG, 24, 1, 2, 356, 0 },
+
+  { 179, "ctrl_student_hil/signal dropout check /MATLAB Function", 2,
+    "vecy(1,15)", offsetof(B_ctrl_student_HIL_T, vecy)+14*sizeof(real_T),
+    BLOCKIO_SIG, 24, 1, 2, 358, 0 },
+
+  { 180, "ctrl_student_hil/signal dropout check /MATLAB Function", 2,
+    "vecy(1,16)", offsetof(B_ctrl_student_HIL_T, vecy)+15*sizeof(real_T),
+    BLOCKIO_SIG, 24, 1, 2, 360, 0 },
+
+  { 181, "ctrl_student_hil/signal dropout check /MATLAB Function", 2,
+    "vecy(1,17)", offsetof(B_ctrl_student_HIL_T, vecy)+16*sizeof(real_T),
+    BLOCKIO_SIG, 24, 1, 2, 362, 0 },
+
+  { 182, "ctrl_student_hil/signal dropout check /MATLAB Function", 2,
+    "vecy(1,18)", offsetof(B_ctrl_student_HIL_T, vecy)+17*sizeof(real_T),
+    BLOCKIO_SIG, 24, 1, 2, 364, 0 },
+
+  { 183, "ctrl_student_hil/signal dropout check /MATLAB Function", 2,
+    "vecy(1,19)", offsetof(B_ctrl_student_HIL_T, vecy)+18*sizeof(real_T),
+    BLOCKIO_SIG, 24, 1, 2, 366, 0 },
+
+  { 184, "ctrl_student_hil/signal dropout check /MATLAB Function", 2,
+    "vecy(1,20)", offsetof(B_ctrl_student_HIL_T, vecy)+19*sizeof(real_T),
+    BLOCKIO_SIG, 24, 1, 2, 368, 0 },
+
+  { 185, "ctrl_student_hil/signal dropout check /MATLAB Function", 3, "d",
     offsetof(B_ctrl_student_HIL_T, d)+0*sizeof(real_T), BLOCKIO_SIG, 0, 1, 2,
-    286, 0 },
+    370, 0 },
 
-  { 144, "ctrl_student_hil/joystick1/Thrust allocation", 0, "u_BT", offsetof
-    (B_ctrl_student_HIL_T, u_BT_d)+0*sizeof(real_T), BLOCKIO_SIG, 0, 1, 2, 288,
+  { 186, "ctrl_student_hil/signal dropout check /MATLAB Function", 4, "s1",
+    offsetof(B_ctrl_student_HIL_T, s1)+0*sizeof(real_T), BLOCKIO_SIG, 0, 1, 2,
+    372, 0 },
+
+  { 187, "ctrl_student_hil/signal dropout check /MATLAB Function", 5, "s2",
+    offsetof(B_ctrl_student_HIL_T, s2)+0*sizeof(real_T), BLOCKIO_SIG, 0, 1, 2,
+    374, 0 },
+
+  { 188, "ctrl_student_hil/joystick1/Thrust allocation", 0, "u_BT", offsetof
+    (B_ctrl_student_HIL_T, u_BT_d)+0*sizeof(real_T), BLOCKIO_SIG, 0, 1, 2, 376,
     0 },
 
-  { 145, "ctrl_student_hil/joystick1/Thrust allocation", 1, "u_VSP", offsetof
-    (B_ctrl_student_HIL_T, u_VSP_p)+0*sizeof(real_T), BLOCKIO_SIG, 0, 1, 2, 290,
+  { 189, "ctrl_student_hil/joystick1/Thrust allocation", 1, "u_VSP", offsetof
+    (B_ctrl_student_HIL_T, u_VSP_p)+0*sizeof(real_T), BLOCKIO_SIG, 0, 1, 2, 378,
     0 },
 
-  { 146, "ctrl_student_hil/joystick1/Thrust allocation", 2, "alpha_VSP",
+  { 190, "ctrl_student_hil/joystick1/Thrust allocation", 2, "alpha_VSP",
     offsetof(B_ctrl_student_HIL_T, alpha_VSP_b)+0*sizeof(real_T), BLOCKIO_SIG, 0,
-    1, 2, 292, 0 },
+    1, 2, 380, 0 },
 
-  { 147, "ctrl_student_hil/joystick1/Thrust allocation", 3, "omega_VSP",
+  { 191, "ctrl_student_hil/joystick1/Thrust allocation", 3, "omega_VSP",
     offsetof(B_ctrl_student_HIL_T, omega_VSP_h)+0*sizeof(real_T), BLOCKIO_SIG, 0,
-    1, 2, 294, 0 },
+    1, 2, 382, 0 },
 
-  { 148, "ctrl_student_hil/Noise generator1/Sample & hold/MATLAB Function1", 0,
+  { 192, "ctrl_student_hil/Noise generator1/Sample & hold/MATLAB Function1", 0,
     "output(1,1)", offsetof(B_ctrl_student_HIL_T, output)+0*sizeof(real_T),
-    BLOCKIO_SIG, 17, 1, 2, 296, 0 },
+    BLOCKIO_SIG, 17, 1, 2, 384, 0 },
 
-  { 149, "ctrl_student_hil/Noise generator1/Sample & hold/MATLAB Function1", 0,
+  { 193, "ctrl_student_hil/Noise generator1/Sample & hold/MATLAB Function1", 0,
     "output(1,2)", offsetof(B_ctrl_student_HIL_T, output)+1*sizeof(real_T),
-    BLOCKIO_SIG, 17, 1, 2, 298, 0 },
+    BLOCKIO_SIG, 17, 1, 2, 386, 0 },
 
-  { 150, "ctrl_student_hil/Noise generator1/Sample & hold/MATLAB Function1", 0,
+  { 194, "ctrl_student_hil/Noise generator1/Sample & hold/MATLAB Function1", 0,
     "output(1,3)", offsetof(B_ctrl_student_HIL_T, output)+2*sizeof(real_T),
-    BLOCKIO_SIG, 17, 1, 2, 300, 0 },
+    BLOCKIO_SIG, 17, 1, 2, 388, 0 },
 
-  { 151, "ctrl_student_hil/Noise generator1/Downsamplesignal/MATLAB Function", 0,
+  { 195, "ctrl_student_hil/Noise generator1/Downsamplesignal/MATLAB Function", 0,
     "count", offsetof(B_ctrl_student_HIL_T, count)+0*sizeof(real_T), BLOCKIO_SIG,
-    0, 1, 2, 302, 0 },
+    0, 1, 2, 390, 0 },
 
-  { 152, "ctrl_student_hil/DP-system/z1-jjz2", 0, "z1(1,1)", offsetof
-    (B_ctrl_student_HIL_T, z1)+0*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2, 304, 0 },
+  { 196, "ctrl_student_hil/DP-system/z1-jjz2", 0, "z1(1,1)", offsetof
+    (B_ctrl_student_HIL_T, z1)+0*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2, 392, 0 },
 
-  { 153, "ctrl_student_hil/DP-system/z1-jjz2", 0, "z1(1,2)", offsetof
-    (B_ctrl_student_HIL_T, z1)+1*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2, 306, 0 },
+  { 197, "ctrl_student_hil/DP-system/z1-jjz2", 0, "z1(1,2)", offsetof
+    (B_ctrl_student_HIL_T, z1)+1*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2, 394, 0 },
 
-  { 154, "ctrl_student_hil/DP-system/z1-jjz2", 0, "z1(1,3)", offsetof
-    (B_ctrl_student_HIL_T, z1)+2*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2, 308, 0 },
+  { 198, "ctrl_student_hil/DP-system/z1-jjz2", 0, "z1(1,3)", offsetof
+    (B_ctrl_student_HIL_T, z1)+2*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2, 396, 0 },
 
-  { 155, "ctrl_student_hil/DP-system/z1-jjz2", 1, "z2(1,1)", offsetof
-    (B_ctrl_student_HIL_T, z2)+0*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2, 310, 0 },
+  { 199, "ctrl_student_hil/DP-system/z1-jjz2", 1, "z2(1,1)", offsetof
+    (B_ctrl_student_HIL_T, z2)+0*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2, 398, 0 },
 
-  { 156, "ctrl_student_hil/DP-system/z1-jjz2", 1, "z2(1,2)", offsetof
-    (B_ctrl_student_HIL_T, z2)+1*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2, 312, 0 },
+  { 200, "ctrl_student_hil/DP-system/z1-jjz2", 1, "z2(1,2)", offsetof
+    (B_ctrl_student_HIL_T, z2)+1*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2, 400, 0 },
 
-  { 157, "ctrl_student_hil/DP-system/z1-jjz2", 1, "z2(1,3)", offsetof
-    (B_ctrl_student_HIL_T, z2)+2*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2, 314, 0 },
+  { 201, "ctrl_student_hil/DP-system/z1-jjz2", 1, "z2(1,3)", offsetof
+    (B_ctrl_student_HIL_T, z2)+2*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2, 402, 0 },
 
-  { 158, "ctrl_student_hil/DP-system/update law", 0, "s_dot1", offsetof
-    (B_ctrl_student_HIL_T, s_dot1)+0*sizeof(real_T), BLOCKIO_SIG, 0, 1, 2, 316,
+  { 202, "ctrl_student_hil/DP-system/update law", 0, "s_dot1", offsetof
+    (B_ctrl_student_HIL_T, s_dot1)+0*sizeof(real_T), BLOCKIO_SIG, 0, 1, 2, 404,
     0 },
 
-  { 159, "ctrl_student_hil/DP-system/update law", 1, "i", offsetof
-    (B_ctrl_student_HIL_T, i)+0*sizeof(real_T), BLOCKIO_SIG, 0, 1, 2, 318, 0 },
+  { 203, "ctrl_student_hil/DP-system/update law", 1, "i", offsetof
+    (B_ctrl_student_HIL_T, i)+0*sizeof(real_T), BLOCKIO_SIG, 0, 1, 2, 406, 0 },
 
-  { 160, "ctrl_student_hil/DP-system/signal switch", 0, "signal(1,1)", offsetof
-    (B_ctrl_student_HIL_T, signal)+0*sizeof(real_T), BLOCKIO_SIG, 20, 1, 2, 320,
+  { 204, "ctrl_student_hil/DP-system/signal switch", 0, "signal(1,1)", offsetof
+    (B_ctrl_student_HIL_T, signal)+0*sizeof(real_T), BLOCKIO_SIG, 20, 1, 2, 408,
     0 },
 
-  { 161, "ctrl_student_hil/DP-system/signal switch", 0, "signal(1,2)", offsetof
-    (B_ctrl_student_HIL_T, signal)+1*sizeof(real_T), BLOCKIO_SIG, 20, 1, 2, 322,
+  { 205, "ctrl_student_hil/DP-system/signal switch", 0, "signal(1,2)", offsetof
+    (B_ctrl_student_HIL_T, signal)+1*sizeof(real_T), BLOCKIO_SIG, 20, 1, 2, 410,
     0 },
 
-  { 162, "ctrl_student_hil/DP-system/signal switch", 0, "signal(1,3)", offsetof
-    (B_ctrl_student_HIL_T, signal)+2*sizeof(real_T), BLOCKIO_SIG, 20, 1, 2, 324,
+  { 206, "ctrl_student_hil/DP-system/signal switch", 0, "signal(1,3)", offsetof
+    (B_ctrl_student_HIL_T, signal)+2*sizeof(real_T), BLOCKIO_SIG, 20, 1, 2, 412,
     0 },
 
-  { 163, "ctrl_student_hil/DP-system/signal switch", 0, "signal(1,4)", offsetof
-    (B_ctrl_student_HIL_T, signal)+3*sizeof(real_T), BLOCKIO_SIG, 20, 1, 2, 326,
+  { 207, "ctrl_student_hil/DP-system/signal switch", 0, "signal(1,4)", offsetof
+    (B_ctrl_student_HIL_T, signal)+3*sizeof(real_T), BLOCKIO_SIG, 20, 1, 2, 414,
     0 },
 
-  { 164, "ctrl_student_hil/DP-system/signal switch", 0, "signal(1,5)", offsetof
-    (B_ctrl_student_HIL_T, signal)+4*sizeof(real_T), BLOCKIO_SIG, 20, 1, 2, 328,
+  { 208, "ctrl_student_hil/DP-system/signal switch", 0, "signal(1,5)", offsetof
+    (B_ctrl_student_HIL_T, signal)+4*sizeof(real_T), BLOCKIO_SIG, 20, 1, 2, 416,
     0 },
 
-  { 165, "ctrl_student_hil/DP-system/signal switch", 0, "signal(1,6)", offsetof
-    (B_ctrl_student_HIL_T, signal)+5*sizeof(real_T), BLOCKIO_SIG, 20, 1, 2, 330,
+  { 209, "ctrl_student_hil/DP-system/signal switch", 0, "signal(1,6)", offsetof
+    (B_ctrl_student_HIL_T, signal)+5*sizeof(real_T), BLOCKIO_SIG, 20, 1, 2, 418,
     0 },
 
-  { 166, "ctrl_student_hil/DP-system/signal switch", 0, "signal(1,7)", offsetof
-    (B_ctrl_student_HIL_T, signal)+6*sizeof(real_T), BLOCKIO_SIG, 20, 1, 2, 332,
+  { 210, "ctrl_student_hil/DP-system/signal switch", 0, "signal(1,7)", offsetof
+    (B_ctrl_student_HIL_T, signal)+6*sizeof(real_T), BLOCKIO_SIG, 20, 1, 2, 420,
     0 },
 
-  { 167, "ctrl_student_hil/DP-system/signal switch", 0, "signal(1,8)", offsetof
-    (B_ctrl_student_HIL_T, signal)+7*sizeof(real_T), BLOCKIO_SIG, 20, 1, 2, 334,
+  { 211, "ctrl_student_hil/DP-system/signal switch", 0, "signal(1,8)", offsetof
+    (B_ctrl_student_HIL_T, signal)+7*sizeof(real_T), BLOCKIO_SIG, 20, 1, 2, 422,
     0 },
 
-  { 168, "ctrl_student_hil/DP-system/signal switch", 0, "signal(1,9)", offsetof
-    (B_ctrl_student_HIL_T, signal)+8*sizeof(real_T), BLOCKIO_SIG, 20, 1, 2, 336,
+  { 212, "ctrl_student_hil/DP-system/signal switch", 0, "signal(1,9)", offsetof
+    (B_ctrl_student_HIL_T, signal)+8*sizeof(real_T), BLOCKIO_SIG, 20, 1, 2, 424,
     0 },
 
-  { 169, "ctrl_student_hil/DP-system/signal switch", 0, "signal(1,10)", offsetof
-    (B_ctrl_student_HIL_T, signal)+9*sizeof(real_T), BLOCKIO_SIG, 20, 1, 2, 338,
+  { 213, "ctrl_student_hil/DP-system/signal switch", 0, "signal(1,10)", offsetof
+    (B_ctrl_student_HIL_T, signal)+9*sizeof(real_T), BLOCKIO_SIG, 20, 1, 2, 426,
     0 },
 
-  { 170, "ctrl_student_hil/DP-system/signal switch", 0, "signal(1,11)", offsetof
-    (B_ctrl_student_HIL_T, signal)+10*sizeof(real_T), BLOCKIO_SIG, 20, 1, 2, 340,
+  { 214, "ctrl_student_hil/DP-system/signal switch", 0, "signal(1,11)", offsetof
+    (B_ctrl_student_HIL_T, signal)+10*sizeof(real_T), BLOCKIO_SIG, 20, 1, 2, 428,
     0 },
 
-  { 171, "ctrl_student_hil/DP-system/inputs", 0, "eta_0(1,1)", offsetof
-    (B_ctrl_student_HIL_T, eta_0)+0*sizeof(real_T), BLOCKIO_SIG, 21, 1, 2, 342,
+  { 215, "ctrl_student_hil/DP-system/inputs", 0, "eta_0(1,1)", offsetof
+    (B_ctrl_student_HIL_T, eta_0)+0*sizeof(real_T), BLOCKIO_SIG, 21, 1, 2, 430,
     0 },
 
-  { 172, "ctrl_student_hil/DP-system/inputs", 0, "eta_0(1,2)", offsetof
-    (B_ctrl_student_HIL_T, eta_0)+1*sizeof(real_T), BLOCKIO_SIG, 21, 1, 2, 344,
+  { 216, "ctrl_student_hil/DP-system/inputs", 0, "eta_0(1,2)", offsetof
+    (B_ctrl_student_HIL_T, eta_0)+1*sizeof(real_T), BLOCKIO_SIG, 21, 1, 2, 432,
     0 },
 
-  { 173, "ctrl_student_hil/DP-system/inputs", 1, "eta_d(1,1)", offsetof
-    (B_ctrl_student_HIL_T, eta_d)+0*sizeof(real_T), BLOCKIO_SIG, 19, 1, 2, 346,
+  { 217, "ctrl_student_hil/DP-system/inputs", 1, "eta_d(1,1)", offsetof
+    (B_ctrl_student_HIL_T, eta_d)+0*sizeof(real_T), BLOCKIO_SIG, 19, 1, 2, 434,
     0 },
 
-  { 174, "ctrl_student_hil/DP-system/inputs", 1, "eta_d(1,2)", offsetof
-    (B_ctrl_student_HIL_T, eta_d)+1*sizeof(real_T), BLOCKIO_SIG, 19, 1, 2, 348,
+  { 218, "ctrl_student_hil/DP-system/inputs", 1, "eta_d(1,2)", offsetof
+    (B_ctrl_student_HIL_T, eta_d)+1*sizeof(real_T), BLOCKIO_SIG, 19, 1, 2, 436,
     0 },
 
-  { 175, "ctrl_student_hil/DP-system/inputs", 2, "U_ref_l", offsetof
-    (B_ctrl_student_HIL_T, U_ref_l)+0*sizeof(real_T), BLOCKIO_SIG, 0, 1, 2, 350,
+  { 219, "ctrl_student_hil/DP-system/inputs", 2, "U_ref_l", offsetof
+    (B_ctrl_student_HIL_T, U_ref_l)+0*sizeof(real_T), BLOCKIO_SIG, 0, 1, 2, 438,
     0 },
 
-  { 176, "ctrl_student_hil/DP-system/controller", 2, "D1(1,1)", offsetof
-    (B_ctrl_student_HIL_T, D1)+0*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2, 352, 0 },
+  { 220, "ctrl_student_hil/DP-system/controller", 2, "D1(1,1)", offsetof
+    (B_ctrl_student_HIL_T, D1)+0*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2, 440, 0 },
 
-  { 177, "ctrl_student_hil/DP-system/controller", 2, "D1(1,2)", offsetof
-    (B_ctrl_student_HIL_T, D1)+1*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2, 354, 0 },
+  { 221, "ctrl_student_hil/DP-system/controller", 2, "D1(1,2)", offsetof
+    (B_ctrl_student_HIL_T, D1)+1*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2, 442, 0 },
 
-  { 178, "ctrl_student_hil/DP-system/controller", 2, "D1(1,3)", offsetof
-    (B_ctrl_student_HIL_T, D1)+2*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2, 356, 0 },
+  { 222, "ctrl_student_hil/DP-system/controller", 2, "D1(1,3)", offsetof
+    (B_ctrl_student_HIL_T, D1)+2*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2, 444, 0 },
 
-  { 179, "ctrl_student_hil/DP-system/controller", 3, "z11(1,1)", offsetof
-    (B_ctrl_student_HIL_T, z11)+0*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2, 358, 0
+  { 223, "ctrl_student_hil/DP-system/controller", 3, "z11(1,1)", offsetof
+    (B_ctrl_student_HIL_T, z11)+0*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2, 446, 0
   },
 
-  { 180, "ctrl_student_hil/DP-system/controller", 3, "z11(1,2)", offsetof
-    (B_ctrl_student_HIL_T, z11)+1*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2, 360, 0
+  { 224, "ctrl_student_hil/DP-system/controller", 3, "z11(1,2)", offsetof
+    (B_ctrl_student_HIL_T, z11)+1*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2, 448, 0
   },
 
-  { 181, "ctrl_student_hil/DP-system/controller", 3, "z11(1,3)", offsetof
-    (B_ctrl_student_HIL_T, z11)+2*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2, 362, 0
+  { 225, "ctrl_student_hil/DP-system/controller", 3, "z11(1,3)", offsetof
+    (B_ctrl_student_HIL_T, z11)+2*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2, 450, 0
   },
 
-  { 182, "ctrl_student_hil/DP-system/controller", 4, "ma(1,1)", offsetof
-    (B_ctrl_student_HIL_T, ma)+0*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2, 364, 0 },
+  { 226, "ctrl_student_hil/DP-system/controller", 4, "ma(1,1)", offsetof
+    (B_ctrl_student_HIL_T, ma)+0*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2, 452, 0 },
 
-  { 183, "ctrl_student_hil/DP-system/controller", 4, "ma(1,2)", offsetof
-    (B_ctrl_student_HIL_T, ma)+1*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2, 366, 0 },
+  { 227, "ctrl_student_hil/DP-system/controller", 4, "ma(1,2)", offsetof
+    (B_ctrl_student_HIL_T, ma)+1*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2, 454, 0 },
 
-  { 184, "ctrl_student_hil/DP-system/controller", 4, "ma(1,3)", offsetof
-    (B_ctrl_student_HIL_T, ma)+2*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2, 368, 0 },
+  { 228, "ctrl_student_hil/DP-system/controller", 4, "ma(1,3)", offsetof
+    (B_ctrl_student_HIL_T, ma)+2*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2, 456, 0 },
 
-  { 185, "ctrl_student_hil/DP-system/controller", 5, "Kdz(1,1)", offsetof
-    (B_ctrl_student_HIL_T, Kdz)+0*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2, 370, 0
+  { 229, "ctrl_student_hil/DP-system/controller", 5, "Kdz(1,1)", offsetof
+    (B_ctrl_student_HIL_T, Kdz)+0*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2, 458, 0
   },
 
-  { 186, "ctrl_student_hil/DP-system/controller", 5, "Kdz(1,2)", offsetof
-    (B_ctrl_student_HIL_T, Kdz)+1*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2, 372, 0
+  { 230, "ctrl_student_hil/DP-system/controller", 5, "Kdz(1,2)", offsetof
+    (B_ctrl_student_HIL_T, Kdz)+1*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2, 460, 0
   },
 
-  { 187, "ctrl_student_hil/DP-system/controller", 5, "Kdz(1,3)", offsetof
-    (B_ctrl_student_HIL_T, Kdz)+2*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2, 374, 0
+  { 231, "ctrl_student_hil/DP-system/controller", 5, "Kdz(1,3)", offsetof
+    (B_ctrl_student_HIL_T, Kdz)+2*sizeof(real_T), BLOCKIO_SIG, 17, 1, 2, 462, 0
   },
 
-  { 188, "ctrl_student_hil/DP-system/MATLAB Function", 0, "temp(1,1)", offsetof
-    (B_ctrl_student_HIL_T, temp)+0*sizeof(real_T), BLOCKIO_SIG, 21, 1, 2, 376, 0
+  { 232, "ctrl_student_hil/DP-system/MATLAB Function", 0, "temp(1,1)", offsetof
+    (B_ctrl_student_HIL_T, temp)+0*sizeof(real_T), BLOCKIO_SIG, 21, 1, 2, 464, 0
   },
 
-  { 189, "ctrl_student_hil/DP-system/MATLAB Function", 0, "temp(1,2)", offsetof
-    (B_ctrl_student_HIL_T, temp)+1*sizeof(real_T), BLOCKIO_SIG, 21, 1, 2, 378, 0
+  { 233, "ctrl_student_hil/DP-system/MATLAB Function", 0, "temp(1,2)", offsetof
+    (B_ctrl_student_HIL_T, temp)+1*sizeof(real_T), BLOCKIO_SIG, 21, 1, 2, 466, 0
   },
 
-  { 190, "ctrl_student_hil/DP-system/Ellipsoidal path", 0, "eta_v(1,1)",
+  { 234, "ctrl_student_hil/DP-system/Ellipsoidal path", 0, "eta_v(1,1)",
     offsetof(B_ctrl_student_HIL_T, eta_v)+0*sizeof(real_T), BLOCKIO_SIG, 20, 1,
-    2, 380, 0 },
+    2, 468, 0 },
 
-  { 191, "ctrl_student_hil/DP-system/Ellipsoidal path", 0, "eta_v(1,2)",
+  { 235, "ctrl_student_hil/DP-system/Ellipsoidal path", 0, "eta_v(1,2)",
     offsetof(B_ctrl_student_HIL_T, eta_v)+1*sizeof(real_T), BLOCKIO_SIG, 20, 1,
-    2, 382, 0 },
+    2, 470, 0 },
 
-  { 192, "ctrl_student_hil/DP-system/Ellipsoidal path", 0, "eta_v(1,3)",
+  { 236, "ctrl_student_hil/DP-system/Ellipsoidal path", 0, "eta_v(1,3)",
     offsetof(B_ctrl_student_HIL_T, eta_v)+2*sizeof(real_T), BLOCKIO_SIG, 20, 1,
-    2, 384, 0 },
+    2, 472, 0 },
 
-  { 193, "ctrl_student_hil/DP-system/Ellipsoidal path", 0, "eta_v(1,4)",
+  { 237, "ctrl_student_hil/DP-system/Ellipsoidal path", 0, "eta_v(1,4)",
     offsetof(B_ctrl_student_HIL_T, eta_v)+3*sizeof(real_T), BLOCKIO_SIG, 20, 1,
-    2, 386, 0 },
+    2, 474, 0 },
 
-  { 194, "ctrl_student_hil/DP-system/Ellipsoidal path", 0, "eta_v(1,5)",
+  { 238, "ctrl_student_hil/DP-system/Ellipsoidal path", 0, "eta_v(1,5)",
     offsetof(B_ctrl_student_HIL_T, eta_v)+4*sizeof(real_T), BLOCKIO_SIG, 20, 1,
-    2, 388, 0 },
+    2, 476, 0 },
 
-  { 195, "ctrl_student_hil/DP-system/Ellipsoidal path", 0, "eta_v(1,6)",
+  { 239, "ctrl_student_hil/DP-system/Ellipsoidal path", 0, "eta_v(1,6)",
     offsetof(B_ctrl_student_HIL_T, eta_v)+5*sizeof(real_T), BLOCKIO_SIG, 20, 1,
-    2, 390, 0 },
+    2, 478, 0 },
 
-  { 196, "ctrl_student_hil/DP-system/Ellipsoidal path", 0, "eta_v(1,7)",
+  { 240, "ctrl_student_hil/DP-system/Ellipsoidal path", 0, "eta_v(1,7)",
     offsetof(B_ctrl_student_HIL_T, eta_v)+6*sizeof(real_T), BLOCKIO_SIG, 20, 1,
-    2, 392, 0 },
+    2, 480, 0 },
 
-  { 197, "ctrl_student_hil/DP-system/Ellipsoidal path", 0, "eta_v(1,8)",
+  { 241, "ctrl_student_hil/DP-system/Ellipsoidal path", 0, "eta_v(1,8)",
     offsetof(B_ctrl_student_HIL_T, eta_v)+7*sizeof(real_T), BLOCKIO_SIG, 20, 1,
-    2, 394, 0 },
+    2, 482, 0 },
 
-  { 198, "ctrl_student_hil/DP-system/Ellipsoidal path", 0, "eta_v(1,9)",
+  { 242, "ctrl_student_hil/DP-system/Ellipsoidal path", 0, "eta_v(1,9)",
     offsetof(B_ctrl_student_HIL_T, eta_v)+8*sizeof(real_T), BLOCKIO_SIG, 20, 1,
-    2, 396, 0 },
+    2, 484, 0 },
 
-  { 199, "ctrl_student_hil/DP-system/Ellipsoidal path", 0, "eta_v(1,10)",
+  { 243, "ctrl_student_hil/DP-system/Ellipsoidal path", 0, "eta_v(1,10)",
     offsetof(B_ctrl_student_HIL_T, eta_v)+9*sizeof(real_T), BLOCKIO_SIG, 20, 1,
-    2, 398, 0 },
+    2, 486, 0 },
 
-  { 200, "ctrl_student_hil/DP-system/Ellipsoidal path", 0, "eta_v(1,11)",
+  { 244, "ctrl_student_hil/DP-system/Ellipsoidal path", 0, "eta_v(1,11)",
     offsetof(B_ctrl_student_HIL_T, eta_v)+10*sizeof(real_T), BLOCKIO_SIG, 20, 1,
-    2, 400, 0 },
+    2, 488, 0 },
 
-  { 201,
+  { 245,
     "ctrl_student_hil/tau to real ship (only use in MCLab)/To thruster of real ship/control limit checking",
     0, "fault", offsetof(B_ctrl_student_HIL_T, fault)+0*sizeof(boolean_T),
-    BLOCKIO_SIG, 8, 1, 2, 402, 0 },
+    BLOCKIO_SIG, 8, 1, 2, 490, 0 },
 
-  { 202, "ctrl_student_hil/Observer/L3/MATLAB Function", 0, "y(1,1)", offsetof
+  { 246, "ctrl_student_hil/Observer/L3/MATLAB Function", 0, "y(1,1)", offsetof
     (B_ctrl_student_HIL_T, sf_MATLABFunction_o.y)+0*sizeof(real_T), BLOCKIO_SIG,
-    22, 1, 2, 404, 0 },
+    22, 1, 2, 492, 0 },
 
-  { 203, "ctrl_student_hil/Observer/L3/MATLAB Function", 0, "y(2,1)", offsetof
+  { 247, "ctrl_student_hil/Observer/L3/MATLAB Function", 0, "y(2,1)", offsetof
     (B_ctrl_student_HIL_T, sf_MATLABFunction_o.y)+1*sizeof(real_T), BLOCKIO_SIG,
-    22, 1, 2, 406, 0 },
+    22, 1, 2, 494, 0 },
 
-  { 204, "ctrl_student_hil/Observer/L3/MATLAB Function", 0, "y(3,1)", offsetof
+  { 248, "ctrl_student_hil/Observer/L3/MATLAB Function", 0, "y(3,1)", offsetof
     (B_ctrl_student_HIL_T, sf_MATLABFunction_o.y)+2*sizeof(real_T), BLOCKIO_SIG,
-    22, 1, 2, 408, 0 },
+    22, 1, 2, 496, 0 },
 
-  { 205, "ctrl_student_hil/Observer/L3/MATLAB Function", 0, "y(1,2)", offsetof
+  { 249, "ctrl_student_hil/Observer/L3/MATLAB Function", 0, "y(1,2)", offsetof
     (B_ctrl_student_HIL_T, sf_MATLABFunction_o.y)+3*sizeof(real_T), BLOCKIO_SIG,
-    22, 1, 2, 410, 0 },
+    22, 1, 2, 498, 0 },
 
-  { 206, "ctrl_student_hil/Observer/L3/MATLAB Function", 0, "y(2,2)", offsetof
+  { 250, "ctrl_student_hil/Observer/L3/MATLAB Function", 0, "y(2,2)", offsetof
     (B_ctrl_student_HIL_T, sf_MATLABFunction_o.y)+4*sizeof(real_T), BLOCKIO_SIG,
-    22, 1, 2, 412, 0 },
+    22, 1, 2, 500, 0 },
 
-  { 207, "ctrl_student_hil/Observer/L3/MATLAB Function", 0, "y(3,2)", offsetof
+  { 251, "ctrl_student_hil/Observer/L3/MATLAB Function", 0, "y(3,2)", offsetof
     (B_ctrl_student_HIL_T, sf_MATLABFunction_o.y)+5*sizeof(real_T), BLOCKIO_SIG,
-    22, 1, 2, 414, 0 },
+    22, 1, 2, 502, 0 },
 
-  { 208, "ctrl_student_hil/Observer/L3/MATLAB Function", 0, "y(1,3)", offsetof
+  { 252, "ctrl_student_hil/Observer/L3/MATLAB Function", 0, "y(1,3)", offsetof
     (B_ctrl_student_HIL_T, sf_MATLABFunction_o.y)+6*sizeof(real_T), BLOCKIO_SIG,
-    22, 1, 2, 416, 0 },
+    22, 1, 2, 504, 0 },
 
-  { 209, "ctrl_student_hil/Observer/L3/MATLAB Function", 0, "y(2,3)", offsetof
+  { 253, "ctrl_student_hil/Observer/L3/MATLAB Function", 0, "y(2,3)", offsetof
     (B_ctrl_student_HIL_T, sf_MATLABFunction_o.y)+7*sizeof(real_T), BLOCKIO_SIG,
-    22, 1, 2, 418, 0 },
+    22, 1, 2, 506, 0 },
 
-  { 210, "ctrl_student_hil/Observer/L3/MATLAB Function", 0, "y(3,3)", offsetof
+  { 254, "ctrl_student_hil/Observer/L3/MATLAB Function", 0, "y(3,3)", offsetof
     (B_ctrl_student_HIL_T, sf_MATLABFunction_o.y)+8*sizeof(real_T), BLOCKIO_SIG,
-    22, 1, 2, 420, 0 },
+    22, 1, 2, 508, 0 },
 
-  { 211, "ctrl_student_hil/Observer/L2/MATLAB Function", 0, "y(1,1)", offsetof
+  { 255, "ctrl_student_hil/Observer/L2/MATLAB Function", 0, "y(1,1)", offsetof
     (B_ctrl_student_HIL_T, sf_MATLABFunction_fv.y)+0*sizeof(real_T), BLOCKIO_SIG,
-    22, 1, 2, 422, 0 },
+    22, 1, 2, 510, 0 },
 
-  { 212, "ctrl_student_hil/Observer/L2/MATLAB Function", 0, "y(2,1)", offsetof
+  { 256, "ctrl_student_hil/Observer/L2/MATLAB Function", 0, "y(2,1)", offsetof
     (B_ctrl_student_HIL_T, sf_MATLABFunction_fv.y)+1*sizeof(real_T), BLOCKIO_SIG,
-    22, 1, 2, 424, 0 },
+    22, 1, 2, 512, 0 },
 
-  { 213, "ctrl_student_hil/Observer/L2/MATLAB Function", 0, "y(3,1)", offsetof
+  { 257, "ctrl_student_hil/Observer/L2/MATLAB Function", 0, "y(3,1)", offsetof
     (B_ctrl_student_HIL_T, sf_MATLABFunction_fv.y)+2*sizeof(real_T), BLOCKIO_SIG,
-    22, 1, 2, 426, 0 },
+    22, 1, 2, 514, 0 },
 
-  { 214, "ctrl_student_hil/Observer/L2/MATLAB Function", 0, "y(1,2)", offsetof
+  { 258, "ctrl_student_hil/Observer/L2/MATLAB Function", 0, "y(1,2)", offsetof
     (B_ctrl_student_HIL_T, sf_MATLABFunction_fv.y)+3*sizeof(real_T), BLOCKIO_SIG,
-    22, 1, 2, 428, 0 },
+    22, 1, 2, 516, 0 },
 
-  { 215, "ctrl_student_hil/Observer/L2/MATLAB Function", 0, "y(2,2)", offsetof
+  { 259, "ctrl_student_hil/Observer/L2/MATLAB Function", 0, "y(2,2)", offsetof
     (B_ctrl_student_HIL_T, sf_MATLABFunction_fv.y)+4*sizeof(real_T), BLOCKIO_SIG,
-    22, 1, 2, 430, 0 },
+    22, 1, 2, 518, 0 },
 
-  { 216, "ctrl_student_hil/Observer/L2/MATLAB Function", 0, "y(3,2)", offsetof
+  { 260, "ctrl_student_hil/Observer/L2/MATLAB Function", 0, "y(3,2)", offsetof
     (B_ctrl_student_HIL_T, sf_MATLABFunction_fv.y)+5*sizeof(real_T), BLOCKIO_SIG,
-    22, 1, 2, 432, 0 },
+    22, 1, 2, 520, 0 },
 
-  { 217, "ctrl_student_hil/Observer/L2/MATLAB Function", 0, "y(1,3)", offsetof
+  { 261, "ctrl_student_hil/Observer/L2/MATLAB Function", 0, "y(1,3)", offsetof
     (B_ctrl_student_HIL_T, sf_MATLABFunction_fv.y)+6*sizeof(real_T), BLOCKIO_SIG,
-    22, 1, 2, 434, 0 },
+    22, 1, 2, 522, 0 },
 
-  { 218, "ctrl_student_hil/Observer/L2/MATLAB Function", 0, "y(2,3)", offsetof
+  { 262, "ctrl_student_hil/Observer/L2/MATLAB Function", 0, "y(2,3)", offsetof
     (B_ctrl_student_HIL_T, sf_MATLABFunction_fv.y)+7*sizeof(real_T), BLOCKIO_SIG,
-    22, 1, 2, 436, 0 },
+    22, 1, 2, 524, 0 },
 
-  { 219, "ctrl_student_hil/Observer/L2/MATLAB Function", 0, "y(3,3)", offsetof
+  { 263, "ctrl_student_hil/Observer/L2/MATLAB Function", 0, "y(3,3)", offsetof
     (B_ctrl_student_HIL_T, sf_MATLABFunction_fv.y)+8*sizeof(real_T), BLOCKIO_SIG,
-    22, 1, 2, 438, 0 },
+    22, 1, 2, 526, 0 },
 
-  { 220, "ctrl_student_hil/Observer/L1/MATLAB Function", 0, "y(1,1)", offsetof
+  { 264, "ctrl_student_hil/Observer/L1/MATLAB Function", 0, "y(1,1)", offsetof
     (B_ctrl_student_HIL_T, sf_MATLABFunction_l.y)+0*sizeof(real_T), BLOCKIO_SIG,
-    22, 1, 2, 440, 0 },
+    22, 1, 2, 528, 0 },
 
-  { 221, "ctrl_student_hil/Observer/L1/MATLAB Function", 0, "y(2,1)", offsetof
+  { 265, "ctrl_student_hil/Observer/L1/MATLAB Function", 0, "y(2,1)", offsetof
     (B_ctrl_student_HIL_T, sf_MATLABFunction_l.y)+1*sizeof(real_T), BLOCKIO_SIG,
-    22, 1, 2, 442, 0 },
+    22, 1, 2, 530, 0 },
 
-  { 222, "ctrl_student_hil/Observer/L1/MATLAB Function", 0, "y(3,1)", offsetof
+  { 266, "ctrl_student_hil/Observer/L1/MATLAB Function", 0, "y(3,1)", offsetof
     (B_ctrl_student_HIL_T, sf_MATLABFunction_l.y)+2*sizeof(real_T), BLOCKIO_SIG,
-    22, 1, 2, 444, 0 },
+    22, 1, 2, 532, 0 },
 
-  { 223, "ctrl_student_hil/Observer/L1/MATLAB Function", 0, "y(1,2)", offsetof
+  { 267, "ctrl_student_hil/Observer/L1/MATLAB Function", 0, "y(1,2)", offsetof
     (B_ctrl_student_HIL_T, sf_MATLABFunction_l.y)+3*sizeof(real_T), BLOCKIO_SIG,
-    22, 1, 2, 446, 0 },
+    22, 1, 2, 534, 0 },
 
-  { 224, "ctrl_student_hil/Observer/L1/MATLAB Function", 0, "y(2,2)", offsetof
+  { 268, "ctrl_student_hil/Observer/L1/MATLAB Function", 0, "y(2,2)", offsetof
     (B_ctrl_student_HIL_T, sf_MATLABFunction_l.y)+4*sizeof(real_T), BLOCKIO_SIG,
-    22, 1, 2, 448, 0 },
+    22, 1, 2, 536, 0 },
 
-  { 225, "ctrl_student_hil/Observer/L1/MATLAB Function", 0, "y(3,2)", offsetof
+  { 269, "ctrl_student_hil/Observer/L1/MATLAB Function", 0, "y(3,2)", offsetof
     (B_ctrl_student_HIL_T, sf_MATLABFunction_l.y)+5*sizeof(real_T), BLOCKIO_SIG,
-    22, 1, 2, 450, 0 },
+    22, 1, 2, 538, 0 },
 
-  { 226, "ctrl_student_hil/Observer/L1/MATLAB Function", 0, "y(1,3)", offsetof
+  { 270, "ctrl_student_hil/Observer/L1/MATLAB Function", 0, "y(1,3)", offsetof
     (B_ctrl_student_HIL_T, sf_MATLABFunction_l.y)+6*sizeof(real_T), BLOCKIO_SIG,
-    22, 1, 2, 452, 0 },
+    22, 1, 2, 540, 0 },
 
-  { 227, "ctrl_student_hil/Observer/L1/MATLAB Function", 0, "y(2,3)", offsetof
+  { 271, "ctrl_student_hil/Observer/L1/MATLAB Function", 0, "y(2,3)", offsetof
     (B_ctrl_student_HIL_T, sf_MATLABFunction_l.y)+7*sizeof(real_T), BLOCKIO_SIG,
-    22, 1, 2, 454, 0 },
+    22, 1, 2, 542, 0 },
 
-  { 228, "ctrl_student_hil/Observer/L1/MATLAB Function", 0, "y(3,3)", offsetof
+  { 272, "ctrl_student_hil/Observer/L1/MATLAB Function", 0, "y(3,3)", offsetof
     (B_ctrl_student_HIL_T, sf_MATLABFunction_l.y)+8*sizeof(real_T), BLOCKIO_SIG,
-    22, 1, 2, 456, 0 },
+    22, 1, 2, 544, 0 },
 
-  { 229, "ctrl_student_hil/DP-system/Kd/MATLAB Function", 0, "y(1,1)", offsetof
+  { 273, "ctrl_student_hil/DP-system/Kd/MATLAB Function", 0, "y(1,1)", offsetof
     (B_ctrl_student_HIL_T, sf_MATLABFunction_m.y)+0*sizeof(real_T), BLOCKIO_SIG,
-    22, 1, 2, 458, 0 },
+    22, 1, 2, 546, 0 },
 
-  { 230, "ctrl_student_hil/DP-system/Kd/MATLAB Function", 0, "y(2,1)", offsetof
+  { 274, "ctrl_student_hil/DP-system/Kd/MATLAB Function", 0, "y(2,1)", offsetof
     (B_ctrl_student_HIL_T, sf_MATLABFunction_m.y)+1*sizeof(real_T), BLOCKIO_SIG,
-    22, 1, 2, 460, 0 },
+    22, 1, 2, 548, 0 },
 
-  { 231, "ctrl_student_hil/DP-system/Kd/MATLAB Function", 0, "y(3,1)", offsetof
+  { 275, "ctrl_student_hil/DP-system/Kd/MATLAB Function", 0, "y(3,1)", offsetof
     (B_ctrl_student_HIL_T, sf_MATLABFunction_m.y)+2*sizeof(real_T), BLOCKIO_SIG,
-    22, 1, 2, 462, 0 },
+    22, 1, 2, 550, 0 },
 
-  { 232, "ctrl_student_hil/DP-system/Kd/MATLAB Function", 0, "y(1,2)", offsetof
+  { 276, "ctrl_student_hil/DP-system/Kd/MATLAB Function", 0, "y(1,2)", offsetof
     (B_ctrl_student_HIL_T, sf_MATLABFunction_m.y)+3*sizeof(real_T), BLOCKIO_SIG,
-    22, 1, 2, 464, 0 },
+    22, 1, 2, 552, 0 },
 
-  { 233, "ctrl_student_hil/DP-system/Kd/MATLAB Function", 0, "y(2,2)", offsetof
+  { 277, "ctrl_student_hil/DP-system/Kd/MATLAB Function", 0, "y(2,2)", offsetof
     (B_ctrl_student_HIL_T, sf_MATLABFunction_m.y)+4*sizeof(real_T), BLOCKIO_SIG,
-    22, 1, 2, 466, 0 },
+    22, 1, 2, 554, 0 },
 
-  { 234, "ctrl_student_hil/DP-system/Kd/MATLAB Function", 0, "y(3,2)", offsetof
+  { 278, "ctrl_student_hil/DP-system/Kd/MATLAB Function", 0, "y(3,2)", offsetof
     (B_ctrl_student_HIL_T, sf_MATLABFunction_m.y)+5*sizeof(real_T), BLOCKIO_SIG,
-    22, 1, 2, 468, 0 },
+    22, 1, 2, 556, 0 },
 
-  { 235, "ctrl_student_hil/DP-system/Kd/MATLAB Function", 0, "y(1,3)", offsetof
+  { 279, "ctrl_student_hil/DP-system/Kd/MATLAB Function", 0, "y(1,3)", offsetof
     (B_ctrl_student_HIL_T, sf_MATLABFunction_m.y)+6*sizeof(real_T), BLOCKIO_SIG,
-    22, 1, 2, 470, 0 },
+    22, 1, 2, 558, 0 },
 
-  { 236, "ctrl_student_hil/DP-system/Kd/MATLAB Function", 0, "y(2,3)", offsetof
+  { 280, "ctrl_student_hil/DP-system/Kd/MATLAB Function", 0, "y(2,3)", offsetof
     (B_ctrl_student_HIL_T, sf_MATLABFunction_m.y)+7*sizeof(real_T), BLOCKIO_SIG,
-    22, 1, 2, 472, 0 },
+    22, 1, 2, 560, 0 },
 
-  { 237, "ctrl_student_hil/DP-system/Kd/MATLAB Function", 0, "y(3,3)", offsetof
+  { 281, "ctrl_student_hil/DP-system/Kd/MATLAB Function", 0, "y(3,3)", offsetof
     (B_ctrl_student_HIL_T, sf_MATLABFunction_m.y)+8*sizeof(real_T), BLOCKIO_SIG,
-    22, 1, 2, 474, 0 },
+    22, 1, 2, 562, 0 },
 
   { -1, "", -1, "", 0, 0, 0 }
 };
 
-static int NI_SigListSize DataSection(".NIVS.siglistsize") = 238;
+static int NI_SigListSize DataSection(".NIVS.siglistsize") = 282;
 static int NI_VirtualBlockSources[1][1];
 static int NI_VirtualBlockOffsets[1][1];
 static int NI_VirtualBlockLengths[1][1];
@@ -4684,9 +4707,12 @@ static int NI_SigDimList[] DataSection(".NIVS.sigdimlist") =
   1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
   1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
   1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-  1, 1, 1, 1, 1, 1, 1, 1, };
+  1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+  1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+  1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+  1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, };
 
-static long NI_ExtListSize DataSection(".NIVS.extlistsize") = 80;
+static long NI_ExtListSize DataSection(".NIVS.extlistsize") = 82;
 static NI_ExternalIO NI_ExtList[] DataSection(".NIVS.extlist") =
 {
   { 0, "joystick1/L2_continuous", 0, EXT_IN, 1, 1, 1 },
@@ -4717,23 +4743,23 @@ static NI_ExternalIO NI_ExtList[] DataSection(".NIVS.extlist") =
 
   { 13, "joystick1/ArrowRight", 0, EXT_IN, 1, 1, 1 },
 
-  { 14, "DP-system/Kd/Kd1", 0, EXT_IN, 1, 1, 1 },
+  { 14, "dead rec  switch/dead", 0, EXT_IN, 1, 1, 1 },
 
-  { 15, "DP-system/Kd/Kd2", 0, EXT_IN, 1, 1, 1 },
+  { 15, "Samp_freq", 0, EXT_IN, 1, 1, 1 },
 
-  { 16, "DP-system/Kd/Kd3", 0, EXT_IN, 1, 1, 1 },
+  { 16, "N_power", 0, EXT_IN, 1, 1, 1 },
 
-  { 17, "psi", 0, EXT_IN, 1, 1, 1 },
+  { 17, "N_power_H", 0, EXT_IN, 1, 1, 1 },
 
-  { 18, "Enable_noise", 0, EXT_IN, 1, 1, 1 },
+  { 18, "psi", 0, EXT_IN, 1, 1, 1 },
 
-  { 19, "N_power", 0, EXT_IN, 1, 1, 1 },
+  { 19, "Enable_noise", 0, EXT_IN, 1, 1, 1 },
 
-  { 20, "N_power_H", 0, EXT_IN, 1, 1, 1 },
+  { 20, "DP-system/Kd/Kd1", 0, EXT_IN, 1, 1, 1 },
 
-  { 21, "dead rec  switch/dead", 0, EXT_IN, 1, 1, 1 },
+  { 21, "DP-system/Kd/Kd2", 0, EXT_IN, 1, 1, 1 },
 
-  { 22, "Samp_freq", 0, EXT_IN, 1, 1, 1 },
+  { 22, "DP-system/Kd/Kd3", 0, EXT_IN, 1, 1, 1 },
 
   { 23, "Observer/L1/L12", 0, EXT_IN, 1, 1, 1 },
 
@@ -4862,6 +4888,10 @@ static NI_ExternalIO NI_ExtList[] DataSection(".NIVS.extlist") =
 
   { 47, "signal dropout check /lost", 0, EXT_OUT, 1, 1, 1 },
 
+  { 48, "signal dropout check /s1", 0, EXT_OUT, 1, 1, 1 },
+
+  { 49, "signal dropout check /s2", 0, EXT_OUT, 1, 1, 1 },
+
   { -1, "", 0, 0, 0, 0, 0 }
 };
 
@@ -4878,8 +4908,8 @@ NI_Task NI_TaskList[] DataSection(".NIVS.tasklist") =
 int NI_NumTasks DataSection(".NIVS.numtasks") = 1;
 static char* NI_CompiledModelName DataSection(".NIVS.compiledmodelname") =
   "ctrl_student_hil";
-static char* NI_CompiledModelVersion = "1.153";
-static char* NI_CompiledModelDateTime = "Thu Mar 30 13:15:42 2017";
+static char* NI_CompiledModelVersion = "1.173";
+static char* NI_CompiledModelDateTime = "Fri Mar 31 08:59:54 2017";
 static char* NI_builder DataSection(".NIVS.builder") =
   "NI VeriStand 2014.0.0.82 (2014) RTW Build";
 static char* NI_BuilderVersion DataSection(".NIVS.builderversion") =
@@ -5441,7 +5471,7 @@ DLL_EXPORT long NIRT_GetSimState(long* numContStates, char* contStatesNames,
   if (numContStates && numDiscStates && numClockTicks) {
     if (*numContStates < 0 || *numDiscStates < 0 || *numClockTicks < 0) {
       *numContStates = 10;
-      *numDiscStates = 1601;
+      *numDiscStates = 1659;
       *numClockTicks = NUMST - TID01EQ;
       return NI_OK;
     }
@@ -5574,6 +5604,75 @@ DLL_EXPORT long NIRT_GetSimState(long* numContStates, char* contStatesNames,
       (&ctrl_student_HIL_DW.guidance_switch_DWORK1, 0, 0, 0);
     strcpy(discStatesNames + (idx++ * 100),
            "&ctrl_student_HIL_DW.guidance_switch_DWORK1");
+    discStates[idx] = NIRT_GetValueByDataType(&ctrl_student_HIL_DW.dead_DWORK1,
+      0, 0, 0);
+    strcpy(discStatesNames + (idx++ * 100), "&ctrl_student_HIL_DW.dead_DWORK1");
+    discStates[idx] = NIRT_GetValueByDataType
+      (&ctrl_student_HIL_DW.counter_PreviousInput, 0, 0, 0);
+    strcpy(discStatesNames + (idx++ * 100),
+           "&ctrl_student_HIL_DW.counter_PreviousInput");
+    discStates[idx] = NIRT_GetValueByDataType
+      (&ctrl_student_HIL_DW.Samp_freq_DWORK1, 0, 0, 0);
+    strcpy(discStatesNames + (idx++ * 100),
+           "&ctrl_student_HIL_DW.Samp_freq_DWORK1");
+    discStates[idx] = NIRT_GetValueByDataType
+      (&ctrl_student_HIL_DW.N_power_DWORK1, 0, 0, 0);
+    strcpy(discStatesNames + (idx++ * 100),
+           "&ctrl_student_HIL_DW.N_power_DWORK1");
+    discStates[idx] = NIRT_GetValueByDataType(&ctrl_student_HIL_DW.NextOutput, 0,
+      0, 0);
+    strcpy(discStatesNames + (idx++ * 100), "&ctrl_student_HIL_DW.NextOutput");
+    discStates[idx] = NIRT_GetValueByDataType(&ctrl_student_HIL_DW.NextOutput_n,
+      0, 0, 0);
+    strcpy(discStatesNames + (idx++ * 100), "&ctrl_student_HIL_DW.NextOutput_n");
+    discStates[idx] = NIRT_GetValueByDataType
+      (&ctrl_student_HIL_DW.N_power_H_DWORK1, 0, 0, 0);
+    strcpy(discStatesNames + (idx++ * 100),
+           "&ctrl_student_HIL_DW.N_power_H_DWORK1");
+    discStates[idx] = NIRT_GetValueByDataType(&ctrl_student_HIL_DW.NextOutput_i,
+      0, 0, 0);
+    strcpy(discStatesNames + (idx++ * 100), "&ctrl_student_HIL_DW.NextOutput_i");
+    discStates[idx] = NIRT_GetValueByDataType(&ctrl_student_HIL_DW.psi_DWORK1, 0,
+      0, 0);
+    strcpy(discStatesNames + (idx++ * 100), "&ctrl_student_HIL_DW.psi_DWORK1");
+    discStates[idx] = NIRT_GetValueByDataType
+      (&ctrl_student_HIL_DW.Hold_PreviousInput, 0, 17, 0);
+    strcpy(discStatesNames + (idx++ * 100),
+           "&ctrl_student_HIL_DW.Hold_PreviousInput");
+    discStates[idx] = NIRT_GetValueByDataType
+      (&ctrl_student_HIL_DW.Hold_PreviousInput, 1, 17, 0);
+    strcpy(discStatesNames + (idx++ * 100),
+           "&ctrl_student_HIL_DW.Hold_PreviousInput");
+    discStates[idx] = NIRT_GetValueByDataType
+      (&ctrl_student_HIL_DW.Hold_PreviousInput, 2, 17, 0);
+    strcpy(discStatesNames + (idx++ * 100),
+           "&ctrl_student_HIL_DW.Hold_PreviousInput");
+    discStates[idx] = NIRT_GetValueByDataType
+      (&ctrl_student_HIL_DW.Enable_noise_DWORK1, 0, 0, 0);
+    strcpy(discStatesNames + (idx++ * 100),
+           "&ctrl_student_HIL_DW.Enable_noise_DWORK1");
+    for (count = 0; count < 20; count++) {
+      discStates[idx] = NIRT_GetValueByDataType
+        (&ctrl_student_HIL_DW.Memory_PreviousInput_c, count, 24, 0);
+      strcpy(discStatesNames + (idx++ * 100),
+             "&ctrl_student_HIL_DW.Memory_PreviousInput_c");
+    }
+
+    for (count = 0; count < 20; count++) {
+      discStates[idx] = NIRT_GetValueByDataType
+        (&ctrl_student_HIL_DW.Memory1_PreviousInput, count, 24, 0);
+      strcpy(discStatesNames + (idx++ * 100),
+             "&ctrl_student_HIL_DW.Memory1_PreviousInput");
+    }
+
+    discStates[idx] = NIRT_GetValueByDataType
+      (&ctrl_student_HIL_DW.Memory3_PreviousInput, 0, 0, 0);
+    strcpy(discStatesNames + (idx++ * 100),
+           "&ctrl_student_HIL_DW.Memory3_PreviousInput");
+    discStates[idx] = NIRT_GetValueByDataType
+      (&ctrl_student_HIL_DW.Memory2_PreviousInput, 0, 0, 0);
+    strcpy(discStatesNames + (idx++ * 100),
+           "&ctrl_student_HIL_DW.Memory2_PreviousInput");
     discStates[idx] = NIRT_GetValueByDataType
       (&ctrl_student_HIL_DW.Memory4_PreviousInput, 0, 17, 0);
     strcpy(discStatesNames + (idx++ * 100),
@@ -5599,9 +5698,9 @@ DLL_EXPORT long NIRT_GetSimState(long* numContStates, char* contStatesNames,
     strcpy(discStatesNames + (idx++ * 100),
            "&ctrl_student_HIL_DW.Memory5_PreviousInput");
     discStates[idx] = NIRT_GetValueByDataType
-      (&ctrl_student_HIL_DW.Memory2_PreviousInput, 0, 0, 0);
+      (&ctrl_student_HIL_DW.Memory2_PreviousInput_k, 0, 0, 0);
     strcpy(discStatesNames + (idx++ * 100),
-           "&ctrl_student_HIL_DW.Memory2_PreviousInput");
+           "&ctrl_student_HIL_DW.Memory2_PreviousInput_k");
     discStates[idx] = NIRT_GetValueByDataType
       (&ctrl_student_HIL_DW.Memory6_PreviousInput, 0, 21, 0);
     strcpy(discStatesNames + (idx++ * 100),
@@ -5635,9 +5734,6 @@ DLL_EXPORT long NIRT_GetSimState(long* numContStates, char* contStatesNames,
     discStates[idx] = NIRT_GetValueByDataType(&ctrl_student_HIL_DW.tauut_DWORK1,
       2, 17, 0);
     strcpy(discStatesNames + (idx++ * 100), "&ctrl_student_HIL_DW.tauut_DWORK1");
-    discStates[idx] = NIRT_GetValueByDataType(&ctrl_student_HIL_DW.psi_DWORK1, 0,
-      0, 0);
-    strcpy(discStatesNames + (idx++ * 100), "&ctrl_student_HIL_DW.psi_DWORK1");
     discStates[idx] = NIRT_GetValueByDataType(&ctrl_student_HIL_DW.tauJ_DWORK1,
       0, 17, 0);
     strcpy(discStatesNames + (idx++ * 100), "&ctrl_student_HIL_DW.tauJ_DWORK1");
@@ -5647,50 +5743,6 @@ DLL_EXPORT long NIRT_GetSimState(long* numContStates, char* contStatesNames,
     discStates[idx] = NIRT_GetValueByDataType(&ctrl_student_HIL_DW.tauJ_DWORK1,
       2, 17, 0);
     strcpy(discStatesNames + (idx++ * 100), "&ctrl_student_HIL_DW.tauJ_DWORK1");
-    discStates[idx] = NIRT_GetValueByDataType
-      (&ctrl_student_HIL_DW.Enable_noise_DWORK1, 0, 0, 0);
-    strcpy(discStatesNames + (idx++ * 100),
-           "&ctrl_student_HIL_DW.Enable_noise_DWORK1");
-    discStates[idx] = NIRT_GetValueByDataType
-      (&ctrl_student_HIL_DW.N_power_DWORK1, 0, 0, 0);
-    strcpy(discStatesNames + (idx++ * 100),
-           "&ctrl_student_HIL_DW.N_power_DWORK1");
-    discStates[idx] = NIRT_GetValueByDataType
-      (&ctrl_student_HIL_DW.N_power_H_DWORK1, 0, 0, 0);
-    strcpy(discStatesNames + (idx++ * 100),
-           "&ctrl_student_HIL_DW.N_power_H_DWORK1");
-    discStates[idx] = NIRT_GetValueByDataType(&ctrl_student_HIL_DW.dead_DWORK1,
-      0, 0, 0);
-    strcpy(discStatesNames + (idx++ * 100), "&ctrl_student_HIL_DW.dead_DWORK1");
-    discStates[idx] = NIRT_GetValueByDataType
-      (&ctrl_student_HIL_DW.Samp_freq_DWORK1, 0, 0, 0);
-    strcpy(discStatesNames + (idx++ * 100),
-           "&ctrl_student_HIL_DW.Samp_freq_DWORK1");
-    discStates[idx] = NIRT_GetValueByDataType
-      (&ctrl_student_HIL_DW.counter_PreviousInput, 0, 0, 0);
-    strcpy(discStatesNames + (idx++ * 100),
-           "&ctrl_student_HIL_DW.counter_PreviousInput");
-    discStates[idx] = NIRT_GetValueByDataType(&ctrl_student_HIL_DW.NextOutput, 0,
-      0, 0);
-    strcpy(discStatesNames + (idx++ * 100), "&ctrl_student_HIL_DW.NextOutput");
-    discStates[idx] = NIRT_GetValueByDataType(&ctrl_student_HIL_DW.NextOutput_n,
-      0, 0, 0);
-    strcpy(discStatesNames + (idx++ * 100), "&ctrl_student_HIL_DW.NextOutput_n");
-    discStates[idx] = NIRT_GetValueByDataType(&ctrl_student_HIL_DW.NextOutput_i,
-      0, 0, 0);
-    strcpy(discStatesNames + (idx++ * 100), "&ctrl_student_HIL_DW.NextOutput_i");
-    discStates[idx] = NIRT_GetValueByDataType
-      (&ctrl_student_HIL_DW.Hold_PreviousInput, 0, 17, 0);
-    strcpy(discStatesNames + (idx++ * 100),
-           "&ctrl_student_HIL_DW.Hold_PreviousInput");
-    discStates[idx] = NIRT_GetValueByDataType
-      (&ctrl_student_HIL_DW.Hold_PreviousInput, 1, 17, 0);
-    strcpy(discStatesNames + (idx++ * 100),
-           "&ctrl_student_HIL_DW.Hold_PreviousInput");
-    discStates[idx] = NIRT_GetValueByDataType
-      (&ctrl_student_HIL_DW.Hold_PreviousInput, 2, 17, 0);
-    strcpy(discStatesNames + (idx++ * 100),
-           "&ctrl_student_HIL_DW.Hold_PreviousInput");
     discStates[idx] = NIRT_GetValueByDataType
       (&ctrl_student_HIL_DW.psi_noise_DWORK1, 0, 0, 0);
     strcpy(discStatesNames + (idx++ * 100),
@@ -5792,29 +5844,29 @@ DLL_EXPORT long NIRT_GetSimState(long* numContStates, char* contStatesNames,
       0, 0, 0);
     strcpy(discStatesNames + (idx++ * 100), "&ctrl_student_HIL_DW.uref_DWORK1");
     discStates[idx] = NIRT_GetValueByDataType
-      (&ctrl_student_HIL_DW.Memory3_PreviousInput, 0, 17, 0);
+      (&ctrl_student_HIL_DW.Memory3_PreviousInput_n, 0, 17, 0);
     strcpy(discStatesNames + (idx++ * 100),
-           "&ctrl_student_HIL_DW.Memory3_PreviousInput");
+           "&ctrl_student_HIL_DW.Memory3_PreviousInput_n");
     discStates[idx] = NIRT_GetValueByDataType
-      (&ctrl_student_HIL_DW.Memory3_PreviousInput, 1, 17, 0);
+      (&ctrl_student_HIL_DW.Memory3_PreviousInput_n, 1, 17, 0);
     strcpy(discStatesNames + (idx++ * 100),
-           "&ctrl_student_HIL_DW.Memory3_PreviousInput");
+           "&ctrl_student_HIL_DW.Memory3_PreviousInput_n");
     discStates[idx] = NIRT_GetValueByDataType
-      (&ctrl_student_HIL_DW.Memory3_PreviousInput, 2, 17, 0);
+      (&ctrl_student_HIL_DW.Memory3_PreviousInput_n, 2, 17, 0);
     strcpy(discStatesNames + (idx++ * 100),
-           "&ctrl_student_HIL_DW.Memory3_PreviousInput");
+           "&ctrl_student_HIL_DW.Memory3_PreviousInput_n");
     discStates[idx] = NIRT_GetValueByDataType
-      (&ctrl_student_HIL_DW.Memory1_PreviousInput, 0, 17, 0);
+      (&ctrl_student_HIL_DW.Memory1_PreviousInput_i, 0, 17, 0);
     strcpy(discStatesNames + (idx++ * 100),
-           "&ctrl_student_HIL_DW.Memory1_PreviousInput");
+           "&ctrl_student_HIL_DW.Memory1_PreviousInput_i");
     discStates[idx] = NIRT_GetValueByDataType
-      (&ctrl_student_HIL_DW.Memory1_PreviousInput, 1, 17, 0);
+      (&ctrl_student_HIL_DW.Memory1_PreviousInput_i, 1, 17, 0);
     strcpy(discStatesNames + (idx++ * 100),
-           "&ctrl_student_HIL_DW.Memory1_PreviousInput");
+           "&ctrl_student_HIL_DW.Memory1_PreviousInput_i");
     discStates[idx] = NIRT_GetValueByDataType
-      (&ctrl_student_HIL_DW.Memory1_PreviousInput, 2, 17, 0);
+      (&ctrl_student_HIL_DW.Memory1_PreviousInput_i, 2, 17, 0);
     strcpy(discStatesNames + (idx++ * 100),
-           "&ctrl_student_HIL_DW.Memory1_PreviousInput");
+           "&ctrl_student_HIL_DW.Memory1_PreviousInput_i");
     discStates[idx] = NIRT_GetValueByDataType(&ctrl_student_HIL_DW.sdot_DWORK1,
       0, 0, 0);
     strcpy(discStatesNames + (idx++ * 100), "&ctrl_student_HIL_DW.sdot_DWORK1");
@@ -5842,20 +5894,6 @@ DLL_EXPORT long NIRT_GetSimState(long* numContStates, char* contStatesNames,
     discStates[idx] = NIRT_GetValueByDataType(&ctrl_student_HIL_DW.bias_3_DWORK1,
       0, 0, 0);
     strcpy(discStatesNames + (idx++ * 100), "&ctrl_student_HIL_DW.bias_3_DWORK1");
-    for (count = 0; count < 10; count++) {
-      discStates[idx] = NIRT_GetValueByDataType
-        (&ctrl_student_HIL_DW.Memory_PreviousInput_c, count, 24, 0);
-      strcpy(discStatesNames + (idx++ * 100),
-             "&ctrl_student_HIL_DW.Memory_PreviousInput_c");
-    }
-
-    for (count = 0; count < 10; count++) {
-      discStates[idx] = NIRT_GetValueByDataType
-        (&ctrl_student_HIL_DW.Memory1_PreviousInput_j, count, 24, 0);
-      strcpy(discStatesNames + (idx++ * 100),
-             "&ctrl_student_HIL_DW.Memory1_PreviousInput_j");
-    }
-
     discStates[idx] = NIRT_GetValueByDataType(&ctrl_student_HIL_DW.x_bar_DWORK1,
       0, 0, 0);
     strcpy(discStatesNames + (idx++ * 100), "&ctrl_student_HIL_DW.x_bar_DWORK1");
@@ -5915,6 +5953,12 @@ DLL_EXPORT long NIRT_GetSimState(long* numContStates, char* contStatesNames,
     discStates[idx] = NIRT_GetValueByDataType(&ctrl_student_HIL_DW.lost_DWORK1,
       0, 0, 0);
     strcpy(discStatesNames + (idx++ * 100), "&ctrl_student_HIL_DW.lost_DWORK1");
+    discStates[idx] = NIRT_GetValueByDataType(&ctrl_student_HIL_DW.s1_DWORK1, 0,
+      0, 0);
+    strcpy(discStatesNames + (idx++ * 100), "&ctrl_student_HIL_DW.s1_DWORK1");
+    discStates[idx] = NIRT_GetValueByDataType(&ctrl_student_HIL_DW.s2_DWORK1, 0,
+      0, 0);
+    strcpy(discStatesNames + (idx++ * 100), "&ctrl_student_HIL_DW.s2_DWORK1");
     discStates[idx] = NIRT_GetValueByDataType
       (&ctrl_student_HIL_DW.NIVeriStandSignalProbe_DWORK2, 0, 6, 0);
     strcpy(discStatesNames + (idx++ * 100),
@@ -6090,6 +6134,46 @@ DLL_EXPORT long NIRT_GetSimState(long* numContStates, char* contStatesNames,
     }
 
     for (count = 0; count < 17; count++) {
+      discStates[idx] = NIRT_GetValueByDataType(&ctrl_student_HIL_DW.dead_DWORK2,
+        count, 18, 0);
+      strcpy(discStatesNames + (idx++ * 100), "&ctrl_student_HIL_DW.dead_DWORK2");
+    }
+
+    for (count = 0; count < 17; count++) {
+      discStates[idx] = NIRT_GetValueByDataType
+        (&ctrl_student_HIL_DW.Samp_freq_DWORK2, count, 18, 0);
+      strcpy(discStatesNames + (idx++ * 100),
+             "&ctrl_student_HIL_DW.Samp_freq_DWORK2");
+    }
+
+    for (count = 0; count < 17; count++) {
+      discStates[idx] = NIRT_GetValueByDataType
+        (&ctrl_student_HIL_DW.N_power_DWORK2, count, 18, 0);
+      strcpy(discStatesNames + (idx++ * 100),
+             "&ctrl_student_HIL_DW.N_power_DWORK2");
+    }
+
+    for (count = 0; count < 17; count++) {
+      discStates[idx] = NIRT_GetValueByDataType
+        (&ctrl_student_HIL_DW.N_power_H_DWORK2, count, 18, 0);
+      strcpy(discStatesNames + (idx++ * 100),
+             "&ctrl_student_HIL_DW.N_power_H_DWORK2");
+    }
+
+    for (count = 0; count < 17; count++) {
+      discStates[idx] = NIRT_GetValueByDataType(&ctrl_student_HIL_DW.psi_DWORK2,
+        count, 18, 0);
+      strcpy(discStatesNames + (idx++ * 100), "&ctrl_student_HIL_DW.psi_DWORK2");
+    }
+
+    for (count = 0; count < 17; count++) {
+      discStates[idx] = NIRT_GetValueByDataType
+        (&ctrl_student_HIL_DW.Enable_noise_DWORK2, count, 18, 0);
+      strcpy(discStatesNames + (idx++ * 100),
+             "&ctrl_student_HIL_DW.Enable_noise_DWORK2");
+    }
+
+    for (count = 0; count < 17; count++) {
       discStates[idx] = NIRT_GetValueByDataType(&ctrl_student_HIL_DW.Kd1_DWORK2,
         count, 18, 0);
       strcpy(discStatesNames + (idx++ * 100), "&ctrl_student_HIL_DW.Kd1_DWORK2");
@@ -6115,49 +6199,9 @@ DLL_EXPORT long NIRT_GetSimState(long* numContStates, char* contStatesNames,
     }
 
     for (count = 0; count < 17; count++) {
-      discStates[idx] = NIRT_GetValueByDataType(&ctrl_student_HIL_DW.psi_DWORK2,
-        count, 18, 0);
-      strcpy(discStatesNames + (idx++ * 100), "&ctrl_student_HIL_DW.psi_DWORK2");
-    }
-
-    for (count = 0; count < 17; count++) {
       discStates[idx] = NIRT_GetValueByDataType(&ctrl_student_HIL_DW.tauJ_DWORK2,
         count, 18, 0);
       strcpy(discStatesNames + (idx++ * 100), "&ctrl_student_HIL_DW.tauJ_DWORK2");
-    }
-
-    for (count = 0; count < 17; count++) {
-      discStates[idx] = NIRT_GetValueByDataType
-        (&ctrl_student_HIL_DW.Enable_noise_DWORK2, count, 18, 0);
-      strcpy(discStatesNames + (idx++ * 100),
-             "&ctrl_student_HIL_DW.Enable_noise_DWORK2");
-    }
-
-    for (count = 0; count < 17; count++) {
-      discStates[idx] = NIRT_GetValueByDataType
-        (&ctrl_student_HIL_DW.N_power_DWORK2, count, 18, 0);
-      strcpy(discStatesNames + (idx++ * 100),
-             "&ctrl_student_HIL_DW.N_power_DWORK2");
-    }
-
-    for (count = 0; count < 17; count++) {
-      discStates[idx] = NIRT_GetValueByDataType
-        (&ctrl_student_HIL_DW.N_power_H_DWORK2, count, 18, 0);
-      strcpy(discStatesNames + (idx++ * 100),
-             "&ctrl_student_HIL_DW.N_power_H_DWORK2");
-    }
-
-    for (count = 0; count < 17; count++) {
-      discStates[idx] = NIRT_GetValueByDataType(&ctrl_student_HIL_DW.dead_DWORK2,
-        count, 18, 0);
-      strcpy(discStatesNames + (idx++ * 100), "&ctrl_student_HIL_DW.dead_DWORK2");
-    }
-
-    for (count = 0; count < 17; count++) {
-      discStates[idx] = NIRT_GetValueByDataType
-        (&ctrl_student_HIL_DW.Samp_freq_DWORK2, count, 18, 0);
-      strcpy(discStatesNames + (idx++ * 100),
-             "&ctrl_student_HIL_DW.Samp_freq_DWORK2");
     }
 
     for (count = 0; count < 17; count++) {
@@ -6457,6 +6501,18 @@ DLL_EXPORT long NIRT_GetSimState(long* numContStates, char* contStatesNames,
     }
 
     for (count = 0; count < 17; count++) {
+      discStates[idx] = NIRT_GetValueByDataType(&ctrl_student_HIL_DW.s1_DWORK2,
+        count, 18, 0);
+      strcpy(discStatesNames + (idx++ * 100), "&ctrl_student_HIL_DW.s1_DWORK2");
+    }
+
+    for (count = 0; count < 17; count++) {
+      discStates[idx] = NIRT_GetValueByDataType(&ctrl_student_HIL_DW.s2_DWORK2,
+        count, 18, 0);
+      strcpy(discStatesNames + (idx++ * 100), "&ctrl_student_HIL_DW.s2_DWORK2");
+    }
+
+    for (count = 0; count < 17; count++) {
       discStates[idx] = NIRT_GetValueByDataType
         (&ctrl_student_HIL_DW.NIVeriStandSignalProbe_DWORK1, count, 18, 0);
       strcpy(discStatesNames + (idx++ * 100),
@@ -6559,6 +6615,46 @@ DLL_EXPORT long NIRT_SetSimState(double* contStates, double* discStates, long
       discStates[idx++], 0, 0);
     NIRT_SetValueByDataType(&ctrl_student_HIL_DW.guidance_switch_DWORK1, 0,
       discStates[idx++], 0, 0);
+    NIRT_SetValueByDataType(&ctrl_student_HIL_DW.dead_DWORK1, 0, discStates[idx
+      ++], 0, 0);
+    NIRT_SetValueByDataType(&ctrl_student_HIL_DW.counter_PreviousInput, 0,
+      discStates[idx++], 0, 0);
+    NIRT_SetValueByDataType(&ctrl_student_HIL_DW.Samp_freq_DWORK1, 0,
+      discStates[idx++], 0, 0);
+    NIRT_SetValueByDataType(&ctrl_student_HIL_DW.N_power_DWORK1, 0,
+      discStates[idx++], 0, 0);
+    NIRT_SetValueByDataType(&ctrl_student_HIL_DW.NextOutput, 0, discStates[idx++],
+      0, 0);
+    NIRT_SetValueByDataType(&ctrl_student_HIL_DW.NextOutput_n, 0, discStates[idx
+      ++], 0, 0);
+    NIRT_SetValueByDataType(&ctrl_student_HIL_DW.N_power_H_DWORK1, 0,
+      discStates[idx++], 0, 0);
+    NIRT_SetValueByDataType(&ctrl_student_HIL_DW.NextOutput_i, 0, discStates[idx
+      ++], 0, 0);
+    NIRT_SetValueByDataType(&ctrl_student_HIL_DW.psi_DWORK1, 0, discStates[idx++],
+      0, 0);
+    NIRT_SetValueByDataType(&ctrl_student_HIL_DW.Hold_PreviousInput, 0,
+      discStates[idx++], 17, 0);
+    NIRT_SetValueByDataType(&ctrl_student_HIL_DW.Hold_PreviousInput, 1,
+      discStates[idx++], 17, 0);
+    NIRT_SetValueByDataType(&ctrl_student_HIL_DW.Hold_PreviousInput, 2,
+      discStates[idx++], 17, 0);
+    NIRT_SetValueByDataType(&ctrl_student_HIL_DW.Enable_noise_DWORK1, 0,
+      discStates[idx++], 0, 0);
+    for (count = 0; count < 20; count++) {
+      NIRT_SetValueByDataType(&ctrl_student_HIL_DW.Memory_PreviousInput_c, count,
+        discStates[idx++], 24, 0);
+    }
+
+    for (count = 0; count < 20; count++) {
+      NIRT_SetValueByDataType(&ctrl_student_HIL_DW.Memory1_PreviousInput, count,
+        discStates[idx++], 24, 0);
+    }
+
+    NIRT_SetValueByDataType(&ctrl_student_HIL_DW.Memory3_PreviousInput, 0,
+      discStates[idx++], 0, 0);
+    NIRT_SetValueByDataType(&ctrl_student_HIL_DW.Memory2_PreviousInput, 0,
+      discStates[idx++], 0, 0);
     NIRT_SetValueByDataType(&ctrl_student_HIL_DW.Memory4_PreviousInput, 0,
       discStates[idx++], 17, 0);
     NIRT_SetValueByDataType(&ctrl_student_HIL_DW.Memory4_PreviousInput, 1,
@@ -6571,7 +6667,7 @@ DLL_EXPORT long NIRT_SetSimState(double* contStates, double* discStates, long
       discStates[idx++], 17, 0);
     NIRT_SetValueByDataType(&ctrl_student_HIL_DW.Memory5_PreviousInput, 2,
       discStates[idx++], 17, 0);
-    NIRT_SetValueByDataType(&ctrl_student_HIL_DW.Memory2_PreviousInput, 0,
+    NIRT_SetValueByDataType(&ctrl_student_HIL_DW.Memory2_PreviousInput_k, 0,
       discStates[idx++], 0, 0);
     NIRT_SetValueByDataType(&ctrl_student_HIL_DW.Memory6_PreviousInput, 0,
       discStates[idx++], 21, 0);
@@ -6594,38 +6690,12 @@ DLL_EXPORT long NIRT_SetSimState(double* contStates, double* discStates, long
       ++], 17, 0);
     NIRT_SetValueByDataType(&ctrl_student_HIL_DW.tauut_DWORK1, 2, discStates[idx
       ++], 17, 0);
-    NIRT_SetValueByDataType(&ctrl_student_HIL_DW.psi_DWORK1, 0, discStates[idx++],
-      0, 0);
     NIRT_SetValueByDataType(&ctrl_student_HIL_DW.tauJ_DWORK1, 0, discStates[idx
       ++], 17, 0);
     NIRT_SetValueByDataType(&ctrl_student_HIL_DW.tauJ_DWORK1, 1, discStates[idx
       ++], 17, 0);
     NIRT_SetValueByDataType(&ctrl_student_HIL_DW.tauJ_DWORK1, 2, discStates[idx
       ++], 17, 0);
-    NIRT_SetValueByDataType(&ctrl_student_HIL_DW.Enable_noise_DWORK1, 0,
-      discStates[idx++], 0, 0);
-    NIRT_SetValueByDataType(&ctrl_student_HIL_DW.N_power_DWORK1, 0,
-      discStates[idx++], 0, 0);
-    NIRT_SetValueByDataType(&ctrl_student_HIL_DW.N_power_H_DWORK1, 0,
-      discStates[idx++], 0, 0);
-    NIRT_SetValueByDataType(&ctrl_student_HIL_DW.dead_DWORK1, 0, discStates[idx
-      ++], 0, 0);
-    NIRT_SetValueByDataType(&ctrl_student_HIL_DW.Samp_freq_DWORK1, 0,
-      discStates[idx++], 0, 0);
-    NIRT_SetValueByDataType(&ctrl_student_HIL_DW.counter_PreviousInput, 0,
-      discStates[idx++], 0, 0);
-    NIRT_SetValueByDataType(&ctrl_student_HIL_DW.NextOutput, 0, discStates[idx++],
-      0, 0);
-    NIRT_SetValueByDataType(&ctrl_student_HIL_DW.NextOutput_n, 0, discStates[idx
-      ++], 0, 0);
-    NIRT_SetValueByDataType(&ctrl_student_HIL_DW.NextOutput_i, 0, discStates[idx
-      ++], 0, 0);
-    NIRT_SetValueByDataType(&ctrl_student_HIL_DW.Hold_PreviousInput, 0,
-      discStates[idx++], 17, 0);
-    NIRT_SetValueByDataType(&ctrl_student_HIL_DW.Hold_PreviousInput, 1,
-      discStates[idx++], 17, 0);
-    NIRT_SetValueByDataType(&ctrl_student_HIL_DW.Hold_PreviousInput, 2,
-      discStates[idx++], 17, 0);
     NIRT_SetValueByDataType(&ctrl_student_HIL_DW.psi_noise_DWORK1, 0,
       discStates[idx++], 0, 0);
     NIRT_SetValueByDataType(&ctrl_student_HIL_DW.x_noise_DWORK1, 0,
@@ -6687,17 +6757,17 @@ DLL_EXPORT long NIRT_SetSimState(double* contStates, double* discStates, long
 
     NIRT_SetValueByDataType(&ctrl_student_HIL_DW.uref_DWORK1, 0, discStates[idx
       ++], 0, 0);
-    NIRT_SetValueByDataType(&ctrl_student_HIL_DW.Memory3_PreviousInput, 0,
+    NIRT_SetValueByDataType(&ctrl_student_HIL_DW.Memory3_PreviousInput_n, 0,
       discStates[idx++], 17, 0);
-    NIRT_SetValueByDataType(&ctrl_student_HIL_DW.Memory3_PreviousInput, 1,
+    NIRT_SetValueByDataType(&ctrl_student_HIL_DW.Memory3_PreviousInput_n, 1,
       discStates[idx++], 17, 0);
-    NIRT_SetValueByDataType(&ctrl_student_HIL_DW.Memory3_PreviousInput, 2,
+    NIRT_SetValueByDataType(&ctrl_student_HIL_DW.Memory3_PreviousInput_n, 2,
       discStates[idx++], 17, 0);
-    NIRT_SetValueByDataType(&ctrl_student_HIL_DW.Memory1_PreviousInput, 0,
+    NIRT_SetValueByDataType(&ctrl_student_HIL_DW.Memory1_PreviousInput_i, 0,
       discStates[idx++], 17, 0);
-    NIRT_SetValueByDataType(&ctrl_student_HIL_DW.Memory1_PreviousInput, 1,
+    NIRT_SetValueByDataType(&ctrl_student_HIL_DW.Memory1_PreviousInput_i, 1,
       discStates[idx++], 17, 0);
-    NIRT_SetValueByDataType(&ctrl_student_HIL_DW.Memory1_PreviousInput, 2,
+    NIRT_SetValueByDataType(&ctrl_student_HIL_DW.Memory1_PreviousInput_i, 2,
       discStates[idx++], 17, 0);
     NIRT_SetValueByDataType(&ctrl_student_HIL_DW.sdot_DWORK1, 0, discStates[idx
       ++], 0, 0);
@@ -6717,16 +6787,6 @@ DLL_EXPORT long NIRT_SetSimState(double* contStates, double* discStates, long
       discStates[idx++], 0, 0);
     NIRT_SetValueByDataType(&ctrl_student_HIL_DW.bias_3_DWORK1, 0,
       discStates[idx++], 0, 0);
-    for (count = 0; count < 10; count++) {
-      NIRT_SetValueByDataType(&ctrl_student_HIL_DW.Memory_PreviousInput_c, count,
-        discStates[idx++], 24, 0);
-    }
-
-    for (count = 0; count < 10; count++) {
-      NIRT_SetValueByDataType(&ctrl_student_HIL_DW.Memory1_PreviousInput_j,
-        count, discStates[idx++], 24, 0);
-    }
-
     NIRT_SetValueByDataType(&ctrl_student_HIL_DW.x_bar_DWORK1, 0, discStates[idx
       ++], 0, 0);
     NIRT_SetValueByDataType(&ctrl_student_HIL_DW.y_bar_DWORK1, 0, discStates[idx
@@ -6765,6 +6825,10 @@ DLL_EXPORT long NIRT_SetSimState(double* contStates, double* discStates, long
       0, 0);
     NIRT_SetValueByDataType(&ctrl_student_HIL_DW.lost_DWORK1, 0, discStates[idx
       ++], 0, 0);
+    NIRT_SetValueByDataType(&ctrl_student_HIL_DW.s1_DWORK1, 0, discStates[idx++],
+      0, 0);
+    NIRT_SetValueByDataType(&ctrl_student_HIL_DW.s2_DWORK1, 0, discStates[idx++],
+      0, 0);
     NIRT_SetValueByDataType(&ctrl_student_HIL_DW.NIVeriStandSignalProbe_DWORK2,
       0, discStates[idx++], 6, 0);
     NIRT_SetValueByDataType(&ctrl_student_HIL_DW.RandSeed, 0, discStates[idx++],
@@ -6894,6 +6958,36 @@ DLL_EXPORT long NIRT_SetSimState(double* contStates, double* discStates, long
     }
 
     for (count = 0; count < 17; count++) {
+      NIRT_SetValueByDataType(&ctrl_student_HIL_DW.dead_DWORK2, count,
+        discStates[idx++], 18, 0);
+    }
+
+    for (count = 0; count < 17; count++) {
+      NIRT_SetValueByDataType(&ctrl_student_HIL_DW.Samp_freq_DWORK2, count,
+        discStates[idx++], 18, 0);
+    }
+
+    for (count = 0; count < 17; count++) {
+      NIRT_SetValueByDataType(&ctrl_student_HIL_DW.N_power_DWORK2, count,
+        discStates[idx++], 18, 0);
+    }
+
+    for (count = 0; count < 17; count++) {
+      NIRT_SetValueByDataType(&ctrl_student_HIL_DW.N_power_H_DWORK2, count,
+        discStates[idx++], 18, 0);
+    }
+
+    for (count = 0; count < 17; count++) {
+      NIRT_SetValueByDataType(&ctrl_student_HIL_DW.psi_DWORK2, count,
+        discStates[idx++], 18, 0);
+    }
+
+    for (count = 0; count < 17; count++) {
+      NIRT_SetValueByDataType(&ctrl_student_HIL_DW.Enable_noise_DWORK2, count,
+        discStates[idx++], 18, 0);
+    }
+
+    for (count = 0; count < 17; count++) {
       NIRT_SetValueByDataType(&ctrl_student_HIL_DW.Kd1_DWORK2, count,
         discStates[idx++], 18, 0);
     }
@@ -6914,37 +7008,7 @@ DLL_EXPORT long NIRT_SetSimState(double* contStates, double* discStates, long
     }
 
     for (count = 0; count < 17; count++) {
-      NIRT_SetValueByDataType(&ctrl_student_HIL_DW.psi_DWORK2, count,
-        discStates[idx++], 18, 0);
-    }
-
-    for (count = 0; count < 17; count++) {
       NIRT_SetValueByDataType(&ctrl_student_HIL_DW.tauJ_DWORK2, count,
-        discStates[idx++], 18, 0);
-    }
-
-    for (count = 0; count < 17; count++) {
-      NIRT_SetValueByDataType(&ctrl_student_HIL_DW.Enable_noise_DWORK2, count,
-        discStates[idx++], 18, 0);
-    }
-
-    for (count = 0; count < 17; count++) {
-      NIRT_SetValueByDataType(&ctrl_student_HIL_DW.N_power_DWORK2, count,
-        discStates[idx++], 18, 0);
-    }
-
-    for (count = 0; count < 17; count++) {
-      NIRT_SetValueByDataType(&ctrl_student_HIL_DW.N_power_H_DWORK2, count,
-        discStates[idx++], 18, 0);
-    }
-
-    for (count = 0; count < 17; count++) {
-      NIRT_SetValueByDataType(&ctrl_student_HIL_DW.dead_DWORK2, count,
-        discStates[idx++], 18, 0);
-    }
-
-    for (count = 0; count < 17; count++) {
-      NIRT_SetValueByDataType(&ctrl_student_HIL_DW.Samp_freq_DWORK2, count,
         discStates[idx++], 18, 0);
     }
 
@@ -7171,6 +7235,16 @@ DLL_EXPORT long NIRT_SetSimState(double* contStates, double* discStates, long
 
     for (count = 0; count < 17; count++) {
       NIRT_SetValueByDataType(&ctrl_student_HIL_DW.lost_DWORK2, count,
+        discStates[idx++], 18, 0);
+    }
+
+    for (count = 0; count < 17; count++) {
+      NIRT_SetValueByDataType(&ctrl_student_HIL_DW.s1_DWORK2, count,
+        discStates[idx++], 18, 0);
+    }
+
+    for (count = 0; count < 17; count++) {
+      NIRT_SetValueByDataType(&ctrl_student_HIL_DW.s2_DWORK2, count,
         discStates[idx++], 18, 0);
     }
 
