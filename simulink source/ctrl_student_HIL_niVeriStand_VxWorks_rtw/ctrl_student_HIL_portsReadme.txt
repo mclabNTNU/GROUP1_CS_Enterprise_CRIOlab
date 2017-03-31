@@ -63,6 +63,9 @@
 <outport> id = "-1" name = "DP-system/uref " width = "1" datatype = "0"</outport>
 <outport> id = "-1" name = "DP-system/sdot" width = "1" datatype = "0"</outport>
 <outport> id = "-1" name = "DP-system/i" width = "1" datatype = "0"</outport>
+<outport> id = "-1" name = "Observer/bias_ut/bias1" width = "1" datatype = "17"</outport>
+<outport> id = "-1" name = "Observer/bias_ut/bias2" width = "1" datatype = "17"</outport>
+<outport> id = "-1" name = "Observer/bias_ut/bias3" width = "1" datatype = "17"</outport>
 <outport> id = "-1" name = "Observer/eta_bar_ut/x_bar" width = "1" datatype = "17"</outport>
 <outport> id = "-1" name = "Observer/eta_bar_ut/y_bar" width = "1" datatype = "17"</outport>
 <outport> id = "-1" name = "Observer/eta_bar_ut/psi_bar" width = "1" datatype = "17"</outport>

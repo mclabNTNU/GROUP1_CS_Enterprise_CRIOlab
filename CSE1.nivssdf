@@ -10,7 +10,7 @@
 				<String>CSE1</String>
 			</Property>
 			<Property Name="Version">
-				<String>1.0.0.348</String>
+				<String>1.0.0.359</String>
 			</Property>
 			<Property Name="Creator">
 				<String />
@@ -958,111 +958,6 @@
 							</DefaultValue>
 						</Channel>
 						<Channel Name="Square" TypeGUID="03D3BB99-1485-13A6-561D1F898F032919" RowDim="1" ColDim="1" Units="" BitFields="1">
-							<Description />
-							<Properties />
-							<Errors />
-							<DefaultValue>
-								<Elem>0</Elem>
-							</DefaultValue>
-						</Channel>
-					</Section>
-					<Section Name="Oqus" TypeGUID="35f2e757-0c29-4d89-97e9-6f9421cf693d">
-						<Description />
-						<Properties>
-							<Property Name="CD Status">
-								<U32>1</U32>
-							</Property>
-							<Property Name="Driver VI Exec Mode">
-								<U32>1</U32>
-							</Property>
-							<Property Name="Driver VI Path_0">
-								<DependentFile Type="To Common Doc Dir" Path="Custom Devices\Oqus\Oqus Engine - VxWorks.llb\Oqus RT Driver VI.vi">
-									<Version>1.0</Version>
-									<ForceDownload>false</ForceDownload>
-									<RTDestination>c:\ni-rt\NIVeriStand\Custom Devices\Oqus\Oqus Engine - VxWorks.llb\Oqus RT Driver VI.vi</RTDestination>
-									<SupportedTarget>VxWorks</SupportedTarget>
-									<MD5 />
-								</DependentFile>
-							</Property>
-							<Property Name="Driver VI Path_1">
-								<DependentFile Type="To Common Doc Dir" Path="Custom Devices\Oqus\Oqus Engine.llb\Oqus RT Driver VI.vi">
-									<Version>1.0</Version>
-									<ForceDownload>false</ForceDownload>
-									<RTDestination>c:\ni-rt\NIVeriStand\Custom Devices\Oqus\Oqus Engine.llb\Oqus RT Driver VI.vi</RTDestination>
-									<SupportedTarget>PharLap &amp; Windows</SupportedTarget>
-									<MD5 />
-								</DependentFile>
-							</Property>
-							<Property Name="Version">
-								<String>1.0</String>
-							</Property>
-						</Properties>
-						<Errors />
-						<Channel Name="Framecnt" TypeGUID="03D3BB99-1485-13A6-561D1F898F032919" RowDim="1" ColDim="1" Units="" BitFields="1">
-							<Description />
-							<Properties />
-							<Errors />
-							<DefaultValue>
-								<Elem>0</Elem>
-							</DefaultValue>
-						</Channel>
-						<Channel Name="Error" TypeGUID="03D3BB99-1485-13A6-561D1F898F032919" RowDim="1" ColDim="1" Units="" BitFields="1">
-							<Description />
-							<Properties />
-							<Errors />
-							<DefaultValue>
-								<Elem>0</Elem>
-							</DefaultValue>
-						</Channel>
-						<Channel Name="X" TypeGUID="03D3BB99-1485-13A6-561D1F898F032919" RowDim="1" ColDim="1" Units="" BitFields="1">
-							<Description />
-							<Properties />
-							<Errors />
-							<DefaultValue>
-								<Elem>0</Elem>
-							</DefaultValue>
-						</Channel>
-						<Channel Name="Y" TypeGUID="03D3BB99-1485-13A6-561D1F898F032919" RowDim="1" ColDim="1" Units="" BitFields="1">
-							<Description />
-							<Properties />
-							<Errors />
-							<DefaultValue>
-								<Elem>0</Elem>
-							</DefaultValue>
-						</Channel>
-						<Channel Name="Z" TypeGUID="03D3BB99-1485-13A6-561D1F898F032919" RowDim="1" ColDim="1" Units="" BitFields="1">
-							<Description />
-							<Properties />
-							<Errors />
-							<DefaultValue>
-								<Elem>0</Elem>
-							</DefaultValue>
-						</Channel>
-						<Channel Name="Roll" TypeGUID="03D3BB99-1485-13A6-561D1F898F032919" RowDim="1" ColDim="1" Units="" BitFields="1">
-							<Description />
-							<Properties />
-							<Errors />
-							<DefaultValue>
-								<Elem>0</Elem>
-							</DefaultValue>
-						</Channel>
-						<Channel Name="Pictch" TypeGUID="03D3BB99-1485-13A6-561D1F898F032919" RowDim="1" ColDim="1" Units="" BitFields="1">
-							<Description />
-							<Properties />
-							<Errors />
-							<DefaultValue>
-								<Elem>0</Elem>
-							</DefaultValue>
-						</Channel>
-						<Channel Name="Yaw" TypeGUID="03D3BB99-1485-13A6-561D1F898F032919" RowDim="1" ColDim="1" Units="" BitFields="1">
-							<Description />
-							<Properties />
-							<Errors />
-							<DefaultValue>
-								<Elem>0</Elem>
-							</DefaultValue>
-						</Channel>
-						<Channel Name="Residual" TypeGUID="03D3BB99-1485-13A6-561D1F898F032919" RowDim="1" ColDim="1" Units="" BitFields="1">
 							<Description />
 							<Properties />
 							<Errors />
@@ -5680,10 +5575,10 @@
 									<Double>10000</Double>
 								</Property>
 								<Property Name="DLL Size">
-									<I32>315583</I32>
+									<I32>320187</I32>
 								</Property>
 								<Property Name="DLL Timestamp">
-									<Double>3573803119.4934216</Double>
+									<Double>3573809003.6902604</Double>
 								</Property>
 								<Property Name="Decimation">
 									<I32>1</I32>
@@ -5727,7 +5622,7 @@
 										<ForceDownload>false</ForceDownload>
 										<RTDestination>c:\ni-rt\system\ctrl_student_HIL.out</RTDestination>
 										<SupportedTarget>VxWorks</SupportedTarget>
-										<MD5>44b2dd76797fcff2ac05d726f0c9c7b5</MD5>
+										<MD5>4d80e63feaefef0ea2c3ace86a0b9f22</MD5>
 									</DependentFile>
 								</Property>
 								<Property Name="GlobalParameterScopes">
@@ -6998,7 +6893,7 @@
 													<String>Observer/eta_bar_ut/x_bar</String>
 												</Property>
 												<Property Name="Index">
-													<I32>64</I32>
+													<I32>67</I32>
 												</Property>
 											</Properties>
 											<Errors />
@@ -7013,7 +6908,7 @@
 													<String>Observer/eta_bar_ut/y_bar</String>
 												</Property>
 												<Property Name="Index">
-													<I32>65</I32>
+													<I32>68</I32>
 												</Property>
 											</Properties>
 											<Errors />
@@ -7028,7 +6923,7 @@
 													<String>Observer/eta_bar_ut/psi_bar</String>
 												</Property>
 												<Property Name="Index">
-													<I32>66</I32>
+													<I32>69</I32>
 												</Property>
 											</Properties>
 											<Errors />
@@ -7048,7 +6943,7 @@
 													<String>Observer/eta_hat_ut/psi_hat</String>
 												</Property>
 												<Property Name="Index">
-													<I32>67</I32>
+													<I32>70</I32>
 												</Property>
 											</Properties>
 											<Errors />
@@ -7063,7 +6958,7 @@
 													<String>Observer/eta_hat_ut/x_hat</String>
 												</Property>
 												<Property Name="Index">
-													<I32>68</I32>
+													<I32>71</I32>
 												</Property>
 											</Properties>
 											<Errors />
@@ -7078,7 +6973,7 @@
 													<String>Observer/eta_hat_ut/y_hat</String>
 												</Property>
 												<Property Name="Index">
-													<I32>69</I32>
+													<I32>72</I32>
 												</Property>
 											</Properties>
 											<Errors />
@@ -7098,7 +6993,7 @@
 													<String>Observer/nu_hat_ut/r_hat</String>
 												</Property>
 												<Property Name="Index">
-													<I32>70</I32>
+													<I32>73</I32>
 												</Property>
 											</Properties>
 											<Errors />
@@ -7113,7 +7008,7 @@
 													<String>Observer/nu_hat_ut/u_hat</String>
 												</Property>
 												<Property Name="Index">
-													<I32>71</I32>
+													<I32>74</I32>
 												</Property>
 											</Properties>
 											<Errors />
@@ -7128,7 +7023,7 @@
 													<String>Observer/nu_hat_ut/v_hat</String>
 												</Property>
 												<Property Name="Index">
-													<I32>72</I32>
+													<I32>75</I32>
 												</Property>
 											</Properties>
 											<Errors />
@@ -7142,6 +7037,56 @@
 										<Properties />
 										<Errors />
 									</Section>
+									<Section Name="bias_ut" TypeGUID="cbfdde93-6581-4b7c-83b8-e88484f25b2e">
+										<Description />
+										<Properties />
+										<Errors />
+										<Channel Name="bias1" TypeGUID="03D3B995-1485-13A6-56ABA0860ADF91DF" RowDim="1" ColDim="1" Units="" BitFields="5">
+											<Description />
+											<Properties>
+												<Property Name="Model Path">
+													<String>Observer/bias_ut/bias1</String>
+												</Property>
+												<Property Name="Index">
+													<I32>64</I32>
+												</Property>
+											</Properties>
+											<Errors />
+											<DefaultValue>
+												<Elem>0</Elem>
+											</DefaultValue>
+										</Channel>
+										<Channel Name="bias2" TypeGUID="03D3B995-1485-13A6-56ABA0860ADF91DF" RowDim="1" ColDim="1" Units="" BitFields="5">
+											<Description />
+											<Properties>
+												<Property Name="Model Path">
+													<String>Observer/bias_ut/bias2</String>
+												</Property>
+												<Property Name="Index">
+													<I32>65</I32>
+												</Property>
+											</Properties>
+											<Errors />
+											<DefaultValue>
+												<Elem>0</Elem>
+											</DefaultValue>
+										</Channel>
+										<Channel Name="bias3" TypeGUID="03D3B995-1485-13A6-56ABA0860ADF91DF" RowDim="1" ColDim="1" Units="" BitFields="5">
+											<Description />
+											<Properties>
+												<Property Name="Model Path">
+													<String>Observer/bias_ut/bias3</String>
+												</Property>
+												<Property Name="Index">
+													<I32>66</I32>
+												</Property>
+											</Properties>
+											<Errors />
+											<DefaultValue>
+												<Elem>0</Elem>
+											</DefaultValue>
+										</Channel>
+									</Section>
 								</Section>
 								<Section Name="signal dropout check " TypeGUID="cbfdde93-6581-4b7c-83b8-e88484f25b2e">
 									<Description />
@@ -7154,7 +7099,7 @@
 												<String>signal dropout check /lost</String>
 											</Property>
 											<Property Name="Index">
-												<I32>73</I32>
+												<I32>76</I32>
 											</Property>
 										</Properties>
 										<Errors />
